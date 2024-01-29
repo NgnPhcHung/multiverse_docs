@@ -1,17 +1,35 @@
-import { Cursors } from "components";
-import { USER_COLORS } from "consts";
-import { awareness } from "providers";
+import { Suspense, lazy } from "react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-export const color =
-  USER_COLORS[Math.floor(Math.random() * USER_COLORS.length)];
+const AppLayout = lazy(() => import("./AppLayout"));
+const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
+const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
 
-awareness.setLocalState({ color });
+const routes = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <Suspense>
+        <ViewSelectorPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "text-diagram",
+    element: (
+      <Suspense>
+        <DiagramByEditorPage />
+      </Suspense>
+    ),
+  },
+]);
 
 const App = () => {
-  return <div className=" w-screen h-screen fixed">
-    
-    <Cursors />
-  </div>;
+  return (
+    <AppLayout>
+      <RouterProvider router={routes} />
+    </AppLayout>
+  );
 };
 
 export default App;

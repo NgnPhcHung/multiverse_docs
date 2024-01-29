@@ -1,11 +1,10 @@
 import { usePerfectCursor } from "hooks";
 import { memo, useCallback, useRef } from "react";
 
-
 export const Cursor = memo(
   ({ point, color }: { point?: number[]; color?: string }) => {
     const rCursor = useRef<SVGSVGElement>(null);
-    console.log("rerender", point)
+
     const animateCursor = useCallback((point: number[]) => {
       const elm = rCursor.current;
       if (!elm) return;
@@ -21,13 +20,13 @@ export const Cursor = memo(
     return (
       <svg
         ref={rCursor}
-        className="w-14 h-14 absolute pointer-events-none"
+        className="w-10 h-10 absolute pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 35 35"
         fill="none"
         fillRule="evenodd"
         style={{
-          transform: `translate(${point[0]}px), ${point[1]}px`,
+          transform: `translate(${point[0]}px,${point[1]}px)`,
         }}
       >
         <g fill="rgba(0,0,0,.2)" transform="translate(1,1)">

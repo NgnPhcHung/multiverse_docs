@@ -1,12 +1,13 @@
-import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
+import * as Y from "yjs";
 
 export const ydoc = new Y.Doc();
 
 export const provider = new WebsocketProvider(
-  "wss://demos.yjs.dev",
-  "y-presence + perfect-cursors",
-  ydoc
+  `${location.protocol === "http:" ? "ws:" : "wss:"}//diagram.sequence`,
+  "sequenceQueryDnD",
+  ydoc,
+  { connect: false }
 );
 
 export const awareness = provider.awareness;
