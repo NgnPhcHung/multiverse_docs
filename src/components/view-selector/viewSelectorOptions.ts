@@ -11,8 +11,8 @@ interface ViewSelectorOptions {
 export const viewSelectorOptions: ViewSelectorOptions[] = [
   {
     id: 1,
-    title: "Create diagram from our SQL",
-    description: "",
+    title: "Database diagram",
+    description: "Generate diagram from our SQL",
     url: "/text-diagram",
     icon: "layout-list",
   },
