@@ -4,7 +4,7 @@ import * as Y from "yjs";
 export const ydoc = new Y.Doc();
 
 export const provider = new WebsocketProvider(
-  `${location.protocol === "http:" ? "ws:" : "wss:"}//diagram.sequence`,
+  `wss://diagram.sequence`,
   "sequenceQueryDnD",
   ydoc,
   { connect: false }
