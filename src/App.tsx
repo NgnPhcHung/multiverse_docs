@@ -1,9 +1,9 @@
 import { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-
 const AppLayout = lazy(() => import("./AppLayout"));
 const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
 const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
+
 
 const routes = createBrowserRouter([
   {

@@ -1,20 +1,31 @@
 import { Avatar } from "components/common/avatar";
 import { useDisclosure } from "hooks";
+import { PropsWithChildren } from "react";
 import { awareness, provider } from "store";
 import { color } from "utils";
 import { useUsers } from "y-presence";
-import { Dialog } from "../dialog";
-import { PropsWithChildren } from "react";
 import { Button } from "../button";
+import { Dialog } from "../dialog";
 
 export const Nav = ({ children }: PropsWithChildren) => {
   const users = useUsers(awareness, (state) => state);
   const [opened, { toggle, close }] = useDisclosure();
 
   const startConnection = () => {
-    provider.connect();
-    awareness.setLocalState({ color });
+    console.log(awareness.states);
+    try {
+      if (provider.wsconnected) {
+        provider.disconnect();
+      } else {
+        provider.connect();
+        awareness.setLocalState({ color });
+      }
+    } catch (error) {
+      console.log("error",error);
+    }
   };
+
+
 
   return (
     <>
@@ -31,7 +42,9 @@ export const Nav = ({ children }: PropsWithChildren) => {
           );
         })}
         <Button onClick={toggle}>open modal</Button>
-        <Button onClick={startConnection}>connect</Button>
+        <Button onClick={startConnection}>
+          {provider.wsconnected ? "Disconnect" : "Connect"}
+        </Button>
       </nav>
       <Dialog opened={opened} onClose={close} size="lg"></Dialog>
     </>

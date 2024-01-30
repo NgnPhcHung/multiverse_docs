@@ -2,7 +2,7 @@
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { useEffect, useRef, useState } from "react";
-import { TableType, provider, useEditorStore, ydoc } from "store";
+import { TableType, provider, useEditorStore, doc } from "store";
 import { useDebounce } from "usehooks-ts";
 import { MonacoBinding } from "y-monaco";
 import { EditorSkeleton } from "./EditorSkeleton";
@@ -40,7 +40,6 @@ export const Editor = () => {
   ) => {
     const editorModel = editor.getModel();
     if (editorModel !== null) {
-      const doc = ydoc;
       const type = doc.getText("monaco");
       new MonacoBinding(
         type,

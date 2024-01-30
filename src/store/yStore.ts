@@ -1,13 +1,17 @@
 import { WebsocketProvider } from "y-websocket";
-import * as Y from "yjs";
+import { Doc } from "yjs";
 
-export const ydoc = new Y.Doc();
+export const doc = new Doc();
 
 export const provider = new WebsocketProvider(
-  `wss://diagram.sequence`,
+  "wss://demos.yjs.dev/ws",
   "sequenceQueryDnD",
-  ydoc,
+  doc,
   { connect: false }
 );
+provider.on("status", (status: string) => console.log(status));
+provider.on("connection-error", () => {
+  provider.shouldConnect = false;
+});
 
 export const awareness = provider.awareness;
