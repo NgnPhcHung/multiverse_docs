@@ -1,9 +1,9 @@
-import { Suspense, lazy } from "react";
+import { AppLiveBlocksProvider, SocketContext } from "components/providers";
+import { Suspense, lazy, useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 const AppLayout = lazy(() => import("./AppLayout"));
 const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
 const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
-
 
 const routes = createBrowserRouter([
   {
@@ -25,9 +25,24 @@ const routes = createBrowserRouter([
 ]);
 
 const App = () => {
+  const roomId = "liveblocks-tutorial-ALmzBYbHtOBtB-xV-gSbz";
+  const [room, joinRoom] = useState(roomId);
+  const [name, setName] = useState("");
+
   return (
     <AppLayout>
-      <RouterProvider router={routes} />
+      <SocketContext.Provider
+        value={{
+          name,
+          room,
+          setName,
+          joinRoom,
+        }}
+      >
+        <AppLiveBlocksProvider>
+          <RouterProvider router={routes} />
+        </AppLiveBlocksProvider>
+      </SocketContext.Provider>
     </AppLayout>
   );
 };

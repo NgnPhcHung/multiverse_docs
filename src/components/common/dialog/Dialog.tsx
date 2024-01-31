@@ -52,7 +52,7 @@ export const Dialog = ({
               className="absolute right-2 top-2"
               onClick={onClose}
             >
-              <X />
+              <X size={16}/>
             </ActionIcon>
             {children}
           </motion.div>
@@ -65,7 +65,7 @@ export const Dialog = ({
 interface DescriptionProps extends PropsWithChildren {}
 
 const Description = ({ children }: DescriptionProps) => {
-  <div className="p-4">{children}</div>;
+  return <div className="p-4">{children}</div>;
 };
 
 Dialog.Description = Description;

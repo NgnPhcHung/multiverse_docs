@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { useNavigate } from "react-router-dom";
-import { DynamicIcon } from "./DyanamicIcon";
+import { DynamicIcon } from "../common/DyanamicIcon";
 
 interface CardViewProps {
   icon: keyof typeof dynamicIconImports;

@@ -1,2 +1,1 @@
-export * from './yStore';
-export * from "./editorStore"
+export * from "./editorStore";

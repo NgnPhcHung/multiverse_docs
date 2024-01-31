@@ -2,7 +2,6 @@
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { useEffect, useRef, useState } from "react";
-import { TableType, provider, useEditorStore, doc } from "store";
 import { useDebounce } from "usehooks-ts";
 import { MonacoBinding } from "y-monaco";
 import { EditorSkeleton } from "./EditorSkeleton";

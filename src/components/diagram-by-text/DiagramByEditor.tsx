@@ -1,12 +1,12 @@
-import { Cursors, Editor, Sidebar } from "components";
+import { Cursors, Sidebar } from "components";
 
 export const DiagramByEditor = () => {
   return (
     <div className="flex dark:bg-brand relative h-full overflow-hidden">
       <Sidebar>
-        <Editor />
+        {/* <Editor /> */}
       </Sidebar>
-      <main className="flex-1 h-full overflow-y-auto">
+      <main className="flex-1 h-full overflow-y-auto relative">
         <Cursors />
       </main>
     </div>

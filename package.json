@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
+    "@liveblocks/client": "^1.9.7",
+    "@liveblocks/react": "^1.9.7",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash.throttle": "^4.1.9",
     "clsx": "^2.1.0",
