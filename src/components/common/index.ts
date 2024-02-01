@@ -5,4 +5,5 @@ export * from "./navbar";
 export * from "./sidebar";
 export * from "./actionIcon";
 export * from "./input";
-export * from "./DyanamicIcon"
+export * from "./DyanamicIcon";
+export * from "./Loading";

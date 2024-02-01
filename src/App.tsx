@@ -1,6 +1,8 @@
 import { AppLiveBlocksProvider, SocketContext } from "components/providers";
 import { Suspense, lazy, useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Toaster } from "sonner";
+
 const AppLayout = lazy(() => import("./AppLayout"));
 const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
 const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
@@ -39,6 +41,7 @@ const App = () => {
           joinRoom,
         }}
       >
+        <Toaster />
         <AppLiveBlocksProvider>
           <RouterProvider router={routes} />
         </AppLiveBlocksProvider>

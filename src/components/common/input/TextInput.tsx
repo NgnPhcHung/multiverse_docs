@@ -6,13 +6,15 @@ type InputType = "col" | "row";
 
 const inputTypeStyle: Record<InputType, string> = {
   col: "",
-  row: "grid grid-cols-12 gap-x-2 place-items-center",
+  row: "grid grid-cols-12 gap-x-2",
 };
 
 interface TextInputProps {
   label?: string;
   rightIcon?: keyof typeof dynamicIconImports;
   inputType?: InputType;
+  value?: string;
+  onChange?: (value: string) => void;
   classNames?: {
     rightIcon?: string;
     input?: string;
@@ -26,16 +28,24 @@ export const TextInput = ({
   label,
   rightIcon,
   inputType = "col",
+  value,
   classNames,
+  onChange,
 }: TextInputProps) => {
   return (
-    <div className={clsx(classNames?.root, inputTypeStyle[inputType])}>
+    <div
+      className={clsx(
+        classNames?.root,
+        inputTypeStyle[inputType],
+        "w-full items-center"
+      )}
+    >
       {label && (
         <label
           htmlFor="input-group"
           className={clsx(
             classNames?.label,
-            "block mb-2 text-sm font-medium text-gray-900 "
+            "block mb-2 text-sm font-medium text-gray-900 text-start"
           )}
         >
           {label}
@@ -63,6 +73,8 @@ export const TextInput = ({
             classNames?.input,
             "bg-gray-50  outline-secondary/50  text-gray-900 text-sm rounded-lg focus:ring-0 focus:outline-1 block w-full ps-10 p-2 mb-1"
           )}
+          onChange={(e) => onChange?.(e.target.value)}
+          value={value}
         />
       </div>
     </div>

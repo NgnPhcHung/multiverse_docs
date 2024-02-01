@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { createClient } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
 
@@ -35,6 +34,6 @@ export const {
     useCanUndo,
     useCanRedo,
     useMutation,
-    useStatus
+    useStatus,
   },
 } = createRoomContext<Presence, Storage, UserMeta, RoomEvent>(client);

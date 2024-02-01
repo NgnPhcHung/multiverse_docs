@@ -17,6 +17,7 @@ export const Cursor = memo(({ x, y }: CursorProps) => {
       fill="none"
       fillRule="evenodd"
       style={{
+        outline: "1px black",
         transform: `translateX(${x}px) translateY(${y}px)`,
       }}
     >
