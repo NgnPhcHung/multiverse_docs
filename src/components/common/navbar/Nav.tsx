@@ -30,7 +30,13 @@ export const Nav = ({ children }: PropsWithChildren) => {
         <div className="w-full flex items-center justify-between">
           <Button onClick={toggle}>open modal</Button>
           <div className="flex items-center space-x-2">
-            {!!others.length && others.map((o) => <Avatar name="" color="" />)}
+            {!!others.length &&
+              others.map(
+                (o) =>
+                  o.id !== null && (
+                    <Avatar key={o.id?.toString()} name="" color="" />
+                  )
+              )}
           </div>
         </div>
       </nav>

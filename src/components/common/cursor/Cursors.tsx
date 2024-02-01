@@ -26,7 +26,7 @@ export const Cursors = () => {
     <div
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="absolute top-0 left-0- w-full h-full"
+      className="absolute top-14 left-0 z-50"
     >
       {others
         .filter((other) => other.presence.cursor !== null)

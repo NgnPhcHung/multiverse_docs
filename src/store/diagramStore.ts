@@ -1,3 +1,4 @@
+import { socketClient } from "./../config/liveblocks.config";
 import { createClient, EnsureJson } from "@liveblocks/client";
 import { liveblocks, type WithLiveblocks } from "@liveblocks/zustand";
 import {
@@ -27,12 +28,6 @@ interface Storage {
   nodes: Node[];
   edges: Edge[];
 }
-
-const client = createClient({
-  publicApiKey:
-    "pk_dev_Pp9vrAbSBHciHzT4oVbPdxzVwYmX32QvcKkyNjz979A95UldHgugh8vmPYpywAZf",
-  throttle: 16, // Updates every 16ms === 60fps animation
-});
 
 export const useDiagramStore = create<
   WithLiveblocks<FlowState, {}, EnsureJson<any>>
@@ -88,7 +83,7 @@ export const useDiagramStore = create<
     }),
     {
       // Add Liveblocks client
-      client,
+      client: socketClient,
 
       // Define the store properties that should be shared in real-time
       storageMapping: {

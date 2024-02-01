@@ -6,9 +6,9 @@ import ReactFlow, {
   Controls,
   MiniMap,
 } from "reactflow";
+import "reactflow/dist/style.css";
 import { useDiagramStore } from "store";
 import { useOverrideRoomId } from "utils";
-import "reactflow/dist/style.css";
 
 export const Diagram = () => {
   const {
@@ -30,23 +30,25 @@ export const Diagram = () => {
   if (isStorageLoading) {
     return <Loading />;
   }
+
+  console.log(nodes);
+
   return (
-    <div className="w-[950px] h-[950px]">
+    <div className="w-full h-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        className="w-[950px] h-[950px]"
       >
         <MiniMap position="bottom-right" />
         <Controls
           position="bottom-center"
           className="flex p-2 bg-white rounded-md text-teal-500"
         />
+        <Background className="bg-brand" variant={BackgroundVariant.Dots} />
       </ReactFlow>
-      <Background className="bg-brand" variant={BackgroundVariant.Dots} />
     </div>
   );
 };

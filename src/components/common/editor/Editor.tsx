@@ -1,9 +1,14 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+import LiveblocksProvider from "@liveblocks/yjs";
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
+import { TypedLiveblocksProvider, useRoom } from "config";
 import * as monaco from "monaco-editor";
-import { useEffect, useRef, useState } from "react";
+import { editor } from "monaco-editor";
+import { useCallback, useEffect, useState } from "react";
+import { TableType, useEditorStore } from "store";
 import { useDebounce } from "usehooks-ts";
 import { MonacoBinding } from "y-monaco";
+import { Awareness } from "y-protocols/awareness";
+import * as Y from "yjs";
 import { EditorSkeleton } from "./EditorSkeleton";
 import { useEditorFormatter } from "./editorFunctions";
 import {
@@ -13,9 +18,12 @@ import {
 } from "./editorSettings";
 
 export const Editor = () => {
-  const editorRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [editorValues, setEditorValues] = useState("");
+  const room = useRoom();
+  const [provider, setProvider] = useState<TypedLiveblocksProvider>();
+
+  const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
 
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
@@ -39,16 +47,15 @@ export const Editor = () => {
   ) => {
     const editorModel = editor.getModel();
     if (editorModel !== null) {
-      const type = doc.getText("monaco");
-      new MonacoBinding(
-        type,
-        editorModel,
-        new Set([editor]),
-        provider.awareness
-      );
+      // const type = doc.getText("monaco");
+      // new MonacoBinding(
+      //   type,
+      //   editorModel,
+      //   new Set([editor]),
+      //   provider.awareness
+      // );
 
       const tableValues: TableType[] = [];
-      if (!editorRef.current) return;
       const formattedValueFormEditor = formatValue(editor.getValue());
       formattedValueFormEditor?.forEach((element) => {
         const regexValue = regex.exec(element);
@@ -77,8 +84,41 @@ export const Editor = () => {
     setLoading(false);
   }, [monaco]);
 
+  // Set up Liveblocks Yjs provider and attach Monaco editor
+  useEffect(() => {
+    let yProvider: TypedLiveblocksProvider;
+    let yDoc: Y.Doc;
+    let binding: MonacoBinding;
+
+    if (editorRef) {
+      yDoc = new Y.Doc();
+      const yText = yDoc.getText("monaco");
+      yProvider = new LiveblocksProvider(room, yDoc);
+      setProvider(yProvider);
+
+      // Attach Yjs to Monaco
+      binding = new MonacoBinding(
+        yText,
+        editorRef.getModel() as editor.ITextModel,
+        new Set([editorRef]),
+        yProvider.awareness as Awareness
+      );
+    }
+
+    return () => {
+      yDoc?.destroy();
+      yProvider?.destroy();
+      binding?.destroy();
+    };
+  }, [editorRef, room]);
+
+  const handleOnMount = useCallback((e: editor.IStandaloneCodeEditor) => {
+    setEditorRef(e);
+  }, []);
+
   return (
     <div className="w-full h-full">
+      {/* {provider ? <Cursors yProvider={provider} /> : null} */}
       {loading ? (
         <EditorSkeleton />
       ) : (
