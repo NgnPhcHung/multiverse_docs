@@ -1,10 +1,13 @@
+import { TypedLiveblocksProvider } from "config";
 import { createContext, useContext } from "react";
 
 interface Context {
   room: string;
   name: string;
+  provider?: TypedLiveblocksProvider;
   joinRoom: (room: string) => void;
   setName: (room: string) => void;
+  setProvider: (provider: TypedLiveblocksProvider) => void;
 }
 
 export const SocketContext = createContext<Context>({
@@ -12,6 +15,7 @@ export const SocketContext = createContext<Context>({
   name: "",
   joinRoom: () => {},
   setName: () => {},
+  setProvider: () => {},
 });
 
 export const useSocketContext = () => {

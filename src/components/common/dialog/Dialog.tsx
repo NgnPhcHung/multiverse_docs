@@ -7,7 +7,7 @@ import { PropsWithChildren } from "react";
 type ESize = "md" | "lg" | "xl";
 
 const containSize: Record<ESize, string> = {
-  md: "2xl:w-1/5 min-w-[calc(100vw - 40rem)] h-48",
+  md: "2xl:w-1/5 min-w-[calc(100vw - 40rem)] h-fit",
   lg: "w-1/3 h-1/3",
   xl: "w-4/5 h-4/5",
 };

@@ -1,4 +1,5 @@
 import { AppLiveBlocksProvider, SocketContext } from "components/providers";
+import { TypedLiveblocksProvider } from "config";
 import { Suspense, lazy, useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -30,6 +31,7 @@ const App = () => {
   const roomId = "liveblocks-tutorial-ALmzBYbHtOBtB-xV-gSbz";
   const [room, joinRoom] = useState(roomId);
   const [name, setName] = useState("");
+  const [provider, setProvider] = useState<TypedLiveblocksProvider>();
 
   return (
     <AppLayout>
@@ -37,6 +39,8 @@ const App = () => {
         value={{
           name,
           room,
+          provider,
+          setProvider,
           setName,
           joinRoom,
         }}

@@ -1,16 +1,47 @@
+import { useSocketContext } from "components/providers";
+import { useOthers, useRoom } from "config";
 import { useDisclosure } from "hooks";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { Avatar, TextInput } from "..";
 import { Button } from "../button";
 import { Dialog } from "../dialog";
-import { useOthers, useRoom } from "config";
-import { toast } from "sonner";
+import RandomAnimalNames from "random-animal-name";
+import { generateHexColor, groupBy } from "utils";
+import { AwarenessList } from "interfaces";
 
 export const Nav = ({ children }: PropsWithChildren) => {
   const [opened, { toggle, close }] = useDisclosure();
   const [value, setValue] = useState("");
   const others = useOthers();
+
   const room = useRoom();
+  const { provider } = useSocketContext();
+
+  useEffect(() => {
+    const createUserData = () => {
+      const name = RandomAnimalNames();
+
+      const awarenessUsers = [
+        ...(provider?.awareness.getStates() || []),
+      ] as AwarenessList;
+
+      const existedColors = groupBy(
+        awarenessUsers,
+        (items) => items[1].user?.color
+      );
+
+      const color = generateHexColor(
+        Object.keys(existedColors).map((color) => color)
+      );
+
+      provider?.awareness.setLocalStateField("user", {
+        name,
+        color,
+      });
+    };
+    createUserData();
+  }, [provider]);
 
   const connect = () => {
     room.connect();
@@ -19,9 +50,12 @@ export const Nav = ({ children }: PropsWithChildren) => {
   };
   const disconnect = () => {
     room.disconnect();
-    toast.success("Disconnected");
+    toast.info("Disconnected");
     close();
   };
+  const users = useMemo(() => {
+    return [...(provider?.awareness.getStates() || [])] as AwarenessList;
+  }, [provider, others]);
 
   return (
     <>
@@ -30,13 +64,16 @@ export const Nav = ({ children }: PropsWithChildren) => {
         <div className="w-full flex items-center justify-between">
           <Button onClick={toggle}>open modal</Button>
           <div className="flex items-center space-x-2">
-            {!!others.length &&
-              others.map(
-                (o) =>
-                  o.id !== null && (
-                    <Avatar key={o.id?.toString()} name="" color="" />
-                  )
-              )}
+            {users.map(
+              (user) =>
+                user[0] !== null && (
+                  <Avatar
+                    key={user[0]}
+                    name={user[1].user?.name ?? "Anonymous"}
+                    color={user[1].user?.color ?? "#C0C0C0"}
+                  />
+                )
+            )}
           </div>
         </div>
       </nav>
@@ -54,6 +91,7 @@ export const Nav = ({ children }: PropsWithChildren) => {
               value={value}
               onChange={setValue}
             />
+
             <div className="flex flex-wrap items-center justify-center mt-4 overflow-hidden gap-2 w-full">
               <Button
                 rightIcon="screen-share"

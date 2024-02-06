@@ -1,10 +1,10 @@
 import LiveblocksProvider from "@liveblocks/yjs";
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
-import { TypedLiveblocksProvider, useRoom } from "config";
+import { TypedLiveblocksProvider, useOthers, useRoom } from "config";
 import * as monaco from "monaco-editor";
 import { editor } from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
-import { TableType, useEditorStore } from "store";
+import { TableType, useDiagramStore, useEditorStore } from "store";
 import { useDebounce } from "usehooks-ts";
 import { MonacoBinding } from "y-monaco";
 import { Awareness } from "y-protocols/awareness";
@@ -16,14 +16,16 @@ import {
   regex,
   settingMonacoEditor,
 } from "./editorSettings";
+import { EditorCursor } from "./EditorCursor";
+import { useSocketContext } from "components/providers";
 
 export const Editor = () => {
+  const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
   const [loading, setLoading] = useState(true);
   const [editorValues, setEditorValues] = useState("");
-  const room = useRoom();
-  const [provider, setProvider] = useState<TypedLiveblocksProvider>();
 
-  const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
+  const room = useRoom();
+  const { setProvider, provider } = useSocketContext();
 
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
@@ -42,34 +44,28 @@ export const Editor = () => {
       : setEditorValues(defaultEditorValue);
   };
 
-  const handleMonacoEditorDidMount = (
-    editor: monaco.editor.IStandaloneCodeEditor
-  ) => {
-    const editorModel = editor.getModel();
-    if (editorModel !== null) {
-      // const type = doc.getText("monaco");
-      // new MonacoBinding(
-      //   type,
-      //   editorModel,
-      //   new Set([editor]),
-      //   provider.awareness
-      // );
-
-      const tableValues: TableType[] = [];
-      const formattedValueFormEditor = formatValue(editor.getValue());
-      formattedValueFormEditor?.forEach((element) => {
-        const regexValue = regex.exec(element);
-        if (regexValue !== null) {
-          const tableName = regexValue[1];
-          const tableEntity = regexValue[2];
-          tableValues.push({ tableName, tableEntity });
-        }
-      });
-      setEditorContent(tableValues);
-      editor.focus();
-      setDefaultValues();
-    }
-  };
+  const handleMonacoEditorDidMount = useCallback(
+    (editor: monaco.editor.IStandaloneCodeEditor) => {
+      setEditorRef(editor);
+      const editorModel = editor.getModel();
+      if (editorModel !== null) {
+        const tableValues: TableType[] = [];
+        const formattedValueFormEditor = formatValue(editor.getValue());
+        formattedValueFormEditor?.forEach((element) => {
+          const regexValue = regex.exec(element);
+          if (regexValue !== null) {
+            const tableName = regexValue[1];
+            const tableEntity = regexValue[2];
+            tableValues.push({ tableName, tableEntity });
+          }
+        });
+        setEditorContent(tableValues);
+        editor.focus();
+        setDefaultValues();
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     if (debouncedValue) onFormat(debouncedValue);
@@ -84,7 +80,6 @@ export const Editor = () => {
     setLoading(false);
   }, [monaco]);
 
-  // Set up Liveblocks Yjs provider and attach Monaco editor
   useEffect(() => {
     let yProvider: TypedLiveblocksProvider;
     let yDoc: Y.Doc;
@@ -96,7 +91,6 @@ export const Editor = () => {
       yProvider = new LiveblocksProvider(room, yDoc);
       setProvider(yProvider);
 
-      // Attach Yjs to Monaco
       binding = new MonacoBinding(
         yText,
         editorRef.getModel() as editor.ITextModel,
@@ -112,13 +106,9 @@ export const Editor = () => {
     };
   }, [editorRef, room]);
 
-  const handleOnMount = useCallback((e: editor.IStandaloneCodeEditor) => {
-    setEditorRef(e);
-  }, []);
-
   return (
     <div className="w-full h-full">
-      {/* {provider ? <Cursors yProvider={provider} /> : null} */}
+      {provider ? <EditorCursor yProvider={provider} /> : null}
       {loading ? (
         <EditorSkeleton />
       ) : (

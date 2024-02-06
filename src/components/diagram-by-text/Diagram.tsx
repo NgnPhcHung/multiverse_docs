@@ -1,37 +1,30 @@
 import { Loading } from "components";
-import { useEffect } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
   Controls,
   MiniMap,
+  useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { useDiagramStore } from "store";
-import { useOverrideRoomId } from "utils";
+import { useDiagramStore, useEditorStore } from "store";
+import { CustomNode, Tables } from "./Tables";
+import { useMemo } from "react";
 
 export const Diagram = () => {
   const {
-    liveblocks: { enterRoom, leaveRoom, isStorageLoading },
+    liveblocks: { isStorageLoading },
     nodes,
     edges,
     onNodesChange,
     onEdgesChange,
     onConnect,
   } = useDiagramStore();
-
-  const roomId = useOverrideRoomId("zustand-flowchart");
-
-  useEffect(() => {
-    enterRoom(roomId);
-    return () => leaveRoom();
-  }, [enterRoom, leaveRoom, roomId]);
+  const nodeTypes = useMemo(() => ({ tables: Tables }), []);
 
   if (isStorageLoading) {
     return <Loading />;
   }
-
-  console.log(nodes);
 
   return (
     <div className="w-full h-full">
@@ -41,11 +34,12 @@ export const Diagram = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
       >
         <MiniMap position="bottom-right" />
         <Controls
           position="bottom-center"
-          className="flex p-2 bg-white rounded-md text-teal-500"
+          className="flex p-2 bg-white rounded-md shadow-none"
         />
         <Background className="bg-brand" variant={BackgroundVariant.Dots} />
       </ReactFlow>

@@ -1,8 +1,24 @@
-import { TableType, useEditorStore } from "store";
+import { Edge, Node } from "reactflow";
+import { TableType, useDiagramStore } from "store";
 import { lineRegex, regexForeign } from "./editorSettings";
 
 export const useEditorFormatter = () => {
-  const { updateForeignList, updateTableList } = useEditorStore();
+  const { setNode, setEdges } = useDiagramStore();
+
+  const splitToTable = (foreignList: string[]) => {
+    const relations: Edge[] = [];
+    foreignList.map((foreign) => {
+      const related = foreign.trim().replaceAll(" ", ".").split("--");
+
+      relations.push({
+        id: related[0].split(".")[0],
+        source: related[0].split(".")[0],
+        target: related[1].split(".")[0],
+        type: "smoothstep",
+      });
+    });
+    setEdges(relations);
+  };
 
   const formatValue = (value: string) => {
     const userInputValues = lineRegex.exec(value);
@@ -25,7 +41,7 @@ export const useEditorFormatter = () => {
       foreign.push(f.replace(/[.]/g, " "));
     });
 
-    updateForeignList(foreign);
+    splitToTable(foreign);
 
     return splitTable;
   };
@@ -33,7 +49,7 @@ export const useEditorFormatter = () => {
   const onFormat = (value: string) => {
     if (!value) return;
 
-    const temp: TableType[] = [];
+    const tableNodes: Node[] = [];
     const formattedValue = formatValue(value);
     let tables: TableType[] = [];
 
@@ -48,8 +64,16 @@ export const useEditorFormatter = () => {
           .substring(regexValue.indexOf(" ") + 1)
           .slice(1, -1);
         const tableEntity = result;
+        if (!tableName) return;
 
-        temp.push({ tableName, tableEntity });
+        tableNodes.push({
+          id: tableName,
+          type: "tables",
+          data: {
+            tableEntity,
+          },
+          position: { x: 0, y: 0 },
+        });
         if (tableName === null && tableEntity === null) return "";
 
         if (tables.length <= 0) {
@@ -79,7 +103,7 @@ export const useEditorFormatter = () => {
         }
       }
     });
-    updateTableList(temp);
+    setNode(tableNodes);
   };
 
   return { onFormat, formatValue };

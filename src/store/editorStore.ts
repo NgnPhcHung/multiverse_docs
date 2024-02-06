@@ -1,3 +1,4 @@
+import { TableForeign } from "interfaces";
 import { create } from "zustand";
 
 export interface TableType {
@@ -7,7 +8,7 @@ export interface TableType {
 
 type State = {
   tableList?: TableType[];
-  foreignList?: string[];
+  foreignList?: TableForeign[];
   editorFileContent?: TableType[];
 };
 type Action = {

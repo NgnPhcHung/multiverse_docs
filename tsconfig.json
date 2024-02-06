@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "ES2021.String"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -25,7 +25,7 @@
       "@hooks": ["./src/hooks"],
       "@interfaces": ["./src/interfaces"],
       "@components": ["./src/components"],
-      "@providers": ["src/store"],
+      "@providers": ["src/store"]
     }
   },
   "include": ["src"],

@@ -8,7 +8,6 @@ export const DiagramByEditor = () => {
   const room = useRoom();
   const others = useOthers();
   useEffect(() => {
-    console.log(others.length, others);
     if (others.length < 2) {
       room.disconnect();
     }

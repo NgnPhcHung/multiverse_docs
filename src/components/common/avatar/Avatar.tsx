@@ -1,21 +1,21 @@
 import { AvatarGenerator } from "random-avatar-generator";
+import { Tooltip } from "..";
+import { memo } from "react";
 
 interface AvatarProps {
   name: string;
   color: string;
 }
 
-export const Avatar = ({ color, name }: AvatarProps) => {
+export const Avatar = memo(({ color, name }: AvatarProps) => {
   const generator = new AvatarGenerator();
   const avatar = generator.generateRandomAvatar();
 
   return (
-    <div
-      style={{
-        backgroundColor: color,
-      }}
-    >
-      <img alt="avatar" src={avatar} className="w-7 h-7 rounded-full" />
-    </div>
+    <Tooltip content={name}>
+      <div>
+        <img alt="avatar" src={avatar} className="w-7 h-7 rounded-full" />
+      </div>
+    </Tooltip>
   );
-};
+});

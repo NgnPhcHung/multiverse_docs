@@ -6,6 +6,7 @@ export default {
       colors: {
         brand: "#2C2C2C",
         secondary: "#464646",
+        primary: "#c2c2c2",
       },
       zIndex: {
         modalOverlay: 99998,
@@ -13,6 +14,9 @@ export default {
       },
       borderWidth: {
         1: "1px",
+      },
+      height: {
+        17: "70px",
       },
     },
   },
