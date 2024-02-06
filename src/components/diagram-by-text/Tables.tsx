@@ -11,6 +11,7 @@ import {
   useEdgesState,
   useNodes,
 } from "reactflow";
+import { TableType } from "store";
 
 type TableProps = {
   id: string;
@@ -18,7 +19,7 @@ type TableProps = {
 };
 export type CustomNode = Node<TableProps>;
 
-export const Tables = ({ data }: NodeProps<TableProps>) => {
+export const Tables = (data: NodeProps<TableType>) => {
   // const nodes = useNodes();
   // const edges = useEdges();
   // const [listEdges, setEdges] = useEdgesState([]);
@@ -32,8 +33,10 @@ export const Tables = ({ data }: NodeProps<TableProps>) => {
   //   [setEdges]
   // );
   console.log("Data node from table", data);
+  const tableInfo = data.data;
+
   return (
-    <div>
+    <div className="w-44 h-24 bg-white">
       {/* <Handle
         type="target"
         position={Position.Left}
@@ -48,8 +51,8 @@ export const Tables = ({ data }: NodeProps<TableProps>) => {
         isConnectable={false}
         id={id}
       /> */}
-      <p>{data.id}</p>
       {/* <TableRow rows={data.data} nodeId={data.id} /> */}
+      <p>{tableInfo.tableName}</p>
     </div>
   );
   // return (tableList || []).map((table, index) => (

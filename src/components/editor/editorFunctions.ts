@@ -51,7 +51,7 @@ export const useEditorFormatter = () => {
 
     const tableNodes: Node[] = [];
     const formattedValue = formatValue(value);
-    let tables: TableType[] = [];
+    let tables: Node[] = [];
 
     formattedValue?.forEach((v) => {
       let nameFlag = 0;
@@ -77,33 +77,64 @@ export const useEditorFormatter = () => {
         if (tableName === null && tableEntity === null) return "";
 
         if (tables.length <= 0) {
-          tables.push({ tableName, tableEntity });
+          // tables.push({ tableName, tableEntity });
+          tables.push({
+            id: tableName,
+            type: "tables",
+            data: { tableName, tableEntity },
+            position: { x: 125, y: 22 },
+          });
         } else {
           tables.forEach((tb) => {
             nameFlag = 0;
             entityFlag = 0;
             tables.forEach((v) => {
-              if (v.tableName === tableName) {
+              if (v.data.tableName === tableName) {
                 nameFlag++;
-                if (v.tableEntity) entityFlag++;
+                if (v.data.tableEntity) entityFlag++;
               }
             });
             if (nameFlag === 0) {
-              tables.push({ tableName, tableEntity });
+              tables.push({
+                id: tableName,
+                type: "tables",
+                data: { tableName, tableEntity },
+                position: { x: 125, y: 22 },
+              });
             } else if (nameFlag === 1) {
-              if (tb.tableEntity || entityFlag === 1) {
+              if (tb.data.tableEntity || entityFlag === 1) {
                 const filteredTable = tables.filter(
-                  (item) => item.tableName !== tableName
+                  (item) => item.data.tableName !== tableName
                 );
                 tables = filteredTable;
-                tables.push({ tableName, tableEntity });
+                tables.push({
+                  id: tableName,
+                  type: "tables",
+                  data: { tableName, tableEntity },
+                  position: { x: 125, y: 22 },
+                });
               }
             }
           });
         }
       }
     });
-    setNode(tableNodes);
+
+    const newTable = tables.map((table) => {
+      const entity = new String(table.data.tableEntity);
+      const splited = entity.split(")")[0];
+
+      return {
+        ...table,
+        data: {
+          tableName: table.data.tableName,
+          tableEntity: splited,
+        },
+      };
+    });
+
+    console.log(newTable);
+    setNode(newTable);
   };
 
   return { onFormat, formatValue };

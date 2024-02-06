@@ -1,15 +1,14 @@
 import { Loading } from "components";
+import { useMemo } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
   Controls,
   MiniMap,
-  useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { useDiagramStore, useEditorStore } from "store";
-import { CustomNode, Tables } from "./Tables";
-import { useMemo } from "react";
+import { useDiagramStore } from "store";
+import { Tables } from "./Tables";
 
 export const Diagram = () => {
   const {
