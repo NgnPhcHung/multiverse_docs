@@ -8,5 +8,47 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
+  transition: all 300ms ease-in-out;
 }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+@layer base {
+  :root {
+    --brand: 228, 52%, 60%;
+    --brand-hover: 228, 40%, 46%;
+    --secondary: 0, 0%, 27%;
+    --secondary-hover: 0, 0%, 15%;
+    --primary: 0, 0%, 76%;
+    --primary-hover: 0, 0%,64%;
+    --diagram: 0, 0%, 19%;
+  }
 
+  @media (prefers-color-scheme: light) {
+    :root {
+      --brand: 228, 52%, 60%;
+      --brand-hover: 228, 40%, 46%;
+      --secondary: 0, 0%, 86%;
+      --secondary-hover: 0, 0%, 70%;
+      --primary: 0, 0%, 27%;
+      --primary-hover: 0, 0%, 14%;
+      --diagram: 0, 0%, 98%;
+      --button: 220, 0%, 69%;
+      --button-hover:228, 29%, 75%
+    }
+  }
+
+  :root[data-theme="light"] {
+    --brand: 228, 52%, 60%;
+      --brand-hover: 228, 40%, 46%;
+      --secondary: 0, 0%, 86%;
+      --secondary-hover: 0, 0%, 70%;
+      --primary: 0, 0%, 27%;
+      --primary-hover: 0, 0%, 14%;
+      --diagram: 0, 0%, 98%;
+      --button: 220, 0%, 69%;
+      --button-hover:228, 29%, 75%
+  }
+}

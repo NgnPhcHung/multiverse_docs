@@ -1,10 +1,10 @@
 import { AppLiveBlocksProvider, SocketContext } from "components/providers";
 import { TypedLiveblocksProvider } from "config";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
+import { AppContext } from "./AppContext";
 
-const AppLayout = lazy(() => import("./AppLayout"));
 const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
 const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
 
@@ -28,29 +28,53 @@ const routes = createBrowserRouter([
 ]);
 
 const App = () => {
-  const roomId = "liveblocks-tutorial-ALmzBYbHtOBtB-xV-gSbz";
+  const roomId = "diagram-script";
   const [room, joinRoom] = useState(roomId);
   const [name, setName] = useState("");
   const [provider, setProvider] = useState<TypedLiveblocksProvider>();
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsDarkMode(localStorage.theme === "dark");
+  }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, [isDarkMode]);
 
   return (
-    <AppLayout>
-      <SocketContext.Provider
+    <div className="h-screen w-screen">
+      <AppContext.Provider
         value={{
-          name,
-          room,
-          provider,
-          setProvider,
-          setName,
-          joinRoom,
+          isDarkMode,
+          setIsDarkMode,
         }}
       >
-        <Toaster />
-        <AppLiveBlocksProvider>
-          <RouterProvider router={routes} />
-        </AppLiveBlocksProvider>
-      </SocketContext.Provider>
-    </AppLayout>
+        <SocketContext.Provider
+          value={{
+            name,
+            room,
+            provider,
+            setProvider,
+            setName,
+            joinRoom,
+          }}
+        >
+          <Toaster position="bottom-center" />
+          <AppLiveBlocksProvider>
+            <RouterProvider router={routes} />
+          </AppLiveBlocksProvider>
+        </SocketContext.Provider>
+      </AppContext.Provider>
+    </div>
   );
 };
 

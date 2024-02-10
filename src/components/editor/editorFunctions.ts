@@ -1,19 +1,74 @@
 import { Edge, Node } from "reactflow";
-import { TableType, useDiagramStore } from "store";
+import { useDiagramStore } from "store";
 import { lineRegex, regexForeign } from "./editorSettings";
+import { Constrains } from "./editorVariables";
 
 export const useEditorFormatter = () => {
-  const { setNode, setEdges } = useDiagramStore();
+  const { setNode, setEdges, nodes } = useDiagramStore();
+
+  const formatEntityObject = (entityString?: string): string  => {
+    if (!entityString) return "";
+    const str = entityString.split(") ")[0];
+    const entities = str.split(",");
+    const mappedEntity = entities
+      .map((entity) => {
+        const noWhiteSpaceEntity = entity
+          .replace(/\s+/g, " ")
+          .trim()
+          .split(" ");
+        let dataType = "";
+        let constrains = "";
+
+        if (
+          !Constrains.map((cons) => cons.toLocaleLowerCase()).includes(
+            (noWhiteSpaceEntity[1] ?? "").toLocaleLowerCase()
+          )
+        ) {
+          dataType = noWhiteSpaceEntity[1];
+          constrains = noWhiteSpaceEntity.slice(2).toString();
+        } else {
+          dataType = noWhiteSpaceEntity[2];
+          constrains = noWhiteSpaceEntity.slice(1).toString();
+        }
+        if (!noWhiteSpaceEntity[0]) {
+          return undefined;
+        }
+        return {
+          name: noWhiteSpaceEntity[0].replace(/[:]/g, ""),
+          dataType,
+          constrains,
+        };
+      })
+      .filter((e) => e !== undefined);
+
+    const results:
+      | { name: string; dataType: string; constrains: string }[]
+      | undefined = [];
+
+    mappedEntity.forEach((element) => {
+      if (element !== undefined) {
+        results.push(element);
+      }
+    });
+    return JSON.stringify(results);
+  };
 
   const splitToTable = (foreignList: string[]) => {
+    if (!foreignList.length) return;
+
     const relations: Edge[] = [];
-    foreignList.map((foreign) => {
-      const related = foreign.trim().replaceAll(" ", ".").split("--");
+    foreignList.map((foreign: string) => {
+      if (!foreign.includes("--")) {
+        return;
+      }
+      const related = foreign.trim().replaceAll(" ", ".")?.split("--");
 
       relations.push({
-        id: related[0].split(".")[0],
+        id: `${related[0].split(".")[0]}.${related[0].split(".")[1]}`,
         source: related[0].split(".")[0],
         target: related[1].split(".")[0],
+        sourceHandle: `${related[0].split(".")[0]}.${related[0].split(".")[1]}`,
+        targetHandle: `${related[1].split(".")[0]}.${related[1].split(".")[1]}`,
         type: "smoothstep",
       });
     });
@@ -21,6 +76,9 @@ export const useEditorFormatter = () => {
   };
 
   const formatValue = (value: string) => {
+    if (!value) return;
+    if (!value.includes("Create")) return;
+
     const userInputValues = lineRegex.exec(value);
     const inputValues = userInputValues?.input
       ? userInputValues.input
@@ -47,7 +105,7 @@ export const useEditorFormatter = () => {
   };
 
   const onFormat = (value: string) => {
-    if (!value) return;
+    if (!value) return value;
 
     const tableNodes: Node[] = [];
     const formattedValue = formatValue(value);
@@ -70,18 +128,18 @@ export const useEditorFormatter = () => {
           id: tableName,
           type: "tables",
           data: {
-            tableEntity,
+            tableEntity: formatEntityObject(tableEntity),
           },
           position: { x: 0, y: 0 },
         });
         if (tableName === null && tableEntity === null) return "";
 
-        if (tables.length <= 0) {
+        if (tables.length <= 0 && tableName.length) {
           // tables.push({ tableName, tableEntity });
           tables.push({
             id: tableName,
             type: "tables",
-            data: { tableName, tableEntity },
+            data: { tableName, tableEntity: formatEntityObject(tableEntity) },
             position: { x: 125, y: 22 },
           });
         } else {
@@ -94,14 +152,19 @@ export const useEditorFormatter = () => {
                 if (v.data.tableEntity) entityFlag++;
               }
             });
+            const existedNode = nodes.find((node) => node.id === tableName);
+
             if (nameFlag === 0) {
               tables.push({
                 id: tableName,
                 type: "tables",
-                data: { tableName, tableEntity },
-                position: { x: 125, y: 22 },
+                data: {
+                  tableName,
+                  tableEntity: formatEntityObject(tableEntity),
+                },
+                position: { ...(existedNode?.position ?? { x: 125, y: 22 }) },
               });
-            } else if (nameFlag === 1) {
+            } else if (nameFlag === 1 && !!existedNode) {
               if (tb.data.tableEntity || entityFlag === 1) {
                 const filteredTable = tables.filter(
                   (item) => item.data.tableName !== tableName
@@ -110,8 +173,11 @@ export const useEditorFormatter = () => {
                 tables.push({
                   id: tableName,
                   type: "tables",
-                  data: { tableName, tableEntity },
-                  position: { x: 125, y: 22 },
+                  data: {
+                    tableName,
+                    tableEntity: formatEntityObject(tableEntity),
+                  },
+                  position: { ...existedNode.position },
                 });
               }
             }
@@ -133,7 +199,6 @@ export const useEditorFormatter = () => {
       };
     });
 
-    console.log(newTable);
     setNode(newTable);
   };
 

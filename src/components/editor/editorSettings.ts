@@ -1,4 +1,6 @@
 import * as monacoType from "monaco-editor";
+import { EditorTheme, editorColor, editorRule } from "theme";
+
 
 export const defaultEditorValue = `Create user ( 
   id: char unique PrimaryKey,
@@ -20,7 +22,11 @@ Foreign host.id >> user.id,
 Foreign dogtor.firstname -- host.address
 `;
 
-export const settingMonacoEditor = (monaco: typeof monacoType) => {
+export const settingMonacoEditor = (
+  monaco: typeof monacoType,
+  isDarkMode?: boolean
+) => {
+  const theme = isDarkMode ? EditorTheme.Dark : EditorTheme.Light;
   const keywords = ["Create", "PrimaryKey", "Foreign"];
   const typeKeywords = [
     "char",
@@ -122,37 +128,29 @@ export const settingMonacoEditor = (monaco: typeof monacoType) => {
           };
         }),
       ];
-      return { suggestions: suggestions };
+      return { suggestions };
     },
   });
 
   monaco.editor.defineTheme("unknown-language-theme", {
     inherit: true,
     encodedTokensColors: undefined,
-    base: "vs",
-    rules: [
-      { token: "keyword", foreground: "#56B1FF", fontStyle: "bold" },
-      { token: "operator", foreground: "#F3A76E" },
-      { token: "string", foreground: "#F1A880" },
-      { token: "comment", foreground: "#7D7D7D" },
-      { token: "bracket", foreground: "#8381F1" },
-      { token: "typeKeyword", foreground: "#FBA03F" },
-      { token: "constrainKeywords", foreground: "#D350C1" },
-      { token: "delimiter", foreground: "#ffffff" },
-      { token: "number", foreground: "#FBA03F" },
-      { token: "identifier", foreground: "#D6E4F6" },
-    ],
-    colors: {
-      "editor.foreground": "#000000",
-      "editor.background": "#1F1F1F",
-      "editorCursor.foreground": "#c4c4c4",
-      "editor.lineHighlightBackground": "#474746",
-      "editorLineNumber.foreground": "#7c7c7c",
-      "editor.selectionBackground": "#6E6E6E",
-      "editor.inactiveSelectionBackground": "#CDCDCD",
-      "editorBracketMatch.background": "#CDCDCD",
-      "editorLineNumber.activeForeground": "#c8c8c8",
-    },
+    base: isDarkMode ? "vs" : "vs-dark",
+
+    rules: editorRule[theme],
+    colors: editorColor[theme],
+  });
+};
+export const setEditorTheme = (monaco: typeof monacoType, isDarkMode: boolean) => {
+  const theme = isDarkMode ? EditorTheme.Dark : EditorTheme.Light;
+
+  monaco.editor.defineTheme("unknown-language-theme", {
+    inherit: true,
+    encodedTokensColors: undefined,
+    base: isDarkMode ? "vs" : "vs-dark",
+
+    rules: editorRule[theme],
+    colors: editorColor[theme],
   });
 };
 

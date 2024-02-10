@@ -1,16 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ['class', '[data-mode="dark"]'],  
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        brand: "#2C2C2C",
-        secondary: "#464646",
-        primary: "#c2c2c2",
+        brand: "hsl(var(--brand))",
+        brandHover: "hsl(var(--brand-hover))",
+        secondary: "hsl(var(--secondary))",
+        secondaryHover: "hsl(var(--secondary-hover))",
+        primary: "hsl(var(--primary))",
+        primaryHover: "hsl(var(--primary-hover))",
+        diagram: "hsl(var(--diagram))",
       },
       zIndex: {
         modalOverlay: 99998,
         modal: 99999,
+        sideBar:999,
       },
       borderWidth: {
         1: "1px",

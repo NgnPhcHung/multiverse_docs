@@ -3,7 +3,7 @@ import { useOthers, useRoom } from "config";
 import { useDisclosure } from "hooks";
 import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Avatar, TextInput } from "..";
+import { Avatar, TextInput, ToggleTheme } from "..";
 import { Button } from "../button";
 import { Dialog } from "../dialog";
 import RandomAnimalNames from "random-animal-name";
@@ -62,7 +62,7 @@ export const Nav = ({ children }: PropsWithChildren) => {
       <nav className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12 transition-all ease-out duration-300">
         {children}
         <div className="w-full flex items-center justify-between">
-          <Button onClick={toggle}>open modal</Button>
+          <Button onClick={toggle}>Room</Button>
           <div className="flex items-center space-x-2">
             {users.map(
               (user) =>
@@ -76,6 +76,7 @@ export const Nav = ({ children }: PropsWithChildren) => {
             )}
           </div>
         </div>
+        <ToggleTheme />
       </nav>
       <Dialog opened={opened} onClose={close} size="md">
         <Dialog.Description>

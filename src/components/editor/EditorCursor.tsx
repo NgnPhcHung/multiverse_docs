@@ -1,8 +1,6 @@
-import { useSocketContext } from "components/providers";
 import { TypedLiveblocksProvider } from "config";
 import { AwarenessList } from "interfaces";
 import { useEffect, useMemo, useState } from "react";
-import { generateHexColor, groupBy } from "utils";
 
 type Props = {
   yProvider: TypedLiveblocksProvider;
@@ -37,12 +35,12 @@ export function EditorCursor({ yProvider }: Props) {
           .yRemoteSelectionHead-${clientId}  {
             --user-color: ${client.user.color};
             color:${client.user.color};
-           
           }
 
           .yRemoteSelectionHead-${clientId}{
             position: relative;
-           
+            height: 100%;
+            width: 2rem;
           }
           
           .yRemoteSelectionHead-${clientId}::before{
@@ -50,10 +48,9 @@ export function EditorCursor({ yProvider }: Props) {
             position: absolute;
             top: 0;
             left: 0;
-            height: 100%;
-            width:2px;
-            background-color: ${client.user.color};
-            border-left: 2px solid ${client.user.color};
+            height: 19px;
+            width: 1px;
+            border-left: 2px solid ${client.user.color}
           }
 
           .yRemoteSelectionHead-${clientId}::after {

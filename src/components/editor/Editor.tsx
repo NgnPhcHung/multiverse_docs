@@ -1,29 +1,31 @@
 import LiveblocksProvider from "@liveblocks/yjs";
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
-import { TypedLiveblocksProvider, useOthers, useRoom } from "config";
+import { useSocketContext } from "components/providers";
+import { TypedLiveblocksProvider, useRoom } from "config";
 import * as monaco from "monaco-editor";
 import { editor } from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
-import { TableType, useDiagramStore, useEditorStore } from "store";
+import { TableType, useEditorStore } from "store";
 import { useDebounce } from "usehooks-ts";
 import { MonacoBinding } from "y-monaco";
 import { Awareness } from "y-protocols/awareness";
 import * as Y from "yjs";
+import { EditorCursor } from "./EditorCursor";
 import { EditorSkeleton } from "./EditorSkeleton";
 import { useEditorFormatter } from "./editorFunctions";
 import {
   defaultEditorValue,
+  setEditorTheme,
   regex,
   settingMonacoEditor,
 } from "./editorSettings";
-import { EditorCursor } from "./EditorCursor";
-import { useSocketContext } from "components/providers";
+import { useAppContext } from "AppContext";
 
 export const Editor = () => {
   const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
   const [loading, setLoading] = useState(true);
   const [editorValues, setEditorValues] = useState("");
-
+  const { isDarkMode } = useAppContext();
   const room = useRoom();
   const { setProvider, provider } = useSocketContext();
 
@@ -69,6 +71,7 @@ export const Editor = () => {
 
   useEffect(() => {
     if (debouncedValue) onFormat(debouncedValue);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue]);
 
   useEffect(() => {
@@ -76,9 +79,19 @@ export const Editor = () => {
       setLoading(true);
       return;
     }
-    settingMonacoEditor(monaco);
+    settingMonacoEditor(monaco, isDarkMode);
     setLoading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monaco]);
+
+  useEffect(() => {
+    if (!monaco) {
+      setLoading(true);
+      return;
+    }
+    setEditorTheme(monaco, isDarkMode);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDarkMode]);
 
   useEffect(() => {
     let yProvider: TypedLiveblocksProvider;

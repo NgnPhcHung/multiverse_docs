@@ -1,5 +1,4 @@
-import { socketClient } from "./../config/liveblocks.config";
-import { createClient, EnsureJson } from "@liveblocks/client";
+import { EnsureJson } from "@liveblocks/client";
 import { liveblocks, type WithLiveblocks } from "@liveblocks/zustand";
 import {
   addEdge,
@@ -15,6 +14,7 @@ import {
   OnNodesChange,
 } from "reactflow";
 import { create } from "zustand";
+import { socketClient } from "./../config/liveblocks.config";
 
 interface FlowState {
   nodes: Node[];

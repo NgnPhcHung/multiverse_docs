@@ -9,6 +9,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { useDiagramStore } from "store";
 import { Tables } from "./Tables";
+import { useAppContext } from "AppContext";
 
 export const Diagram = () => {
   const {
@@ -20,13 +21,15 @@ export const Diagram = () => {
     onConnect,
   } = useDiagramStore();
   const nodeTypes = useMemo(() => ({ tables: Tables }), []);
+  const { isDarkMode } = useAppContext();
 
   if (isStorageLoading) {
     return <Loading />;
   }
 
+
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full ">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -34,13 +37,18 @@ export const Diagram = () => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        snapGrid={[20,20]}
       >
         <MiniMap position="bottom-right" />
         <Controls
           position="bottom-center"
-          className="flex p-2 bg-white rounded-md shadow-none"
+          className="p-2 flex space-x-2 bg-secondary [&>*]:border-b-0 text-md [&>*]:fill-primary rounded-md [&>*]:rounded-md"
         />
-        <Background className="bg-brand" variant={BackgroundVariant.Dots} />
+        <Background
+          className="bg-diagram"
+          variant={BackgroundVariant.Dots}
+          color={isDarkMode ? "#C0C0C0" : "#202020"}
+        />
       </ReactFlow>
     </div>
   );

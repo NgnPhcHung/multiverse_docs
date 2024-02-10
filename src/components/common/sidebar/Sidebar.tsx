@@ -114,7 +114,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
       <aside
         ref={sidebarRef}
         className={clsx(
-          "group/sidebar h-full bg-gray-300 overflow-y-auto relative flex w-60 flex-col z-[99999]",
+          "group/sidebar h-full bg-gray-300 overflow-y-auto relative flex w-60  flex-col z-sideBar",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
@@ -139,7 +139,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
       <div
         ref={navbarRef}
         className={clsx(
-          "absolute top-0 z-[99999] left-60 w-[calc(100%-240px)] flex space-x-2",
+          "absolute top-0 z-sideBar left-60 w-[calc(100%-240px)] flex space-x-2 ",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "left-0 w-full",
           isCollapsed && "bg-transparent"
@@ -147,7 +147,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
       >
         <Nav>
           {isCollapsed && (
-            <nav className="bg-transparent w-fit ml-1 top-0 hidden group-hover/navbar:block transition-all ease-out duration-300">
+            <nav className="bg-transparent w-fit ml-1 top-0 hidden group-hover/navbar:block ">
               <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
                 <MenuIcon className="w-4 h-4" />
               </ActionIcon>
