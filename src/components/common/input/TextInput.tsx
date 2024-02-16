@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { DynamicIcon } from "..";
+import { ElementRef, useRef } from "react";
 
 type InputType = "col" | "row";
 
@@ -13,7 +14,7 @@ interface TextInputProps {
   label?: string;
   rightIcon?: keyof typeof dynamicIconImports;
   inputType?: InputType;
-  value?: string;
+  value: string;
   onChange?: (value: string) => void;
   classNames?: {
     rightIcon?: string;
@@ -32,6 +33,12 @@ export const TextInput = ({
   classNames,
   onChange,
 }: TextInputProps) => {
+  const inputRef = useRef<ElementRef<"input">>(null);
+
+  const handleClick = () => {
+    if (inputRef && inputRef.current) inputRef.current.focus();
+  };
+
   return (
     <div
       className={clsx(
@@ -39,6 +46,7 @@ export const TextInput = ({
         inputTypeStyle[inputType],
         "w-full items-center"
       )}
+      onClick={handleClick}
     >
       {label && (
         <label

@@ -9,3 +9,7 @@ export function useOverrideRoomId(roomId: string) {
 
   return overrideRoomId;
 }
+
+export function overrideRoom(roomId: string, queryRoomId?: string) {
+  return queryRoomId ? `${roomId}-${queryRoomId}` : roomId;
+}

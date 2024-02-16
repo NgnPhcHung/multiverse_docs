@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { ActionIcon } from "../actionIcon";
 import { X } from "lucide-react";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, memo } from "react";
 
 type ESize = "md" | "lg" | "xl";
 
@@ -26,6 +26,7 @@ export const Dialog = ({
   size = "md",
   children,
 }: DialogProps) => {
+  
   return (
     <AnimatePresence>
       {opened && (
@@ -73,3 +74,4 @@ const Description = ({ children }: DescriptionProps) => {
 };
 
 Dialog.Description = Description;
+export const MemoizedDialog = memo(Dialog);

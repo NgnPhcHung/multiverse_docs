@@ -1,22 +1,27 @@
+import { Input, InputRef, Modal } from "antd";
 import { useSocketContext } from "components/providers";
-import { useOthers, useRoom } from "config";
+import { useRoom } from "config";
 import { useDisclosure } from "hooks";
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
-import { Avatar, TextInput, ToggleTheme } from "..";
-import { Button } from "../button";
-import { Dialog } from "../dialog";
-import RandomAnimalNames from "random-animal-name";
-import { generateHexColor, groupBy } from "utils";
 import { AwarenessList } from "interfaces";
+import { Home } from "lucide-react";
+import RandomAnimalNames from "random-animal-name";
+import { PropsWithChildren, useEffect, useMemo, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { useDiagramStore } from "store";
+import { generateHexColor, groupBy, overrideRoom } from "utils";
+import { Avatar, ToggleTheme } from "..";
+import { Button } from "../button";
 
 export const Nav = ({ children }: PropsWithChildren) => {
   const [opened, { toggle, close }] = useDisclosure();
-  const [value, setValue] = useState("");
-  const others = useOthers();
-
+  const query = useParams();
+  const inputRef = useRef<InputRef>(null);
+  const {
+    liveblocks: { enterRoom, leaveRoom },
+  } = useDiagramStore();
   const room = useRoom();
-  const { provider } = useSocketContext();
+  const { provider, joinRoom, room: socketRoom } = useSocketContext();
 
   useEffect(() => {
     const createUserData = () => {
@@ -41,21 +46,32 @@ export const Nav = ({ children }: PropsWithChildren) => {
       });
     };
     createUserData();
-  }, [provider]);
+  }, [provider, socketRoom]);
 
   const connect = () => {
-    room.connect();
-    toast.success("Joined");
+    const currentRef = inputRef.current;
+    if (!currentRef || !currentRef.input?.value) return;
+
+    const roomId = overrideRoom(currentRef.input.value, query.roomId);
+    if (roomId && roomId.length) {
+      enterRoom(roomId);
+      joinRoom(roomId);
+    } else {
+      enterRoom;
+      room.connect();
+    }
+    toast.success(`Joined ${roomId}`);
     close();
   };
   const disconnect = () => {
     room.disconnect();
+    leaveRoom();
     toast.info("Disconnected");
     close();
   };
   const users = useMemo(() => {
     return [...(provider?.awareness.getStates() || [])] as AwarenessList;
-  }, [provider, others]);
+  }, [provider]);
 
   return (
     <>
@@ -78,55 +94,43 @@ export const Nav = ({ children }: PropsWithChildren) => {
         </div>
         <ToggleTheme />
       </nav>
-      <Dialog opened={opened} onClose={close} size="md">
-        <Dialog.Description>
-          <div className="flex flex-col items-center justify-center w-full">
-            <TextInput
-              rightIcon="home"
-              label="Room"
-              inputType="row"
-              classNames={{
-                label: "col-span-4",
-                inputWrapper: "col-span-8",
-              }}
-              value={value}
-              onChange={setValue}
-            />
-
-            <div className="flex flex-wrap items-center justify-center mt-4 overflow-hidden gap-2 w-full">
-              <Button
-                rightIcon="screen-share"
-                className={{
-                  button: "flex-[0_0_82%] px-2",
-                }}
-              >
-                Host
-              </Button>
-              <Button
-                variant="subtle"
-                rightIcon="screen-share-off"
-                className={{
-                  button: "flex-[0_0_40%]",
-                }}
-                onClick={disconnect}
-              >
-                Disconnect
-              </Button>
-
-              <Button
-                variant="outline"
-                rightIcon="arrow-right-left"
-                className={{
-                  button: "flex-[0_0_40%]",
-                }}
-                onClick={connect}
-              >
-                Join
-              </Button>
-            </div>
-          </div>
-        </Dialog.Description>
-      </Dialog>
+      <Modal
+        title
+        open={opened}
+        closable
+        onCancel={close}
+        classNames={{
+          footer: "flex space-x-4 justify-end",
+        }}
+        footer={[
+          <Button key="host" rightIcon="screen-share">
+            Host
+          </Button>,
+          <Button
+            key="back"
+            variant="subtle"
+            rightIcon="screen-share-off"
+            onClick={disconnect}
+          >
+            Disconnect
+          </Button>,
+          <Button
+            key="join"
+            variant="outline"
+            rightIcon="arrow-right-left"
+            onClick={connect}
+          >
+            Join
+          </Button>,
+        ]}
+      >
+        <Input
+          ref={inputRef}
+          className="mt-6"
+          prefix={<Home className="w-4 h-4 text-primary" />}
+          placeholder="Room name ..."
+        />
+      </Modal>
     </>
   );
 };

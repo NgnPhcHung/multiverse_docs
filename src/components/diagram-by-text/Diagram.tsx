@@ -1,15 +1,18 @@
+import { useAppContext } from "AppContext";
 import { Loading } from "components";
-import { useMemo } from "react";
+import { useStatus } from "config";
+import { useEffect, useMemo } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
+  ConnectionMode,
   Controls,
   MiniMap,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useDiagramStore } from "store";
 import { Tables } from "./Tables";
-import { useAppContext } from "AppContext";
+import ConnectionEdge from "./ConnectionEdge";
 
 export const Diagram = () => {
   const {
@@ -21,24 +24,42 @@ export const Diagram = () => {
     onConnect,
   } = useDiagramStore();
   const nodeTypes = useMemo(() => ({ tables: Tables }), []);
+  const edgeTypes = useMemo(() => ({
+    floating: ConnectionEdge,
+  }),[]);
+
   const { isDarkMode } = useAppContext();
+  const status = useStatus();
+
+  useEffect(() => {
+    edges.map((edge) => {
+      onConnect({
+        source: edge.source,
+        sourceHandle: edge.sourceHandle ?? null,
+        target: edge.target,
+        targetHandle: edge.targetHandle ?? null,
+      });
+    });
+  }, [edges, onConnect, status]);
 
   if (isStorageLoading) {
     return <Loading />;
   }
 
-
   return (
     <div className="w-full h-full ">
       <ReactFlow
+        snapToGrid
         nodes={nodes}
         edges={edges}
+        snapGrid={[20, 20]}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        snapGrid={[20,20]}
-      >
+        connectionMode={ConnectionMode.Loose}
+        >
         <MiniMap position="bottom-right" />
         <Controls
           position="bottom-center"

@@ -69,7 +69,7 @@ export const useEditorFormatter = () => {
         target: related[1].split(".")[0],
         sourceHandle: `${related[0].split(".")[0]}.${related[0].split(".")[1]}`,
         targetHandle: `${related[1].split(".")[0]}.${related[1].split(".")[1]}`,
-        type: "smoothstep",
+        type: "floating",
       });
     });
     setEdges(relations);
@@ -130,7 +130,7 @@ export const useEditorFormatter = () => {
           data: {
             tableEntity: formatEntityObject(tableEntity),
           },
-          position: { x: 0, y: 0 },
+          position: { x: 125, y: 22 },
         });
         if (tableName === null && tableEntity === null) return "";
 
@@ -188,13 +188,13 @@ export const useEditorFormatter = () => {
 
     const newTable = tables.map((table) => {
       const entity = new String(table.data.tableEntity);
-      const splited = entity.split(")")[0];
+      const splitted = entity.split(")")[0];
 
       return {
         ...table,
         data: {
           tableName: table.data.tableName,
-          tableEntity: splited,
+          tableEntity: splitted,
         },
       };
     });

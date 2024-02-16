@@ -67,7 +67,7 @@ export const Editor = () => {
       }
     },
     []
-  );
+  );  
 
   useEffect(() => {
     if (debouncedValue) onFormat(debouncedValue);
@@ -99,6 +99,7 @@ export const Editor = () => {
     let binding: MonacoBinding;
 
     if (editorRef) {
+      console.log(room)
       yDoc = new Y.Doc();
       const yText = yDoc.getText("monaco");
       yProvider = new LiveblocksProvider(room, yDoc);
@@ -117,7 +118,7 @@ export const Editor = () => {
       yProvider?.destroy();
       binding?.destroy();
     };
-  }, [editorRef, room]);
+  }, [editorRef, room, setProvider]);
 
   return (
     <div className="w-full h-full">

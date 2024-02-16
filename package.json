@@ -17,6 +17,7 @@
     "@liveblocks/zustand": "^1.9.7",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash.throttle": "^4.1.9",
+    "antd": "^5.14.1",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.3",
     "lodash.throttle": "^4.1.1",
