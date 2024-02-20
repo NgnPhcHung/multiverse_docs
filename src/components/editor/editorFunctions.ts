@@ -2,13 +2,14 @@ import { Edge, Node } from "reactflow";
 import { useDiagramStore } from "store";
 import { lineRegex, regexForeign } from "./editorSettings";
 import { Constrains } from "./editorVariables";
+import { EditorTextRelation, RelationType } from "interfaces";
 
 export const useEditorFormatter = () => {
   const { setNode, setEdges, nodes } = useDiagramStore();
 
-  const formatEntityObject = (entityString?: string): string  => {
+  const formatEntityObject = (entityString?: string): string => {
     if (!entityString) return "";
-    const str = entityString.split(") ")[0];
+    const str = entityString.split(")")[0];
     const entities = str.split(",");
     const mappedEntity = entities
       .map((entity) => {
@@ -58,18 +59,31 @@ export const useEditorFormatter = () => {
 
     const relations: Edge[] = [];
     foreignList.map((foreign: string) => {
-      if (!foreign.includes("--")) {
-        return;
-      }
-      const related = foreign.trim().replaceAll(" ", ".")?.split("--");
+      Object.keys(RelationType).map((relation) => {
+        if (!foreign.includes(relation)) {
+          return;
+        } else {
+          const related = foreign.trim().replaceAll(" ", ".").split(relation);
 
-      relations.push({
-        id: `${related[0].split(".")[0]}.${related[0].split(".")[1]}`,
-        source: related[0].split(".")[0],
-        target: related[1].split(".")[0],
-        sourceHandle: `${related[0].split(".")[0]}.${related[0].split(".")[1]}`,
-        targetHandle: `${related[1].split(".")[0]}.${related[1].split(".")[1]}`,
-        type: "floating",
+          relations.push({
+            id: `${related[0].split(".")[0]}.${related[0].split(".")[1]}-${
+              related[1].split(".")[0]
+            }.${related[1].split(".")[1]}`,
+            source: related[0].split(".")[0],
+            target: related[1].split(".")[0],
+            sourceHandle: `${related[0].split(".")[0]}.${
+              related[0].split(".")[1]
+            }`,
+            targetHandle: `${related[1].split(".")[0]}.${
+              related[1].split(".")[1]
+            }`,
+            type: "floating",
+            data: {
+              // label: RelationType[relation as keyof typeof RelationType],
+              label: RelationType[relation as keyof typeof RelationType],
+            },
+          });
+        }
       });
     });
     setEdges(relations);
@@ -94,18 +108,25 @@ export const useEditorFormatter = () => {
 
     const foreign: string[] = [];
     foreignTemp?.forEach((f) => {
-      f = f.replace("Foreign ", "").replace(/[<<>>~-]/g, "-");
+      f = f.replace("Foreign ", "");
+      Object.values(EditorTextRelation).map((re) =>
+        f.replace(re, RelationType[re])
+      );
       f = f.replace(/\s/g, "");
       foreign.push(f.replace(/[.]/g, " "));
     });
 
     splitToTable(foreign);
 
-    return splitTable;
+    return splitTable || [];
   };
 
   const onFormat = (value: string) => {
-    if (!value) return value;
+    if (!value) {
+      setNode([]);
+      setEdges([]);
+      return;
+    }
 
     const tableNodes: Node[] = [];
     const formattedValue = formatValue(value);

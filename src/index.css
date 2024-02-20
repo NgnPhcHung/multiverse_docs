@@ -22,11 +22,11 @@ body,
     --secondary: 0, 0%, 27%;
     --secondary-hover: 0, 0%, 15%;
     --primary: 0, 0%, 76%;
-    --primary-hover: 0, 0%,64%;
+    --primary-hover: 0, 0%, 64%;
     --diagram: 0, 0%, 19%;
   }
 
-  @media (prefers-color-scheme: light) {
+  @media (prefers-color-scheme: "light") {
     :root {
       --brand: 228, 52%, 60%;
       --brand-hover: 228, 40%, 46%;
@@ -36,19 +36,19 @@ body,
       --primary-hover: 0, 0%, 14%;
       --diagram: 0, 0%, 98%;
       --button: 220, 0%, 69%;
-      --button-hover:228, 29%, 75%
+      --button-hover: 228, 29%, 75%;
     }
   }
 
   :root[data-theme="light"] {
     --brand: 228, 52%, 60%;
-      --brand-hover: 228, 40%, 46%;
-      --secondary: 0, 0%, 86%;
-      --secondary-hover: 0, 0%, 70%;
-      --primary: 0, 0%, 27%;
-      --primary-hover: 0, 0%, 14%;
-      --diagram: 0, 0%, 98%;
-      --button: 220, 0%, 69%;
-      --button-hover:228, 29%, 75%
+    --brand-hover: 228, 40%, 46%;
+    --secondary: 0, 0%, 86%;
+    --secondary-hover: 0, 0%, 70%;
+    --primary: 0, 0%, 27%;
+    --primary-hover: 0, 0%, 14%;
+    --diagram: 0, 0%, 98%;
+    --button: 220, 0%, 69%;
+    --button-hover: 228, 29%, 75%;
   }
 }

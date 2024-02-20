@@ -147,7 +147,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
       >
         <Nav>
           {isCollapsed && (
-            <nav className="bg-transparent w-fit ml-1 top-0 hidden group-hover/navbar:block ">
+            <nav className="bg-transparent w-fit ml-1 top-0 ">
               <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
                 <MenuIcon className="w-4 h-4" />
               </ActionIcon>

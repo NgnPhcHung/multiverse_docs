@@ -67,11 +67,11 @@ export const Editor = () => {
       }
     },
     []
-  );  
+  );
 
   useEffect(() => {
     if (debouncedValue) onFormat(debouncedValue);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue]);
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export const Editor = () => {
     }
     settingMonacoEditor(monaco, isDarkMode);
     setLoading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monaco]);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export const Editor = () => {
       return;
     }
     setEditorTheme(monaco, isDarkMode);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDarkMode]);
 
   useEffect(() => {
@@ -99,7 +99,6 @@ export const Editor = () => {
     let binding: MonacoBinding;
 
     if (editorRef) {
-      console.log(room)
       yDoc = new Y.Doc();
       const yText = yDoc.getText("monaco");
       yProvider = new LiveblocksProvider(room, yDoc);

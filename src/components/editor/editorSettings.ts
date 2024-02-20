@@ -1,25 +1,28 @@
+import { SQLVariableType } from "interfaces";
 import * as monacoType from "monaco-editor";
 import { EditorTheme, editorColor, editorRule } from "theme";
 
-
 export const defaultEditorValue = `Create user ( 
-  id: char unique PrimaryKey,
-  firstname: varchar,
-  lastname: varchar,
-  dateofbirth: date,
-  address: varchar,
+  id: Char  PrimaryKey,
+  firstname: Varchar unique,
+  lastname: Varchar,
+  dateofbirth: Date,
+  address: Varchar,
 )
 Create dogtor ( 
-  id: char PrimaryKey,
+  id: Char PrimaryKey,
   firstname: char,
 )
-Create host ( 
-  id: char PrimaryKey,
-  address: varchar,
-)
 
-Foreign host.id >> user.id,
-Foreign dogtor.firstname -- host.address
+Create host ( 
+  id: Char PrimaryKey,
+  phonenumber: Varchar,
+  lastname: Varchar,
+  dateOfBirth: Datetime,
+)
+ 
+Foreign host.phonenumber -- user.firstname,
+Foreign dogtor.firstname << host.phonenumber,
 `;
 
 export const settingMonacoEditor = (
@@ -28,21 +31,14 @@ export const settingMonacoEditor = (
 ) => {
   const theme = isDarkMode ? EditorTheme.Dark : EditorTheme.Light;
   const keywords = ["Create", "PrimaryKey", "Foreign"];
-  const typeKeywords = [
-    "char",
-    "varchar",
-    "bool",
-    "date",
-    "datetime",
-    "number",
-  ];
+  const typeKeywords = Object.keys(SQLVariableType);
   const constrainKeywords = ["NOT NULL", "not null", "UNIQUE", "unique"];
   monaco.languages.register({ id: "unknown-language" });
   monaco.languages.setMonarchTokensProvider("unknown-language", {
     keywords,
     typeKeywords,
     constrainKeywords,
-    operators: [">>", "<<", "--", "~~", ":"],
+    operators: [">>", "<<", "--", "~~", ":", "<>"],
     symbols: /[=><!~?:&|+\-*\\/\\^%]+/,
     escapes:
       /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
@@ -141,7 +137,10 @@ export const settingMonacoEditor = (
     colors: editorColor[theme],
   });
 };
-export const setEditorTheme = (monaco: typeof monacoType, isDarkMode: boolean) => {
+export const setEditorTheme = (
+  monaco: typeof monacoType,
+  isDarkMode: boolean
+) => {
   const theme = isDarkMode ? EditorTheme.Dark : EditorTheme.Light;
 
   monaco.editor.defineTheme("unknown-language-theme", {
@@ -157,3 +156,4 @@ export const setEditorTheme = (monaco: typeof monacoType, isDarkMode: boolean) =
 export const lineRegex = /[^a-zA-Z]/g;
 export const regex = /(.*)\((.*)\)/i;
 export const regexForeign = /[^)]+$/;
+export const chenRelationRegex = /[<<>>~-]/g;

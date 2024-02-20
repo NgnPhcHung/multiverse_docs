@@ -46,6 +46,7 @@ export const Nav = ({ children }: PropsWithChildren) => {
       });
     };
     createUserData();
+    return () => createUserData();
   }, [provider, socketRoom]);
 
   const connect = () => {
@@ -75,7 +76,7 @@ export const Nav = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <nav className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12 transition-all ease-out duration-300">
+      <nav className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12">
         {children}
         <div className="w-full flex items-center justify-between">
           <Button onClick={toggle}>Room</Button>

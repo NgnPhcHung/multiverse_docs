@@ -52,7 +52,13 @@ export const useDiagramStore = create<
       },
       onConnect: (connection: Connection) => {
         set({
-          edges: addEdge(connection, get().edges),
+          edges: addEdge(
+            {
+              ...connection,
+              type: "smoothstep",
+            },
+            get().edges
+          ),
         });
       },
       setNode: (payload: Node[]) => set({ nodes: payload }),
