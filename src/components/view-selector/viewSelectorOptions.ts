@@ -13,7 +13,14 @@ export const viewSelectorOptions: ViewSelectorOptions[] = [
     id: 1,
     title: "Database diagram",
     description: "Generate diagram from our SQL",
-    url: "/text-diagram",
+    url: "text-diagram",
     icon: "layout-list",
+  },
+  {
+    id: 2,
+    title: "Work flow",
+    description: "Create your own workflow",
+    url: "work-flow",
+    icon: "boxes",
   },
 ];

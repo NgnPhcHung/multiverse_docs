@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { Nav } from "components";
 import { useScreenSize } from "hooks";
 import { ChevronLeft, MenuIcon } from "lucide-react";
 import {
@@ -145,15 +144,13 @@ export const Sidebar = ({ children }: SidebarProps) => {
           isCollapsed && "bg-transparent"
         )}
       >
-        <Nav>
-          {isCollapsed && (
-            <nav className="bg-transparent w-fit ml-1 top-0 ">
-              <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
-                <MenuIcon className="w-4 h-4" />
-              </ActionIcon>
-            </nav>
-          )}
-        </Nav>
+        {isCollapsed && (
+          <nav className="bg-transparent w-fit ml-1 top-0 ">
+            <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
+              <MenuIcon className="w-4 h-4" />
+            </ActionIcon>
+          </nav>
+        )}
       </div>
     </>
   );

@@ -1,5 +1,3 @@
-import { AppLiveBlocksProvider, SocketContext } from "components/providers";
-import { TypedLiveblocksProvider } from "config";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -7,6 +5,7 @@ import { AppContext } from "./AppContext";
 
 const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
 const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
+const WorkflowPage = lazy(() => import("./pages/WorkflowPage"));
 
 const routes = createBrowserRouter([
   {
@@ -25,13 +24,17 @@ const routes = createBrowserRouter([
       </Suspense>
     ),
   },
+  {
+    path: "work-flow",
+    element: (
+      <Suspense>
+        <WorkflowPage />
+      </Suspense>
+    ),
+  },
 ]);
 
 const App = () => {
-  const roomId = "diagram-script";
-  const [room, joinRoom] = useState(roomId);
-  const [name, setName] = useState("");
-  const [provider, setProvider] = useState<TypedLiveblocksProvider>();
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
 
   useEffect(() => {
@@ -58,21 +61,8 @@ const App = () => {
           setIsDarkMode,
         }}
       >
-        <SocketContext.Provider
-          value={{
-            name,
-            room,
-            provider,
-            setProvider,
-            setName,
-            joinRoom,
-          }}
-        >
-          <Toaster position="bottom-center" />
-          <AppLiveBlocksProvider>
-            <RouterProvider router={routes} />
-          </AppLiveBlocksProvider>
-        </SocketContext.Provider>
+        <Toaster position="bottom-center" />
+        <RouterProvider router={routes} />
       </AppContext.Provider>
     </div>
   );

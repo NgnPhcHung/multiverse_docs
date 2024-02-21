@@ -16,7 +16,7 @@ export const CardView = ({ description, icon, title, url }: CardViewProps) => {
   return (
     <div
       role="button"
-      className="border-2 border-solid border-gray-300 rounded-md flex items-center space-x-4 p-4 hover:border-gray-500 cursor-pointer group/cardview transition-all ease-in-out duration-500"
+      className="border-2 border-solid border-gray-300 rounded-md flex items-center space-x-4 p-4 hover:border-gray-500 cursor-pointer group/cardview transition-all ease-in-out duration-500 col-span-4"
       onClick={() => navigate(url)}
     >
       <DynamicIcon name={icon} size={36} className="text-gray-500 " />

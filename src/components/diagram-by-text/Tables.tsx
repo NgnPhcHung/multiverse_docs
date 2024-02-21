@@ -56,9 +56,6 @@ export const Tables = (data: NodeProps<TableType>) => {
                 position={Position.Right}
                 className="bg-primary  opacity-0"
                 id={`${tableInfo.tableName}.${entity.name}`}
-                isConnectable={() => {
-                  return entity.constrains.includes("PrimaryKey");
-                }}
               />
             </>
           );
