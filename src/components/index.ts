@@ -4,3 +4,4 @@ export * from "./view-selector";
 export * from "./editor";
 export * from "./workflow";
 export * from "./layout";
+export * from "./note-taking";

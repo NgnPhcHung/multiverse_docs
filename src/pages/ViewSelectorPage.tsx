@@ -1,11 +1,13 @@
-import { ViewSelector } from "components";
+import { AnimatedPage, ViewSelector } from "components";
 import { Outlet } from "react-router-dom";
 
 function ViewSelectorPage() {
   return (
     <>
-      <ViewSelector />
-      <Outlet />
+      <AnimatedPage>
+        <ViewSelector />
+        <Outlet />
+      </AnimatedPage>
     </>
   );
 }

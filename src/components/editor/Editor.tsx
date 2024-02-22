@@ -5,7 +5,7 @@ import { TypedLiveblocksProvider, useRoom } from "config";
 import * as monaco from "monaco-editor";
 import { editor } from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
-import { TableType, useEditorStore } from "store";
+import { TableType, useDiagramStore, useEditorStore } from "store";
 import { useDebounce } from "usehooks-ts";
 import { MonacoBinding } from "y-monaco";
 import { Awareness } from "y-protocols/awareness";
@@ -28,6 +28,7 @@ export const Editor = () => {
   const { isDarkMode } = useAppContext();
   const room = useRoom();
   const { setProvider, provider } = useSocketContext();
+  const { setNode, setEdges } = useDiagramStore();
 
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
@@ -118,6 +119,13 @@ export const Editor = () => {
       binding?.destroy();
     };
   }, [editorRef, room, setProvider]);
+
+  useEffect(() => {
+    return () => {
+      setNode([]);
+      setEdges([]);
+    };
+  }, [setNode, setEdges]);
 
   return (
     <div className="w-full h-full">

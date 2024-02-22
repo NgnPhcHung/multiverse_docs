@@ -3,7 +3,7 @@ import { viewSelectorOptions } from "./viewSelectorOptions";
 
 export const ViewSelector = () => {
   return (
-    <div className=" h-full w-full flex items-center">
+    <div key="view-selector" className=" h-full w-full flex items-center">
       <div className="p-8 grid grid-cols-12 gap-2 place-items-center w-full">
         {viewSelectorOptions.map((view) => (
           <CardView

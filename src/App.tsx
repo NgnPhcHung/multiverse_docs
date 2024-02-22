@@ -1,8 +1,8 @@
 import { AnimatedRoutes } from "AnimatedRoutes";
 import { useEffect, useState } from "react";
-import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { AppContext } from "./AppContext";
+import { AnimatePresence } from "framer-motion";
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -32,12 +32,9 @@ const App = () => {
         }}
       >
         <Toaster position="bottom-center" />
-        {/* <AnimatePresence mode="wait">
-          <RouterProvider router={routes} />
-        </AnimatePresence> */}
-        <BrowserRouter>
+        <AnimatePresence mode="wait">
           <AnimatedRoutes />
-        </BrowserRouter>
+        </AnimatePresence>
       </AppContext.Provider>
     </div>
   );

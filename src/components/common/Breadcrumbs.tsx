@@ -2,6 +2,7 @@ import { Breadcrumb } from "antd";
 import { HomeIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { ToggleTheme } from ".";
 
 export const Breadcrumbs = () => {
   const location = useLocation();
@@ -9,10 +10,10 @@ export const Breadcrumbs = () => {
     return window.location.pathname.split("/").filter((path) => path !== "");
   }, [location]);
 
-  return (
-    !!paths.length && (
+  return paths.length ? (
+    <div className="bg-secondaryHover flex items-center justify-between pr-4">
       <Breadcrumb
-        className="p-2 bg-secondaryHover"
+        className="p-2 "
         separator={<span className="text-primaryHover">/</span>}
       >
         <Breadcrumb.Item className="text-primaryHover">
@@ -28,6 +29,11 @@ export const Breadcrumbs = () => {
           </Breadcrumb.Item>
         ))}
       </Breadcrumb>
-    )
+      <ToggleTheme />
+    </div>
+  ) : (
+    <div className="w-full flex items-end justify-end">
+      <ToggleTheme />
+    </div>
   );
 };

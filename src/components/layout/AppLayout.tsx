@@ -1,6 +1,6 @@
-import { Breadcrumbs } from "components";
-import { useMemo, useState } from "react";
-import { Outlet, useLocation, useOutlet } from "react-router-dom";
+import { AnimatedPage, Breadcrumbs } from "components";
+import { useState } from "react";
+import { useOutlet } from "react-router-dom";
 
 const AnimatedOutlet: React.FC = () => {
   const o = useOutlet();
@@ -10,13 +10,12 @@ const AnimatedOutlet: React.FC = () => {
 };
 
 export const AppLayout = () => {
-  const location = useLocation();
-  useMemo(() => {}, [location]);
-
   return (
     <>
       <Breadcrumbs />
-      <AnimatedOutlet />
+      <AnimatedPage>
+        <AnimatedOutlet />
+      </AnimatedPage>
     </>
   );
 };

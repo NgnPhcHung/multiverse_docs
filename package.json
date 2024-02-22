@@ -15,6 +15,7 @@
     "@liveblocks/react": "^1.9.7",
     "@liveblocks/yjs": "^1.9.7",
     "@liveblocks/zustand": "^1.9.7",
+    "@mdxeditor/editor": "^2.9.0",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash.throttle": "^4.1.9",
     "antd": "^5.14.1",
@@ -49,7 +50,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss": "^8.4.33",
+    "shiki": "^1.1.6",
     "tailwindcss": "^3.4.1",
+    "twoslash": "^0.2.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-tsconfig-paths": "^4.3.1"

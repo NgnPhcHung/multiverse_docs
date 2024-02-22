@@ -14,7 +14,7 @@ export const DiagramByEditor = () => {
   }, [leaveRoom]);
 
   return (
-    <div className="flex dark:bg-brand relative h-full overflow-hidden">
+    <div key="diagram-editor" className="flex dark:bg-brand relative h-full overflow-hidden">
       <Sidebar navbar={<Nav />}>
         <Editor />
       </Sidebar>

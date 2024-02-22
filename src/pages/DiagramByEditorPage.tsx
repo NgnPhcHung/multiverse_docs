@@ -9,21 +9,19 @@ export default function DiagramByEditorPage() {
   const [name, setName] = useState("");
   const [provider, setProvider] = useState<TypedLiveblocksProvider>();
   return (
-    <>
-      <SocketContext.Provider
-        value={{
-          name,
-          room,
-          provider,
-          setProvider,
-          setName,
-          joinRoom,
-        }}
-      >
-        <AppLiveBlocksProvider>
-          <DiagramByEditor />
-        </AppLiveBlocksProvider>
-      </SocketContext.Provider>
-    </>
+    <SocketContext.Provider
+      value={{
+        name,
+        room,
+        provider,
+        setProvider,
+        setName,
+        joinRoom,
+      }}
+    >
+      <AppLiveBlocksProvider>
+        <DiagramByEditor />
+      </AppLiveBlocksProvider>
+    </SocketContext.Provider>
   );
 }
