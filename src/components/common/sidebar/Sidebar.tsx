@@ -12,9 +12,11 @@ import {
 } from "react";
 import { ActionIcon } from "../actionIcon";
 
-interface SidebarProps extends PropsWithChildren {}
+interface SidebarProps extends PropsWithChildren {
+  navbar?: JSX.Element;
+}
 
-export const Sidebar = ({ children }: SidebarProps) => {
+export const Sidebar = ({ children, navbar }: SidebarProps) => {
   const { md: isMobile, xl, xxl, lg, xxxl } = useScreenSize();
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -144,8 +146,9 @@ export const Sidebar = ({ children }: SidebarProps) => {
           isCollapsed && "bg-transparent"
         )}
       >
+        {navbar}
         {isCollapsed && (
-          <nav className="bg-transparent w-fit ml-1 top-0 ">
+          <nav className="bg-transparent w-fit ml-1 mt-3">
             <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
               <MenuIcon className="w-4 h-4" />
             </ActionIcon>

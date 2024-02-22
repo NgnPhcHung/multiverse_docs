@@ -1,6 +1,6 @@
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 
-interface ViewSelectorOptions {
+export interface ViewSelectorOptions {
   id: number;
   icon: keyof typeof dynamicIconImports;
   title: string;

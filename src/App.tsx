@@ -1,38 +1,8 @@
-import { Suspense, lazy, useEffect, useState } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { AnimatedRoutes } from "AnimatedRoutes";
+import { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { AppContext } from "./AppContext";
-
-const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
-const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
-const WorkflowPage = lazy(() => import("./pages/WorkflowPage"));
-
-const routes = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <Suspense>
-        <ViewSelectorPage />
-      </Suspense>
-    ),
-  },
-  {
-    path: "text-diagram",
-    element: (
-      <Suspense>
-        <DiagramByEditorPage />
-      </Suspense>
-    ),
-  },
-  {
-    path: "work-flow",
-    element: (
-      <Suspense>
-        <WorkflowPage />
-      </Suspense>
-    ),
-  },
-]);
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -54,7 +24,7 @@ const App = () => {
   }, [isDarkMode]);
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen overflow-hidden">
       <AppContext.Provider
         value={{
           isDarkMode,
@@ -62,7 +32,12 @@ const App = () => {
         }}
       >
         <Toaster position="bottom-center" />
-        <RouterProvider router={routes} />
+        {/* <AnimatePresence mode="wait">
+          <RouterProvider router={routes} />
+        </AnimatePresence> */}
+        <BrowserRouter>
+          <AnimatedRoutes />
+        </BrowserRouter>
       </AppContext.Provider>
     </div>
   );

@@ -13,14 +13,20 @@ interface CardViewProps {
 export const CardView = ({ description, icon, title, url }: CardViewProps) => {
   const navigate = useNavigate();
 
+  const onNavigate = () => {
+    setTimeout(() => {
+      navigate(url);
+    }, 0);
+  };
+
   return (
     <div
       role="button"
-      className="border-2 border-solid border-gray-300 rounded-md flex items-center space-x-4 p-4 hover:border-gray-500 cursor-pointer group/cardview transition-all ease-in-out duration-500 col-span-4"
-      onClick={() => navigate(url)}
+      className="w-full z-sideBar border-2 border-solid border-primary-300 rounded-md flex items-center space-x-4 p-4 hover:border-primaryHover cursor-pointer group/cardview col-span-12 md:col-span-4 xl:col-span-4"
+      onClick={onNavigate}
     >
       <DynamicIcon name={icon} size={36} className="text-gray-500 " />
-      <div>
+      <div className="w-full">
         <h2
           className={clsx(
             "font-semibold text-xl relative w-full",

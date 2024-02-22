@@ -7,4 +7,6 @@ export * from "./input";
 export * from "./DyanamicIcon";
 export * from "./Loading";
 export * from "./Tooltip";
-export * from "./ToggleTheme"
+export * from "./ToggleTheme";
+export * from "./Breadcrumbs";
+export * from "./AnimatedPage";
