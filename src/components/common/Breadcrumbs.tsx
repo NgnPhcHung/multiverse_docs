@@ -1,8 +1,8 @@
-import { Breadcrumb } from "antd";
 import { HomeIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ToggleTheme } from ".";
+import { Tooltip } from "antd";
 
 export const Breadcrumbs = () => {
   const location = useLocation();
@@ -10,29 +10,30 @@ export const Breadcrumbs = () => {
     return window.location.pathname.split("/").filter((path) => path !== "");
   }, [location]);
 
-  return paths.length ? (
-    <div className="bg-secondaryHover flex items-center justify-between pr-4">
-      <Breadcrumb
-        className="p-2 "
-        separator={<span className="text-primaryHover">/</span>}
-      >
-        <Breadcrumb.Item className="text-primaryHover">
+  return (
+    <div className="bg-secondaryHover flex items-center justify-between px-4 py-2">
+      <div className="flex items-center justify-center space-x-2 text-primary">
+        <Tooltip placement="bottomRight" title="Home">
           <Link to="/">
             <HomeIcon className="w-4 h-4 mt-1 text-primaryHover" />
           </Link>
-        </Breadcrumb.Item>
-        {paths.map((path, index) => (
-          <Breadcrumb.Item className="flex items-center space-x-2" key={path}>
-            <Link to={`/${paths.slice(0, index + 1).join("/")}`} key={path}>
-              <span className="text-primary"> {path}</span>
-            </Link>
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
-      <ToggleTheme />
-    </div>
-  ) : (
-    <div className="w-full flex items-end justify-end">
+        </Tooltip>
+        {paths.map((path, index) => {
+          const pathTitle = path.split("-").join(" ");
+          return (
+            <div key={path} className="flex space-x-2">
+              <span>/</span>
+              <Link
+                to={`/${paths.slice(0, index + 1).join("/")}`}
+                key={path}
+                className="capitalize "
+              >
+                {pathTitle}
+              </Link>
+            </div>
+          );
+        })}
+      </div>
       <ToggleTheme />
     </div>
   );

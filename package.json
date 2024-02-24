@@ -24,6 +24,7 @@
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.316.0",
     "monaco-editor": "^0.45.0",
+    "monaco-themes": "^0.4.4",
     "perfect-cursors": "^1.0.5",
     "random-animal-name": "^0.1.1",
     "random-avatar-generator": "^2.0.0",

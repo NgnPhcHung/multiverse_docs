@@ -19,7 +19,7 @@ export const viewSelectorOptions: ViewSelectorOptions[] = [
   {
     id: 2,
     title: "Work flow",
-    description: "Create your own workflow just by drag and drop",
+    description: "Create your own workflow by drag and drop",
     url: "work-flow",
     icon: "boxes",
   },

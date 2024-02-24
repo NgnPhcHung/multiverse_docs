@@ -10,3 +10,4 @@ export * from "./Tooltip";
 export * from "./ToggleTheme";
 export * from "./Breadcrumbs";
 export * from "./AnimatedPage";
+export * from "./CopyButton"

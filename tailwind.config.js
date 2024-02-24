@@ -17,6 +17,8 @@ export default {
         modalOverlay: 99998,
         modal: 99999,
         sideBar:999,
+        editor:1000,
+        onEditor:1001,
       },
       borderWidth: {
         1: "1px",

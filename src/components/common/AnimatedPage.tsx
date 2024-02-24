@@ -25,7 +25,7 @@ export const AnimatedPage = ({ children }: PropsWithChildren) => {
   return (
     <div className="w-full h-full relative">
       <motion.div
-        className="absolute h-full w-1/2 bg-secondary  top-0 left-0 z-[9999]"
+        className="absolute h-full w-1/2 bg-secondaryHover  top-0 left-0 z-[9999]"
         variants={doorVariants}
         initial="initial"
         animate="enter"
@@ -36,7 +36,7 @@ export const AnimatedPage = ({ children }: PropsWithChildren) => {
         }}
       />
       <motion.div
-        className="absolute h-full w-1/2 bg-secondary  top-0 right-0 z-[9999]"
+        className="absolute h-full w-1/2 bg-secondaryHover  top-0 right-0 z-[9999]"
         variants={doorVariants}
         initial="initial"
         animate="enter"
