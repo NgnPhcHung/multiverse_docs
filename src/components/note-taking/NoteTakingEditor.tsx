@@ -28,8 +28,7 @@ import { editor } from "monaco-editor";
 import "monaco-themes/themes/Dracula.json";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-
-const DEFAULT_HEIGHT = 121;
+const DEFAULT_HEIGHT = 178;
 
 const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
   // always use the editor, no matter the language or the meta of the code block
@@ -44,7 +43,6 @@ const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
     const monacoInUse = useMonaco();
     const [value, setValue] = useState("");
     const debounceEditorValue = useDebounce(value, 500);
-
     const handleEditorDidMount = useCallback(
       (
         _valueGetter: editor.IStandaloneCodeEditor
@@ -65,7 +63,7 @@ const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
           container.style.height = `${contentHeight + 40}px`;
           try {
             _valueGetter.layout({
-              width:_valueGetter.getLayoutInfo().width,
+              width: _valueGetter.getLayoutInfo().width,
               height: contentHeight,
             });
           } catch {
@@ -84,11 +82,8 @@ const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
       automaticLayout: true,
       minimap: { enabled: false },
       lineNumbers: "off",
+      wordWrap:"on",
       padding: { top: 10 },
-      scrollbar: {
-        vertical: "hidden",
-        horizontal: "hidden",
-      },
     };
 
     useEffect(() => {
@@ -101,7 +96,6 @@ const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
             );
           })
           .then(() => monacoInUse.editor.setTheme("dracula"));
-        // monaco.editor.defineTheme("monokai-bright").then(_ => monaco.editor.setMonacoTheme("monokai-bright"));
       }
     }, [monacoInUse, isDarkMode]);
 
@@ -113,20 +107,16 @@ const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
       <div
         onKeyDown={(e) => e.nativeEvent.stopImmediatePropagation()}
         id="container"
-        className="m-2 w-[96vw] relative group/copyButton"
+        className="m-2 w-full relative group/copyButton"
       >
-        {/* <span className="absolute top-0 left-2 font-semibold">
-          {props.language ?? "typescript"}
-        </span> */}
         <div className="absolute top-8 right-2 z-onEditor hidden group-hover/copyButton:block">
           <CopyButton dataToCopy={value} />
         </div>
         <Editor
-        width="95%"
           options={optionsOverride}
           onMount={handleEditorDidMount}
           defaultLanguage={props.language ?? "typescript"}
-          className="min-h-24 max-h-full pt-6 overflow-hidden rounded-md z-editor"
+          className="w-full pt-6 rounded-md z-10 mb-6"
           value=""
           theme={isDarkMode ? "dracula" : "vs"}
           onChange={(value) => {
@@ -141,8 +131,12 @@ const PlainTextCodeEditorDescriptor: CodeBlockEditorDescriptor = {
 export const NoteTakingEditor = () => {
   return (
     <>
+      {/**
+       *  [&>*:first-child]:bg-secondaryHover [&>*:first-child]:text-primary
+       *
+       */}
       <MDXEditor
-        className="mt-4 mx-4 [&>div]:w-fit [&>*:first-child]:bg-secondaryHover [&>*:first-child]:text-primary [&>.mdxeditor-root-contenteditable]:bg-secondaryHover [&>.mdxeditor-root-contenteditable]:rounded-md [&>.mdxeditor-root-contenteditable]:mt-2 [&>.mdxeditor-root-contenteditable]:px-4 [&>.mdxeditor-root-contenteditable]:w-full "
+        className="mx-4 [&>div]:w-fit [&>*:first-child]:bg-transparent  [&>.mdxeditor-root-contenteditable]:bg-secondaryHover [&>.mdxeditor-root-contenteditable]:rounded-md [&>.mdxeditor-root-contenteditable]:mt-2 [&>.mdxeditor-root-contenteditable]:px-4 [&>.mdxeditor-root-contenteditable]:w-full"
         markdown=""
         contentEditableClassName="text-primary"
         // onChange={(value) => console.log(value)}
@@ -163,7 +157,7 @@ export const NoteTakingEditor = () => {
 
           toolbarPlugin({
             toolbarContents: () => (
-              <>
+              <div className="flex space-x-2 space-y-2 fixed bottom-5 left-auto bg-secondaryHover rounded-md text-primary p-2 flex-wrap items-center justify-center [&_svg]:w-4 [&_svg]:h-4 lg:[&_svg]:w-5 lg:[&_svg]:h-5 ">
                 <BoldItalicUnderlineToggles />
                 <InsertTable />
                 <CreateLink />
@@ -176,15 +170,11 @@ export const NoteTakingEditor = () => {
                     },
 
                     {
-                      fallback: () => (
-                        <>
-                          <InsertCodeBlock />
-                        </>
-                      ),
+                      fallback: () => <InsertCodeBlock />,
                     },
                   ]}
                 />
-              </>
+              </div>
             ),
           }),
         ]}

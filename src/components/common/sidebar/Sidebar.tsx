@@ -14,9 +14,16 @@ import { ActionIcon } from "../actionIcon";
 
 interface SidebarProps extends PropsWithChildren {
   navbar?: JSX.Element;
+  customMinWidth?: number;
 }
 
-export const Sidebar = ({ children, navbar }: SidebarProps) => {
+const DEFAULT_MIN_WIDTH = 240;
+
+export const Sidebar = ({
+  children,
+  navbar,
+  customMinWidth = DEFAULT_MIN_WIDTH,
+}: SidebarProps) => {
   const { md: isMobile, xl, xxl, lg, xxxl } = useScreenSize();
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -49,7 +56,7 @@ export const Sidebar = ({ children, navbar }: SidebarProps) => {
     if (!isResizingRef.current) return;
     let newWidth = event.clientX;
 
-    if (newWidth < 240) newWidth = 240;
+    if (newWidth < customMinWidth) newWidth = customMinWidth;
     if (newWidth > sideWidth) newWidth = sideWidth;
 
     if (sidebarRef.current && navbarRef.current) {
@@ -115,7 +122,7 @@ export const Sidebar = ({ children, navbar }: SidebarProps) => {
       <aside
         ref={sidebarRef}
         className={clsx(
-          "group/sidebar h-full bg-gray-300 overflow-y-auto relative flex w-60  flex-col z-sideBar",
+          "group/sidebar h-full overflow-y-auto relative flex w-60  flex-col z-sideBar",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
@@ -130,7 +137,7 @@ export const Sidebar = ({ children, navbar }: SidebarProps) => {
         >
           <ChevronLeft className="h-4 w-4 text-gray-200" />
         </ActionIcon>
-        <div className="h-full overflow-hidden">{children}</div>
+        <div className="h-full overflow-hidden">{!isCollapsed && children}</div>
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
@@ -140,7 +147,10 @@ export const Sidebar = ({ children, navbar }: SidebarProps) => {
       <div
         ref={navbarRef}
         className={clsx(
-          "absolute top-0 z-sideBar left-60 w-[calc(100%-240px)] flex space-x-2 ",
+          "absolute top-0 z-sideBar left-60 flex space-x-2 ",
+          customMinWidth
+            ? `w-[calc(100%-${customMinWidth}px)] `
+            : `w-[calc(100%-${DEFAULT_MIN_WIDTH}px)]`,
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "left-0 w-full",
           isCollapsed && "bg-transparent"
