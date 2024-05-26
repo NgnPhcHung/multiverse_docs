@@ -1,18 +1,4 @@
-import clsx from "clsx";
-import { ButtonVariant, variants } from ".";
-import { MouseEventHandler, PropsWithChildren } from "react";
-import dynamicIconImports from "lucide-react/dynamicIconImports";
-import { DynamicIcon } from "..";
-
-interface ButtonProps extends PropsWithChildren {
-  variant?: ButtonVariant;
-  className?: {
-    button?: string;
-    rightIcon?: string;
-  };
-  onClick?: MouseEventHandler<HTMLDivElement>;
-  rightIcon?: keyof typeof dynamicIconImports;
-}
+import { ButtonProps, ButtonWrapper } from "./ButtonWrapper";
 
 export const Button = ({
   variant = "primary",
@@ -22,23 +8,14 @@ export const Button = ({
   rightIcon,
 }: ButtonProps) => {
   return (
-    <div
-      onClick={onClick}
-      role="button"
-      className={clsx(
-        "px-2 py-1 font-semibold text-center rounded-sm flex items-center justify-center text-sm",
-        variants[variant],
-        className?.button
-      )}
+    <ButtonWrapper
+      className={className}
+      rightIcon={rightIcon}
+      variant={variant}
     >
-      {rightIcon && (
-        <DynamicIcon
-          name={rightIcon}
-          size={16}
-          className={clsx("text-gray-500 mr-2", className?.rightIcon)}
-        />
-      )}
-      {children}
-    </div>
+      <div onClick={onClick} role="button" className="w-full h-full">
+        {children}
+      </div>
+    </ButtonWrapper>
   );
 };

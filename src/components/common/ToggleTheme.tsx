@@ -1,11 +1,11 @@
-import { useAppContext } from "AppContext";
+import { useDarkMode } from "@hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { ElementRef, useRef } from "react";
 import { flushSync } from "react-dom";
 
 export const ToggleTheme = () => {
-  const { isDarkMode, setIsDarkMode } = useAppContext();
+  const { isDarkMode, setIsDarkMode } = useDarkMode();
   const ref = useRef<ElementRef<"div">>(null);
 
   const toggleDarkMode = async () => {
@@ -53,20 +53,12 @@ export const ToggleTheme = () => {
   return (
     <motion.div
       layout
-      className="border-primary hover:border-primary-hover w-8 h-8 overflow-hidden rounded-md border-1 border-solid p-1 relative z-modal hover-text-gray-200"
+      className="border-primaryHover hover:border-primary w-8 h-8 overflow-hidden rounded-md border-1 border-solid p-1 relative z-modal hover:text-primaryHover"
       onClick={toggleDarkMode}
       role="button"
       ref={ref}
     >
       <AnimatePresence mode="wait" initial={false}>
-        {/* <motion.i
-            className={`icon far fa-${isOn ? "moon" : "sun"}`}
-            key={isOn ? "moon" : "sun"}
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 30, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          /> */}
         {isDarkMode ? (
           <motion.span
             className="absolute "

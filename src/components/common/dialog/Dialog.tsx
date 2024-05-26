@@ -7,7 +7,7 @@ import { PropsWithChildren, memo } from "react";
 type ESize = "md" | "lg" | "xl";
 
 const containSize: Record<ESize, string> = {
-  md: "2xl:w-1/5 min-w-[calc(100vw - 40rem)] h-fit",
+  md: "xl:w-4/5 min-w-[calc(100vw - 40rem)] h-fit",
   lg: "w-1/3 h-1/3",
   xl: "w-4/5 h-4/5",
 };
@@ -26,7 +26,6 @@ export const Dialog = ({
   size = "md",
   children,
 }: DialogProps) => {
-  
   return (
     <AnimatePresence>
       {opened && (
@@ -35,7 +34,7 @@ export const Dialog = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="bg-slate-900/20 backdrop-blur fixed inset-0 z-50 grid place-items-center cursor-pointer  overflow-hidden"
+          className="bg-primary/30 backdrop-blur fixed inset-0 z-50 grid place-items-center cursor-pointer overflow-hidden w-screen h-screen"
         >
           <motion.div
             initial={{ scale: 0, rotate: "12.5deg" }}
@@ -43,7 +42,7 @@ export const Dialog = ({
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
             className={clsx(
-              "bg-gray-200 text-gray-950  p-4  rounded-lg shadow-xl cursor-default relative overflow-hidden ",
+              "bg-secondary text-primary p-4  rounded-lg shadow-xl cursor-default relative overflow-hidden ",
               containSize[size]
             )}
           >

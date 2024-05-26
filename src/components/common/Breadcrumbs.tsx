@@ -1,8 +1,9 @@
-import { HomeIcon } from "lucide-react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Tooltip } from "antd";
+import Logo from "assets/logo.svg?react";
 import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ToggleTheme } from ".";
-import { Tooltip } from "antd";
 
 export const Breadcrumbs = () => {
   const location = useLocation();
@@ -11,11 +12,11 @@ export const Breadcrumbs = () => {
   }, [location]);
 
   return (
-    <div className="bg-secondaryHover flex items-center justify-between px-4 py-2">
+    <div className="bg-secondaryHover flex items-center justify-between px-4">
       <div className="flex items-center justify-center space-x-2 text-primary">
         <Tooltip placement="bottomRight" title="Home">
           <Link to="/">
-            <HomeIcon className="w-4 h-4 mt-1 text-primaryHover" />
+            <Logo />
           </Link>
         </Tooltip>
         {paths.map((path, index) => {

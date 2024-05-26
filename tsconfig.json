@@ -19,15 +19,19 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "types": ["vite-plugin-svgr/client"],
     "baseUrl": "./src",
     "paths": {
-      "@consts": ["./src/consts"],
-      "@hooks": ["./src/hooks"],
-      "@interfaces": ["./src/interfaces"],
-      "@components": ["./src/components"],
-      "@providers": ["src/store"]
+      "@consts": ["consts"],
+      "@hooks": ["hooks"],
+      "@interfaces": ["interfaces"],
+      "@components": ["components"],
+      "@store": ["store"],
+      "@utils": ["utils"],
+      "@theme": ["theme"],
+      "@assets": ["theme"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/svg.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

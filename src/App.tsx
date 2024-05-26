@@ -1,41 +1,22 @@
-import { AnimatedRoutes } from "AnimatedRoutes";
-import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
-import { AppContext } from "./AppContext";
 import { AnimatePresence } from "framer-motion";
+import { AnimatedRoutes } from "pages";
+import { useLayoutEffect } from "react";
+import { Toaster } from "sonner";
 
 const App = () => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
-
-  useEffect(() => {
-    setIsDarkMode(localStorage.theme === "dark");
+  useLayoutEffect(() => {
+    const mode = localStorage.theme === "light" ? "light" : "dark";
+    document.documentElement.classList.add(mode);
+    localStorage.theme = mode;
+    document.documentElement.setAttribute("data-theme", mode);
   }, []);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.theme = "dark";
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.theme = "light";
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-  }, [isDarkMode]);
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      <AppContext.Provider
-        value={{
-          isDarkMode,
-          setIsDarkMode,
-        }}
-      >
-        <Toaster position="bottom-center" />
-        <AnimatePresence mode="wait">
-          <AnimatedRoutes />
-        </AnimatePresence>
-      </AppContext.Provider>
+      <Toaster position="bottom-center" />
+      <AnimatePresence mode="wait">
+        <AnimatedRoutes />
+      </AnimatePresence>
     </div>
   );
 };

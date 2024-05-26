@@ -19,9 +19,9 @@ body,
   :root {
     --brand: 228, 52%, 60%;
     --brand-hover: 228, 40%, 46%;
-    --secondary: 0, 0%, 27%;
+    --secondary: 213, 6%, 24%;
     --secondary-hover: 0, 0%, 15%;
-    --primary: 0, 0%, 76%;
+    --primary: 255, 0%, 80%;
     --primary-hover: 0, 0%, 64%;
     --diagram: 0, 0%, 19%;
   }

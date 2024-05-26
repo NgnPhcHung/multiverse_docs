@@ -16,20 +16,21 @@ import {
 import { create } from "zustand";
 import { socketClient } from "./../config/liveblocks.config";
 
-interface FlowState {
+type FlowState = {
   nodes: Node[];
   edges: Edge[];
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
+
   setNode: (payload: Node[]) => void;
   setEdges: (payload: Edge[]) => void;
-}
+};
 
-interface Storage {
-  nodes: Node[];
-  edges: Edge[];
-}
+type Storage = {
+  nodes: FlowState["nodes"];
+  edges: FlowState["edges"];
+};
 
 export const useDiagramStore = create<
   WithLiveblocks<FlowState, Record<string, never>, EnsureJson<Storage>>

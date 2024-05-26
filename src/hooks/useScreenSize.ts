@@ -1,4 +1,4 @@
-import { useMediaQuery } from "usehooks-ts";
+import useMediaQuery from "./useMediaQuery";
 
 export const useScreenSize = () => {
   const md = useMediaQuery("(max-width:768px)");
@@ -7,5 +7,5 @@ export const useScreenSize = () => {
   const xxl = useMediaQuery("(max-width:1500px)");
   const xxxl = useMediaQuery("(max-width:1960px)");
 
-  return  { md, lg, xl, xxl, xxxl };
+  return { md, lg, xl, xxl, xxxl };
 };

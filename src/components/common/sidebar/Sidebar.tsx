@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useScreenSize } from "hooks";
+import { useScreenSize } from "@hooks";
 import { ChevronLeft, MenuIcon } from "lucide-react";
 import {
   ElementRef,
@@ -137,17 +137,19 @@ export const Sidebar = ({
         >
           <ChevronLeft className="h-4 w-4 text-gray-200" />
         </ActionIcon>
-        <div className="h-full overflow-hidden">{!isCollapsed && children}</div>
+        <div className="h-full overflow-hidden">{children}</div>
+
+        {/* resizer */}
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
-          className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 right-0 top-0 group-hover/sidebar:bg-blue-500 "
+          className="opacity-40  bg-primaryHover w-[1px] transition cursor-ew-resize absolute h-full group-hover/sidebar:w-1 right-0 top-0 group-hover/sidebar:bg-brand group-hover/sidebar:opacity-100"
         />
       </aside>
       <div
         ref={navbarRef}
         className={clsx(
-          "absolute top-0 z-sideBar left-60 flex space-x-2 ",
+          "absolute top-0 z-sideBar left-0 flex space-x-2",
           customMinWidth
             ? `w-[calc(100%-${customMinWidth}px)] `
             : `w-[calc(100%-${DEFAULT_MIN_WIDTH}px)]`,
@@ -156,7 +158,6 @@ export const Sidebar = ({
           isCollapsed && "bg-transparent"
         )}
       >
-        {navbar}
         {isCollapsed && (
           <nav className="bg-transparent w-fit ml-1 mt-3">
             <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
@@ -164,6 +165,7 @@ export const Sidebar = ({
             </ActionIcon>
           </nav>
         )}
+        {navbar}
       </div>
     </>
   );
