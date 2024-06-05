@@ -48,12 +48,22 @@ export const ToggleTheme = () => {
         pseudoElement: "::view-transition-new(root)",
       }
     );
-  };
 
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.theme = "dark";
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.theme = "light";
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  };
+  
   return (
     <motion.div
       layout
-      className="border-primaryHover hover:border-primary w-8 h-8 overflow-hidden rounded-md border-1 border-solid p-1 relative z-modal hover:text-primaryHover"
+      className="border-primaryHover hover:border-primary w-8 h-8 overflow-hidden rounded-md border-1 border-solid p-1 relative z-modalOverlay hover:text-primaryHover"
       onClick={toggleDarkMode}
       role="button"
       ref={ref}
@@ -79,7 +89,7 @@ export const ToggleTheme = () => {
             exit={{ y: 30, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Moon className="text-gray-800 w-5 h-5" />
+            <Moon className="text-gray-200 w-5 h-5" />
           </motion.span>
         )}
       </AnimatePresence>

@@ -1,11 +1,12 @@
-import { Editor, Nav, Sidebar } from "@components";
+import { Nav, Sidebar } from "@components";
+import { useDiagramStore } from "@store";
 import { useEffect } from "react";
 import { ReactFlowProvider } from "reactflow";
-import { useDiagramStore } from "@store";
+import { Editor } from "../editor";
 import { Diagram } from "./Diagram";
-import { RoomSettings } from "./RoomSettings";
 import { DiagramDocuments } from "./DiagramDocuments";
 import { ImportFile } from "./ImportFile";
+import { RoomSettings } from "./RoomSettings";
 
 export const DiagramByEditor = () => {
   const {

@@ -4,9 +4,7 @@ import { Suspense, lazy } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 const ViewSelectorPage = lazy(() => import("./view-selector"));
-const DiagramByEditorPage = lazy(
-  () => import("./diagram-by-editor")
-);
+const DiagramByEditorPage = lazy(() => import("./diagram-by-editor"));
 const SketchNotePage = lazy(() => import("./SketchNotePage"));
 
 export const AnimatedRoutes = () => {
@@ -26,7 +24,7 @@ export const AnimatedRoutes = () => {
         <Route
           path="text-diagram"
           element={
-            <Suspense>
+            <Suspense fallback="loading...">
               <DiagramByEditorPage />
             </Suspense>
           }
@@ -34,7 +32,7 @@ export const AnimatedRoutes = () => {
         <Route
           path="sketch-note"
           element={
-            <Suspense>
+            <Suspense fallback="loading...">
               <SketchNotePage />
             </Suspense>
           }

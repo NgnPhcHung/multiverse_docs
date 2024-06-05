@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ['class', '[data-mode="dark"]'],  
+  darkMode: ["class", '[data-mode="dark"]'],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -14,11 +14,12 @@ export default {
         diagram: "hsl(var(--diagram))",
       },
       zIndex: {
-        modalOverlay: 99998,
-        modal: 99999,
-        sideBar:999,
-        editor:1000,
-        onEditor:1001,
+        theme: 99999,
+        modalOverlay: 98,
+        modal: 99,
+        sideBar: 95,
+        editor: 96,
+        onEditor: 97,
       },
       borderWidth: {
         1: "1px",

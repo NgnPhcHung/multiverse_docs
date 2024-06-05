@@ -1,10 +1,25 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useDarkMode = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.theme === "dark"
+  );
 
-  useLayoutEffect(() => {
-    setIsDarkMode(localStorage.theme === "dark" || false);
-  }, []);
-  return { isDarkMode,  setIsDarkMode };
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "theme") {
+        const isDark = event.newValue === "dark";
+        setIsDarkMode(isDark);
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        setIsDarkMode(isDark);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [isDarkMode]);
+
+  return { isDarkMode, setIsDarkMode };
 };

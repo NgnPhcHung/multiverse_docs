@@ -36,6 +36,7 @@ export const Editor = () => {
   const { onFormat, formatValue } = useEditorFormatter();
   const { editorFileContent, setEditorContent } = useEditorStore();
 
+
   const onChange = (changedValue?: string) => {
     if (!changedValue) return;
     setValue(changedValue);
@@ -88,6 +89,7 @@ export const Editor = () => {
       setLoading(true);
       return;
     }
+
     setEditorTheme(monaco, isDarkMode);
   }, [isDarkMode]);
 
