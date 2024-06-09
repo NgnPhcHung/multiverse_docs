@@ -4,18 +4,29 @@ import { useEffect } from "react";
 import { ReactFlowProvider } from "reactflow";
 import { Editor } from "../editor";
 import { Diagram } from "./Diagram";
-import { DiagramDocuments } from "./DiagramDocuments";
+import { DiagramDocuments } from "../diagram-document";
 import { ImportFile } from "./ImportFile";
 import { RoomSettings } from "./RoomSettings";
 
 export const DiagramByEditor = () => {
   const {
     liveblocks: { leaveRoom },
+    setEdges,
+    setNode,
   } = useDiagramStore();
 
   useEffect(() => {
     return () => leaveRoom();
   }, [leaveRoom]);
+
+
+  
+  useEffect(() => {
+    return () => {
+      setNode([]);
+      setEdges([]);
+    };
+  }, [setNode, setEdges]);
 
   return (
     <div

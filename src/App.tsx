@@ -1,5 +1,5 @@
+import { AnimatedRoutes } from "@pages";
 import { AnimatePresence } from "framer-motion";
-import { AnimatedRoutes } from "pages";
 import { useLayoutEffect } from "react";
 import { Toaster } from "sonner";
 

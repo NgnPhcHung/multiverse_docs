@@ -1,4 +1,6 @@
 import { Loading } from "@components";
+import { useDarkMode } from "@hooks";
+import { useDiagramStore } from "@store";
 import { useStatus } from "config";
 import { useEffect, useMemo } from "react";
 import ReactFlow, {
@@ -9,10 +11,8 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { useDiagramStore } from "@store";
 import ConnectionEdge from "./ConnectionEdge";
 import { Tables } from "./Tables";
-import { useDarkMode } from "@hooks";
 
 export const Diagram = () => {
   const {
@@ -31,7 +31,6 @@ export const Diagram = () => {
     }),
     []
   );
-
   const { isDarkMode } = useDarkMode();
   const status = useStatus();
   useEffect(() => {

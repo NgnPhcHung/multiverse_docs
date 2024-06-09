@@ -15,6 +15,7 @@ body,
   animation: none;
   mix-blend-mode: normal;
 }
+
 @layer base {
   :root {
     --brand: 228, 52%, 60%;

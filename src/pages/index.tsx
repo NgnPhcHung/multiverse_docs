@@ -6,13 +6,22 @@ import { Route, Routes, useLocation } from "react-router-dom";
 const ViewSelectorPage = lazy(() => import("./view-selector"));
 const DiagramByEditorPage = lazy(() => import("./diagram-by-editor"));
 const SketchNotePage = lazy(() => import("./SketchNotePage"));
+const NotFoundPage = lazy(() => import("./not-found/NotFoundPage"));
 
 export const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
     <Routes location={location} key={location.pathname}>
-      <Route path="/*" element={<AppLayout />}>
+      <Route
+        path="*"
+        element={
+          <Suspense fallback={<div>Loading...</div>}>
+            <NotFoundPage />
+          </Suspense>
+        }
+      />
+      <Route path="/" element={<AppLayout />}>
         <Route
           index
           element={

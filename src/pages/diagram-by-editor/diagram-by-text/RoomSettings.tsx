@@ -1,9 +1,9 @@
-import { useSocketContext } from "@components";
-import { useDisclosure } from "@hooks";
+import { Dialog, useSocketContext } from "@components";
+import { useDisclosure, useUser } from "@hooks";
 import { AwarenessList } from "@interfaces";
 import { useDiagramStore } from "@store";
 import { generateHexColor, groupBy, overrideRoom } from "@utils";
-import { Input, InputRef, Modal } from "antd";
+import { Input, InputRef } from "antd";
 import { useRoom } from "config";
 import { Home } from "lucide-react";
 import RandomAnimalNames from "random-animal-name";
@@ -21,6 +21,7 @@ export const RoomSettings = () => {
   } = useDiagramStore();
   const room = useRoom();
   const { provider, joinRoom, room: socketRoom } = useSocketContext();
+  const { userSettings, setUserSettings } = useUser();
 
   useEffect(() => {
     const createUserData = () => {
@@ -57,9 +58,10 @@ export const RoomSettings = () => {
       enterRoom(roomId);
       joinRoom(roomId);
     } else {
-      enterRoom;
+      // enterRoom();
       room.connect();
     }
+    setUserSettings({ ...userSettings, diagramRoom: roomId });
     toast.success(`Joined ${roomId}`);
     close();
   };
@@ -73,44 +75,33 @@ export const RoomSettings = () => {
   return (
     <>
       <Button onClick={toggle}>Room</Button>
+      <Dialog title="" opened={opened} onClose={close} size="lg">
+        <Dialog.Description>
+          <Input
+            ref={inputRef}
+            className="mt-6"
+            prefix={<Home className="w-4 h-4 text-primary" />}
+            placeholder="Room name ..."
+          />
+          <div className="flex items-center justify-end space-x-4 mt-5 w-full">
+            <Button
+              key="back"
+              variant="secondary"
+              rightIcon="screen-share-off"
+              onClick={disconnect}
+            >
+              Disconnect
+            </Button>
+            <Button key="host" rightIcon="screen-share" variant="outline">
+              Create room
+            </Button>
 
-      <Modal
-        title
-        open={opened}
-        closable
-        onCancel={close}
-        classNames={{
-          footer: "flex space-x-4 justify-end",
-        }}
-        footer={[
-          <Button key="host" rightIcon="screen-share">
-            Host
-          </Button>,
-          <Button
-            key="back"
-            variant="subtle"
-            rightIcon="screen-share-off"
-            onClick={disconnect}
-          >
-            Disconnect
-          </Button>,
-          <Button
-            key="join"
-            variant="outline"
-            rightIcon="arrow-right-left"
-            onClick={connect}
-          >
-            Join
-          </Button>,
-        ]}
-      >
-        <Input
-          ref={inputRef}
-          className="mt-6"
-          prefix={<Home className="w-4 h-4 text-primary" />}
-          placeholder="Room name ..."
-        />
-      </Modal>
+            <Button key="join" rightIcon="arrow-right-left" onClick={connect}>
+              Join
+            </Button>
+          </div>
+        </Dialog.Description>
+      </Dialog>
     </>
   );
 };

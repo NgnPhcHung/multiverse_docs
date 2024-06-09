@@ -1,2 +1,2 @@
-export * from "./editorStore";
-export * from "./diagramStore";
+export * from './diagramStore';
+export * from './editorStore';

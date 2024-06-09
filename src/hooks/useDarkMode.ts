@@ -9,6 +9,7 @@ export const useDarkMode = () => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === "theme") {
         const isDark = event.newValue === "dark";
+        console.log({ isDark });
         setIsDarkMode(isDark);
         localStorage.setItem("theme", isDark ? "dark" : "light");
         setIsDarkMode(isDark);

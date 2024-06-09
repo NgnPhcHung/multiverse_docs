@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
-import { MouseEventHandler, PropsWithChildren } from "react";
+import { ChangeEventHandler, MouseEventHandler, PropsWithChildren } from "react";
 import { ButtonVariant, variants } from ".";
 import { DynamicIcon } from "..";
 
@@ -12,6 +12,7 @@ export interface ButtonProps extends PropsWithChildren {
   };
   rightIcon?: keyof typeof dynamicIconImports;
   onClick?: MouseEventHandler<Element>;
+  onChange?: ChangeEventHandler<Element>;
 }
 
 export const ButtonWrapper = ({

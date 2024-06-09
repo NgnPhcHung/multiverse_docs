@@ -13,13 +13,16 @@ import { Awareness } from "y-protocols/awareness";
 import * as Y from "yjs";
 import { EditorCursor } from "./EditorCursor";
 import { EditorSkeleton } from "./EditorSkeleton";
-import { useEditorFormatter } from "./editorFunctions";
+// import { useEditorFormatter } from "./useEditorFormatter";
 import {
   defaultEditorValue,
   regex,
   setEditorTheme,
   settingMonacoEditor,
 } from "./editorSettings";
+import { parseSchema } from "./editorConverter";
+import { useEditorFormatter } from "./useEditorFormatter";
+import { Node } from "reactflow";
 
 export const Editor = () => {
   const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
@@ -28,14 +31,14 @@ export const Editor = () => {
   const { isDarkMode } = useDarkMode();
   const room = useRoom();
   const { setProvider, provider } = useSocketContext();
-  const { setNode, setEdges } = useDiagramStore();
+  const { setNode, nodes } = useDiagramStore();
 
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
   const monaco = useMonaco();
-  const { onFormat, formatValue } = useEditorFormatter();
-  const { editorFileContent, setEditorContent } = useEditorStore();
+  const { formatValue } = useEditorFormatter();
 
+  const { editorFileContent, setEditorContent } = useEditorStore();
 
   const onChange = (changedValue?: string) => {
     if (!changedValue) return;
@@ -72,7 +75,37 @@ export const Editor = () => {
   );
 
   useEffect(() => {
-    if (debouncedValue) onFormat(debouncedValue);
+    if (debouncedValue.length) {
+      const schema = parseSchema(debouncedValue);
+
+      const nodesArr: Node[] = Object.entries(schema).map(([key, value]) => {
+        const existingNodes = nodes.find((node) => node.id === key);
+
+        if (existingNodes) {
+          return {
+            ...existingNodes,
+            data: {
+              [key]: value,
+            },
+          };
+        }
+
+        return {
+          id: key,
+          type: "tables",
+          data: {
+            [key]: value,
+          },
+          position: { x: 125, y: 22 },
+        };
+      });
+      console.log({nodesArr})
+      setNode(nodesArr);
+    }
+
+    return () => {
+      setNode([]);
+    };
   }, [debouncedValue]);
 
   useEffect(() => {
@@ -117,13 +150,6 @@ export const Editor = () => {
       binding?.destroy();
     };
   }, [editorRef, room, setProvider]);
-
-  useEffect(() => {
-    return () => {
-      setNode([]);
-      setEdges([]);
-    };
-  }, [setNode, setEdges]);
 
   return (
     <div className="w-full h-full">

@@ -1,29 +1,29 @@
-import { ElementRef, MouseEvent, useRef } from "react";
+import { ElementRef, useRef } from "react";
 import { ButtonProps, ButtonWrapper } from "./ButtonWrapper";
 
 export const FileButton = ({
   children,
   className,
-  onClick,
+  onChange,
   rightIcon,
 }: ButtonProps) => {
   const fileInputRef = useRef<ElementRef<"input">>(null);
 
-  const handleButtonClick = (event: MouseEvent) => {
-    onClick?.(event);
+  const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
 
   return (
     <ButtonWrapper
       className={className}
-      onClick={onClick}
+      // onClick={onClick}
       rightIcon={rightIcon}
     >
       <div className="w-full h-full" onClick={handleButtonClick}>
         {children}
       </div>
       <input
+        onChange={onChange}
         ref={fileInputRef}
         type="file"
         id="file-button-attachment"

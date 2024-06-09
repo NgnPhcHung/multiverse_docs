@@ -1,91 +1,28 @@
-import { TableType } from "@store";
-import { checkValidJSONString } from "@utils";
-import { Key } from "lucide-react";
-import { useMemo } from "react";
-import { Handle, Node, NodeProps, Position } from "reactflow";
+import { Node, NodeProps } from "reactflow";
+import { TableDefinition } from "../editor/editorConverter";
+import { TableRow } from "./TableRow";
 
 type TableProps = {
   id: string;
   data: Node;
 };
 
-interface DiagramTable {
-  name: string;
-  dataType: string;
-  constrains: string;
-}
-
 export type CustomNode = Node<TableProps>;
 
-export const Tables = (data: NodeProps<TableType>) => {
+export const Tables = (data: NodeProps<TableDefinition>) => {
   const tableInfo = data.data;
-  // const { edges } = useDiagramStore();
-
-  const tableEntity: DiagramTable[] = useMemo(() => {
-    if (checkValidJSONString(tableInfo.tableEntity)) {
-      return JSON.parse(tableInfo.tableEntity);
-    }
-    return [];
-  }, [tableInfo.tableEntity]);
-
-  // useEffect(() => {
-  //   const source: ReactNode[] = [];
-  //   const target: ReactNode[] = [];
-
-  //   const onRenderHandler = (
-  //     property: string | undefined,
-  //     entityName: string,
-  //     type: "source" | "target"
-  //   ) => {
-  //     if (!property || property.includes(entityName)) return null;
-
-  //     return (
-  //       <>
-  //         <Handle
-  //           type={type}
-  //           position={Position.Left}
-  //           className="bg-primary opacity-0"
-  //           id={`${tableInfo.tableName}.${entityName}`}
-  //         />
-  //         <Handle
-  //           type={type}
-  //           position={Position.Right}
-  //           className="bg-primary  opacity-0"
-  //           id={`${tableInfo.tableName}.${entityName}`}
-  //         />
-  //       </>
-  //     );
-  //   };
-
-  //   tableEntity.map((entity) => {
-  //     const tableRow = `${tableInfo.tableName}.${entity.name}`;
-  //     const sourceHandle = edges.find((edge) => edge.sourceHandle === tableRow);
-  //     const targetHandle = edges.find((edge) => edge.targetHandle === tableRow);
-
-  //     source.push(
-  //       onRenderHandler(
-  //         sourceHandle?.sourceHandle ?? undefined,
-  //         entity.name,
-  //         "source"
-  //       )
-  //     );
-  //     target.push(
-  //       onRenderHandler(
-  //         targetHandle?.targetHandle ?? undefined,
-  //         entity.name,
-  //         "target"
-  //       )
-  //     );
-  //   });
-  //   setHandlers({ source, target });
-  // }, [edges, tableEntity, tableInfo.tableName]);
+  const [columns] = Object.values(tableInfo);
+  const tableColumns = columns.columns as TableDefinition["columns"];
 
   return (
     <div className="min-w-48 h-fit bg-secondary text-primaryHover outline-brand hover:outline">
       <p className=" p-1 font-semibold bg-secondaryHover">
-        {tableInfo.tableName}
+        {Object.keys(tableInfo)[0]}
       </p>
-      {tableEntity.map((entity) => {
+      {Object.keys(tableColumns).map((data) => (
+        <TableRow name={data} data={tableColumns[data]} />
+      ))}
+      {/* {tableEntity.map((entity) => {
         return (
           <div
             key={`${entity.name}`}
@@ -131,7 +68,7 @@ export const Tables = (data: NodeProps<TableType>) => {
             />
           </div>
         );
-      })}
+      })} */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { EditorTextRelation, RelationType } from "interfaces";
 import { Edge, Node } from "reactflow";
-import { useDiagramStore } from "store";
+import { useDiagramStore } from "@store";
 import { lineRegex, regexForeign } from "./editorSettings";
 import { Constrains } from "./editorVariables";
 

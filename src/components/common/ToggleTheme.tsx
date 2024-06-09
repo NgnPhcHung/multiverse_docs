@@ -59,7 +59,8 @@ export const ToggleTheme = () => {
       document.documentElement.setAttribute("data-theme", "light");
     }
   };
-  
+
+
   return (
     <motion.div
       layout

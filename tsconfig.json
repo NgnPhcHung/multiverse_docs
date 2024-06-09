@@ -29,7 +29,8 @@
       "@store": ["store"],
       "@utils": ["utils"],
       "@theme": ["theme"],
-      "@assets": ["theme"]
+      "@assets": ["assets"],
+      "@pages": ["pages"],
     }
   },
   "include": ["src", "src/svg.d.ts"],
