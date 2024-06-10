@@ -14,31 +14,31 @@ import * as Y from "yjs";
 import { EditorCursor } from "./EditorCursor";
 import { EditorSkeleton } from "./EditorSkeleton";
 // import { useEditorFormatter } from "./useEditorFormatter";
+import { Edge, Node } from "reactflow";
+import { parseSchema } from "./editorConverter";
 import {
   defaultEditorValue,
   regex,
   setEditorTheme,
   settingMonacoEditor,
 } from "./editorSettings";
-import { parseSchema } from "./editorConverter";
 import { useEditorFormatter } from "./useEditorFormatter";
-import { Node } from "reactflow";
+import { RelationType } from "@interfaces";
+import { getKeyFromEnum } from "@utils";
 
 export const Editor = () => {
-  const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
-  const [loading, setLoading] = useState(true);
-  const [editorValues, setEditorValues] = useState("");
-  const { isDarkMode } = useDarkMode();
   const room = useRoom();
-  const { setProvider, provider } = useSocketContext();
-  const { setNode, nodes } = useDiagramStore();
-
-  const [value, setValue] = useState("");
-  const debouncedValue = useDebounce<string>(value, 500);
   const monaco = useMonaco();
+  const { isDarkMode } = useDarkMode();
+  const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { setNode, setEdges, nodes } = useDiagramStore();
   const { formatValue } = useEditorFormatter();
-
+  const debouncedValue = useDebounce<string>(value, 500);
+  const { setProvider, provider } = useSocketContext();
+  const [editorValues, setEditorValues] = useState("");
   const { editorFileContent, setEditorContent } = useEditorStore();
+  const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>();
 
   const onChange = (changedValue?: string) => {
     if (!changedValue) return;
@@ -77,9 +77,24 @@ export const Editor = () => {
   useEffect(() => {
     if (debouncedValue.length) {
       const schema = parseSchema(debouncedValue);
+      const edgeArr: Edge[] = [];
 
       const nodesArr: Node[] = Object.entries(schema).map(([key, value]) => {
         const existingNodes = nodes.find((node) => node.id === key);
+
+        value.references?.forEach((refer) => {
+          edgeArr.push({
+            id: `${value.tableName}.${refer.sourceColumn}-${refer.table}.${refer.targetColumn}`,
+            source: refer.sourceColumn,
+            target: refer.targetColumn,
+            sourceHandle: `${value.tableName}.${refer.sourceColumn}`,
+            targetHandle: `${refer.table}.${refer.targetColumn}`,
+            type: "floating",
+            data: {
+              label: getKeyFromEnum(refer.relationship, RelationType),
+            },
+          });
+        });
 
         if (existingNodes) {
           return {
@@ -99,7 +114,7 @@ export const Editor = () => {
           position: { x: 125, y: 22 },
         };
       });
-      console.log({nodesArr})
+      setEdges([...edgeArr]);
       setNode(nodesArr);
     }
 

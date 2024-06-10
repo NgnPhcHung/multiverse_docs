@@ -1,36 +1,72 @@
-import { CircleOff } from "lucide-react";
+import { CircleOff, KeyIcon } from "lucide-react";
+import { ReactNode } from "react";
 import { ColumnDefinition } from "../editor/editorConverter";
+import { Handle, Position } from "reactflow";
 
 interface TableRowProps {
   data: ColumnDefinition;
   name: string;
+  tableName: string;
 }
+const Special = ({ content }: { content: string }) => {
+  return (
+    <div className="bg-secondaryHover text-sm px-1 rounded-md">{content}</div>
+  );
+};
 const mapper = {
-  isNotNull: <CircleOff />,
-  isUnique: <CircleOff />,
-  primaryKey: <CircleOff />,
+  isNotNull: <CircleOff className="w-3 h-3" />,
+  isUnique: <Special content="U" />,
+  primaryKey: <KeyIcon className="w-3 h-3" />,
   nullValue: undefined,
 };
-type MapperKey = keyof typeof mapper;
 
-export const TableRow = ({ name, data }: TableRowProps) => {
+export const TableRow = ({ tableName, name, data }: TableRowProps) => {
   const getMapperKey = (key: keyof ColumnDefinition) => {
     if (data[key] === true) return key;
     if (typeof data[key] === "string") return data[key];
     return "nullValue";
   };
 
+
   return (
-    <div className="px-2 flex justify-between">
+    <div className="px-2 flex justify-between relative">
       <div className="mr-4">{name}</div>
-      {Object.keys(data).map((key) => {
-        const specialKeys = ["type"];
-        let renderEle = mapper[getMapperKey(key)];
-        if (specialKeys.includes(key)) {
-          renderEle = data[key];
-        }
-        return renderEle && <div key={key}>{renderEle}</div>;
-      })}
+      <div className="flex items-center space-x-1">
+        {Object.keys(data).map((key) => {
+          const specialKeys = ["type"];
+          let renderEle: ReactNode =
+            mapper[getMapperKey(key as keyof ColumnDefinition)];
+          if (specialKeys.includes(key)) {
+            renderEle = data[key];
+          }
+          return renderEle && <div key={key}>{renderEle}</div>;
+        })}
+      </div>
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="opacity-0"
+        id={`${tableName}.${name}`}
+      />
+      <Handle
+        type="target"
+        position={Position.Right}
+        className="opacity-0"
+        id={`${tableName}.${name}`}
+      ></Handle>
+
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="opacity-0"
+        id={`${tableName}.${name}`}
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        className="opacity-0"
+        id={`${tableName}.${name}`}
+      />
     </div>
   );
 };

@@ -56,7 +56,7 @@ export const useDiagramStore = create<
           edges: addEdge(
             {
               ...connection,
-              type: "smoothstep",
+              type: "floating",
             },
             get().edges
           ),

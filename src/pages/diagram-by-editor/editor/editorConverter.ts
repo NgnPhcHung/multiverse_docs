@@ -1,6 +1,7 @@
 interface Reference {
   table: string;
-  column: string;
+  sourceColumn: string;
+  targetColumn: string;
   relationship: string;
 }
 
@@ -9,11 +10,12 @@ export interface ColumnDefinition {
   isNotNull: boolean;
   isUnique: boolean;
   primaryKey: boolean;
-  references?: Reference;
 }
 
 export interface TableDefinition {
   columns: { [key: string]: ColumnDefinition };
+  tableName: string;
+  references?: Reference[];
 }
 
 interface Schema {
@@ -48,7 +50,7 @@ export function parseSchema(schema: string): Schema {
       };
     }
 
-    result[tableName] = { columns };
+    result[tableName] = { columns, tableName };
   }
   return parseForeignKeys(schema, result);
 }
@@ -66,11 +68,15 @@ export function parseForeignKeys(schema: string, result: Schema): Schema {
     const targetColumn = match[5];
 
     if (result[sourceTable] && result[sourceTable].columns[sourceColumn]) {
-      result[sourceTable].columns[sourceColumn].references = {
+      result[sourceTable].references = [
+        ...(result[sourceTable].references || []),
+      ];
+      result[sourceTable].references?.push({
         table: targetTable,
-        column: targetColumn,
+        targetColumn,
+        sourceColumn,
         relationship: mapRelationshipType(relationship),
-      };
+      });
     }
   }
   return result;
