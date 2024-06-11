@@ -16,21 +16,22 @@ const Special = ({ content }: { content: string }) => {
 const mapper = {
   isNotNull: <CircleOff className="w-3 h-3" />,
   isUnique: <Special content="U" />,
-  primaryKey: <KeyIcon className="w-3 h-3" />,
   nullValue: undefined,
 };
 
 export const TableRow = ({ tableName, name, data }: TableRowProps) => {
   const getMapperKey = (key: keyof ColumnDefinition) => {
-    if (data[key] === true) return key;
+    if (data[key] === true) return key as string;
     if (typeof data[key] === "string") return data[key];
     return "nullValue";
   };
 
-
   return (
     <div className="px-2 flex justify-between relative">
-      <div className="mr-4">{name}</div>
+      <div className="mr-4 flex items-center space-x-2">
+        <div>{name}</div>
+        {data.primaryKey && <KeyIcon className="w-2 h-2" />}
+      </div>
       <div className="flex items-center space-x-1">
         {Object.keys(data).map((key) => {
           const specialKeys = ["type"];

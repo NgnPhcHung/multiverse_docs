@@ -1,4 +1,4 @@
-import { Dialog, FileButton } from "@components";
+import { Button, Dialog, FileButton } from "@components";
 import { useDisclosure } from "@hooks";
 import { Editor as MonacoEditor } from "@monaco-editor/react";
 import { ChangeEvent, useState } from "react";
@@ -18,7 +18,7 @@ export const ImportFile = () => {
         if (event.target && event.target.result) {
           const fileContent = event.target.result as string;
           const sqlFormatted = formatFileSql(fileContent);
-          console.log({ sqlFormatted });
+
           if (Object.keys(sqlFormatted).length) {
             setImportedText(JSON.stringify(sqlFormatted, null, 2).slice(1, -1));
             open();
@@ -53,6 +53,10 @@ export const ImportFile = () => {
               hideCursorInOverviewRuler: true,
             }}
           />
+          <div className="flex items-center space-x-4 justify-end">
+            <Button variant="outline">Cancel</Button>
+            <Button>Select</Button>
+          </div>
         </Dialog.Description>
       </Dialog>
     </>

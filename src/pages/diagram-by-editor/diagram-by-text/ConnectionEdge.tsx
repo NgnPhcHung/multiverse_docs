@@ -10,7 +10,6 @@ import { getEdgeParams } from "@utils";
 
 // this is a little helper component to render the actual edge label
 function EdgeLabel({ transform, label }: { transform: string; label: string }) {
-  console.log({ label });
   return (
     <div
       style={{

@@ -17,6 +17,11 @@ interface DialogProps extends PropsWithChildren {
   onClose: () => void;
   size?: ESize;
   title?: string;
+  classNames?: {
+    container?: string;
+    title?: string;
+    description?: string;
+  };
 }
 
 export const Dialog = ({
@@ -25,6 +30,7 @@ export const Dialog = ({
   onClose,
   size = "md",
   children,
+  classNames,
 }: DialogProps) => {
   return (
     <AnimatePresence>
@@ -42,11 +48,19 @@ export const Dialog = ({
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
             className={clsx(
-              "bg-secondary text-primary p-4  rounded-lg shadow-xl cursor-default relative overflow-hidden ",
-              containSize[size]
+              "bg-secondary text-primary p-4 rounded-lg shadow-xl cursor-default relative overflow-hidden ",
+              containSize[size],
+              classNames?.container
             )}
           >
-            <h3 className="font-semibold text-lg text-start">{title}</h3>
+            <h3
+              className={clsx(
+                classNames?.title,
+                "font-semibold text-lg text-start"
+              )}
+            >
+              {title}
+            </h3>
             <ActionIcon
               variant="subtle"
               className="absolute right-2 top-2"
@@ -54,7 +68,14 @@ export const Dialog = ({
             >
               <X size={16} />
             </ActionIcon>
-            {children}
+            <div
+              className={clsx(
+                classNames?.description,
+                "overflow-hidden flex-wrap flex flex-col items-center justify-center w-full h-full"
+              )}
+            >
+              {children}
+            </div>
           </motion.div>
         </motion.div>
       )}
@@ -65,11 +86,7 @@ export const Dialog = ({
 interface DescriptionProps extends PropsWithChildren {}
 
 const Description = ({ children }: DescriptionProps) => {
-  return (
-    <div className="mt-6 overflow-hidden flex-wrap flex flex-col items-center justify-center w-full h-full">
-      {children}
-    </div>
-  );
+  return <div className="mt-6  w-full h-full">{children}</div>;
 };
 
 Dialog.Description = Description;

@@ -24,7 +24,7 @@ export const DiagramDocuments = () => {
       <Dialog title="Document" opened={opened} onClose={close} size="xl">
         <Dialog.Description>
           <MonacoEditor
-            height="80%"
+            height="90%"
             className="[&_.cursor]:!hidden"
             onMount={handleMonacoEditorDidMount}
             theme="unknown-language-theme"

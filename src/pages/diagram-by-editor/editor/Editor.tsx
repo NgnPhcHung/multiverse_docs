@@ -14,6 +14,8 @@ import * as Y from "yjs";
 import { EditorCursor } from "./EditorCursor";
 import { EditorSkeleton } from "./EditorSkeleton";
 // import { useEditorFormatter } from "./useEditorFormatter";
+import { RelationType } from "@interfaces";
+import { getKeyFromEnum } from "@utils";
 import { Edge, Node } from "reactflow";
 import { parseSchema } from "./editorConverter";
 import {
@@ -23,8 +25,6 @@ import {
   settingMonacoEditor,
 } from "./editorSettings";
 import { useEditorFormatter } from "./useEditorFormatter";
-import { RelationType } from "@interfaces";
-import { getKeyFromEnum } from "@utils";
 
 export const Editor = () => {
   const room = useRoom();
@@ -85,8 +85,8 @@ export const Editor = () => {
         value.references?.forEach((refer) => {
           edgeArr.push({
             id: `${value.tableName}.${refer.sourceColumn}-${refer.table}.${refer.targetColumn}`,
-            source: refer.sourceColumn,
-            target: refer.targetColumn,
+            source: value.tableName,
+            target: refer.table,
             sourceHandle: `${value.tableName}.${refer.sourceColumn}`,
             targetHandle: `${refer.table}.${refer.targetColumn}`,
             type: "floating",

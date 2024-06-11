@@ -1,11 +1,5 @@
-import { SketchNoteContainer } from "@components";
-
 const SketchNotePage = () => {
-  return (
-    <>
-      <SketchNoteContainer />
-    </>
-  );
+  return <></>;
 };
 
 export default SketchNotePage;
