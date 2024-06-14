@@ -86,8 +86,8 @@ export const Editor = () => {
           edgeArr.push({
             id: `${value.tableName}.${refer.sourceColumn}-${refer.table}.${refer.targetColumn}`,
             source: value.tableName,
-            target: refer.table,
             sourceHandle: `${value.tableName}.${refer.sourceColumn}`,
+            target: refer.table,
             targetHandle: `${refer.table}.${refer.targetColumn}`,
             type: "floating",
             data: {
