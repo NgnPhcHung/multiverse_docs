@@ -25,7 +25,7 @@ export const Tables = (data: NodeProps<TableDefinition>) => {
           tableName={columns.tableName}
           name={data}
           data={tableColumns[data]}
-          key={data}
+          key={JSON.stringify(tableColumns[data])}
         />
       ))}
     </div>

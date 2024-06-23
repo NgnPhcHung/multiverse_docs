@@ -25,7 +25,7 @@ export const TableRow = ({ tableName, name, data }: TableRowProps) => {
     if (typeof data[key] === "string") return data[key];
     return "nullValue";
   };
-
+  console.log(`${tableName}.${name}`)
   return (
     <div className="px-2 flex justify-between relative">
       <div className="mr-4 flex items-center space-x-2">
@@ -46,26 +46,26 @@ export const TableRow = ({ tableName, name, data }: TableRowProps) => {
       <Handle
         type="target"
         position={Position.Left}
-        className="opacity-0"
+        // className="opacity-0"
         id={`${tableName}.${name}`}
       />
       <Handle
         type="target"
         position={Position.Right}
-        className="opacity-0"
+        // className="opacity-0"
         id={`${tableName}.${name}`}
       ></Handle>
 
       <Handle
         type="source"
         position={Position.Right}
-        className="opacity-0"
+        // className="opacity-0"
         id={`${tableName}.${name}`}
       />
       <Handle
         type="source"
         position={Position.Left}
-        className="opacity-0"
+        // className="opacity-0"
         id={`${tableName}.${name}`}
       />
     </div>
