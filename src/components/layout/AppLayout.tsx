@@ -1,4 +1,4 @@
-import { AnimatedPage, Breadcrumbs } from "components";
+import { AnimatedPage, Breadcrumbs } from "@components/common";
 import { useState } from "react";
 import { useOutlet } from "react-router-dom";
 

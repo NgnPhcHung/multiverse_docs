@@ -1,24 +1,26 @@
-import { Editor, Nav, Sidebar } from "components";
+import { Nav, Sidebar } from "@components/common";
+import { Editor } from "@components/editor";
+import { useDiagramStore } from "@store/diagramStore";
+import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
-import { ReactFlowProvider } from "reactflow";
-import { useDiagramStore } from "store";
 import { Diagram } from "./Diagram";
 
 export const DiagramByEditor = () => {
-  const {
-    liveblocks: { leaveRoom },
-  } = useDiagramStore();
+  const store = useDiagramStore();
 
   useEffect(() => {
-    return () => leaveRoom();
-  }, [leaveRoom]);
+    store.initStore();
+  }, []);
 
   return (
-    <div key="diagram-editor" className="flex dark:bg-brand relative h-full overflow-hidden">
+    <div
+      key="diagram-editor"
+      className="flex dark:bg-brand relative h-full overflow-hidden"
+    >
       <Sidebar navbar={<Nav />}>
         <Editor />
       </Sidebar>
-      <main className="flex-1 overflow-hidden relative bg-primary">
+      <main className="flex-1 overflow-hidden relative bg-diagram">
         <ReactFlowProvider>
           <Diagram />
         </ReactFlowProvider>

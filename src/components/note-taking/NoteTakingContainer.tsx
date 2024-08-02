@@ -1,5 +1,5 @@
 import { Sidebar } from "components/common";
-import DrawingPanel from "./DrawingPanel";
+// import DrawingPanel from "./DrawingPanel";
 import { NoteTakingEditor } from "./NoteTakingEditor";
 
 export const NoteTakingContainer = () => {
@@ -11,7 +11,7 @@ export const NoteTakingContainer = () => {
         </div>
       </Sidebar>
       <main className="flex-1 overflow-hidden relative bg-primary">
-        <DrawingPanel />
+        {/* <DrawingPanel /> */}
       </main>
     </div>
   );

@@ -1,7 +1,8 @@
-import { TableForeign } from "interfaces";
+import { TableForeign } from "@interfaces/TableForeign";
+import { Node } from "@xyflow/react";
 import { create } from "zustand";
 
-export interface TableType {
+export interface TableType extends Node {
   tableName: string;
   tableEntity: string;
 }

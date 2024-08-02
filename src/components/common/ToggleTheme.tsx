@@ -1,11 +1,11 @@
-import { useAppContext } from "AppContext";
+import { useAppStore } from "@src/store";
 import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { ElementRef, useRef } from "react";
 import { flushSync } from "react-dom";
 
 export const ToggleTheme = () => {
-  const { isDarkMode, setIsDarkMode } = useAppContext();
+  const { isDarkMode, setIsDarkMode } = useAppStore();
   const ref = useRef<ElementRef<"div">>(null);
 
   const toggleDarkMode = async () => {

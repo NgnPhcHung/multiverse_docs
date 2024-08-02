@@ -1,12 +1,8 @@
+import { getEdgeParams } from "@utils/getEdgeParams";
+import { EdgeLabelRenderer, EdgeProps, getSmoothStepPath } from "@xyflow/react";
+import { Position } from "monaco-editor";
 import { useCallback } from "react";
-import {
-  EdgeLabelRenderer,
-  EdgeProps,
-  Position,
-  getSmoothStepPath,
-  useStore,
-} from "reactflow";
-import { getEdgeParams } from "utils/getEdgeParams";
+import { useStore } from "zustand";
 
 // this is a little helper component to render the actual edge label
 function EdgeLabel({ transform, label }: { transform: string; label: string }) {

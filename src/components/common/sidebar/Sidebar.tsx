@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { useScreenSize } from "hooks";
 import { ChevronLeft, MenuIcon } from "lucide-react";
 import {
   ElementRef,
@@ -11,6 +10,7 @@ import {
   useState,
 } from "react";
 import { ActionIcon } from "../actionIcon";
+import { useScreenSize } from "@hooks/useScreenSize";
 
 interface SidebarProps extends PropsWithChildren {
   navbar?: JSX.Element;

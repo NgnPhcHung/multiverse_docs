@@ -1,8 +1,9 @@
+import { useDiagramStore } from "@store/diagramStore";
+import { TableType } from "@store/editorStore";
+import { checkValidJSONString } from "@utils/checkValidJSONString";
+import { Handle, Node, NodeProps, Position } from "@xyflow/react";
 import { Key } from "lucide-react";
-import { ReactElement, ReactNode, createElement, useMemo } from "react";
-import { Connection, Handle, Node, NodeProps, Position } from "reactflow";
-import { TableType, useDiagramStore } from "store";
-import { checkValidJSONString } from "utils";
+import { useMemo } from "react";
 
 type TableProps = {
   id: string;
@@ -17,11 +18,19 @@ interface DiagramTable {
 
 export type CustomNode = Node<TableProps>;
 
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
 export const Tables = (data: NodeProps<TableType>) => {
   const tableInfo = data.data;
   const { edges } = useDiagramStore();
+
   const tableEntity: DiagramTable[] = useMemo(() => {
-    if (checkValidJSONString(tableInfo.tableEntity)) {
+    if (
+      isString(tableInfo.tableEntity) &&
+      checkValidJSONString(tableInfo.tableEntity)
+    ) {
       return JSON.parse(tableInfo.tableEntity);
     }
     return [];
@@ -29,7 +38,11 @@ export const Tables = (data: NodeProps<TableType>) => {
 
   return (
     <div className="min-w-48 h-fit bg-secondaryHover text-primaryHover">
-      <p className=" p-1 font-semibold bg-secondary">{tableInfo.tableName}</p>
+      <p className="p-1 font-semibold bg-secondary">
+        {typeof tableInfo.tableName === "string"
+          ? tableInfo.tableName
+          : "Default Name"}
+      </p>
       {tableEntity.map((entity, idx) => {
         const tableRow = `${tableInfo.tableName}.${entity.name}`;
         const sourceHandle = edges.find(

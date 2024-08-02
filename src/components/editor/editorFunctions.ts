@@ -1,8 +1,9 @@
-import { Edge, Node } from "reactflow";
-import { useDiagramStore } from "store";
+import { EditorTextRelation } from "@interfaces/EditorTextRelation";
+import { RelationType } from "@interfaces/RelationTypes";
+import { useDiagramStore } from "@store/diagramStore";
+import { Edge, Node } from "@xyflow/react";
 import { lineRegex, regexForeign } from "./editorSettings";
 import { Constrains } from "./editorVariables";
-import { EditorTextRelation, RelationType } from "interfaces";
 
 export const useEditorFormatter = () => {
   const { setNode, setEdges, nodes } = useDiagramStore();
@@ -123,7 +124,6 @@ export const useEditorFormatter = () => {
 
   const onFormat = (value: string) => {
     if (!value) {
-      setNode([]);
       setEdges([]);
       return;
     }
@@ -217,10 +217,13 @@ export const useEditorFormatter = () => {
           tableName: table.data.tableName,
           tableEntity: splitted,
         },
+        id: table.data.tableName as string,
+        position: { x: 125, y: 22 },
       };
     });
 
-    setNode(newTable);
+    newTable.forEach((d) => setNode(d));
+
   };
 
   return { onFormat, formatValue };

@@ -1,12 +1,12 @@
-import { AppLayout } from "components";
+import { AppLayout } from "@components/layout";
 import { Suspense, lazy } from "react";
 
 import { Route, Routes, useLocation } from "react-router-dom";
 
 const ViewSelectorPage = lazy(() => import("./pages/ViewSelectorPage"));
 const DiagramByEditorPage = lazy(() => import("./pages/DiagramByEditorPage"));
-const WorkflowPage = lazy(() => import("./pages/WorkflowPage"));
-const NoteTakingPage = lazy(() => import("./pages/NoteTakingPage"));
+// const WorkflowPage = lazy(() => import("./pages/WorkflowPage"));
+// const NoteTakingPage = lazy(() => import("./pages/NoteTakingPage"));
 
 export const AnimatedRoutes = () => {
   const location = useLocation();
@@ -30,7 +30,7 @@ export const AnimatedRoutes = () => {
             </Suspense>
           }
         />
-        <Route
+        {/* <Route
           path="work-flow"
           element={
             <Suspense>
@@ -45,7 +45,7 @@ export const AnimatedRoutes = () => {
               <NoteTakingPage />
             </Suspense>
           }
-        />
+        /> */}
       </Route>
     </Routes>
   );

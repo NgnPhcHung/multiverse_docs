@@ -1,6 +1,6 @@
-import { SQLVariableType } from "interfaces";
+import { SQLVariableType } from "@interfaces/SQLVariableType";
 import * as monacoType from "monaco-editor";
-import { EditorTheme, editorColor, editorRule } from "theme";
+import { EditorTheme, editorRule, editorColor } from "src/theme";
 
 export const defaultEditorValue = `Create user ( 
   id: Char  PrimaryKey,

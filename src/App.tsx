@@ -1,8 +1,7 @@
-import { AnimatedRoutes } from "AnimatedRoutes";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
-import { AppContext } from "./AppContext";
-import { AnimatePresence } from "framer-motion";
+import { AnimatedRoutes } from "./AnimatedRoutes";
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -25,17 +24,10 @@ const App = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      <AppContext.Provider
-        value={{
-          isDarkMode,
-          setIsDarkMode,
-        }}
-      >
-        <Toaster position="bottom-center" />
-        <AnimatePresence mode="wait">
-          <AnimatedRoutes />
-        </AnimatePresence>
-      </AppContext.Provider>
+      <Toaster position="bottom-center" />
+      <AnimatePresence mode="wait">
+        <AnimatedRoutes />
+      </AnimatePresence>
     </div>
   );
 };
