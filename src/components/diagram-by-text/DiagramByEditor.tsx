@@ -1,4 +1,4 @@
-import { Nav, Sidebar } from "@components/common";
+import { Sidebar } from "@components/common";
 import { Editor } from "@components/editor";
 import { useDiagramStore } from "@store/diagramStore";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -17,7 +17,7 @@ export const DiagramByEditor = () => {
       key="diagram-editor"
       className="flex dark:bg-brand relative h-full overflow-hidden"
     >
-      <Sidebar navbar={<Nav />}>
+      <Sidebar>
         <Editor />
       </Sidebar>
       <main className="flex-1 overflow-hidden relative bg-diagram">

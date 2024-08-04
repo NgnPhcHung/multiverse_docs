@@ -1,18 +1,26 @@
 import { useAppStore } from "@src/store";
 import { AnimatePresence, motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
-import { ElementRef, useRef } from "react";
+import { ElementRef, useEffect, useRef } from "react";
 import { flushSync } from "react-dom";
 
 export const ToggleTheme = () => {
   const { isDarkMode, setIsDarkMode } = useAppStore();
   const ref = useRef<ElementRef<"div">>(null);
 
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      setIsDarkMode(true);
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, [isDarkMode, setIsDarkMode]);
+
   const toggleDarkMode = async () => {
-    /**
-     * Return early if View Transition API is not supported
-     * or user prefers reduced motion
-     */
     if (
       !ref.current ||
       !document.startViewTransition ||
@@ -59,14 +67,6 @@ export const ToggleTheme = () => {
       ref={ref}
     >
       <AnimatePresence mode="wait" initial={false}>
-        {/* <motion.i
-            className={`icon far fa-${isOn ? "moon" : "sun"}`}
-            key={isOn ? "moon" : "sun"}
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 30, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          /> */}
         {isDarkMode ? (
           <motion.span
             className="absolute "

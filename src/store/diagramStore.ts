@@ -15,7 +15,7 @@ interface FlowState {
   onNodesChange: (changes: NodeChange<Node>[]) => void;
   onEdgesChange: (changes: EdgeChange<Edge>[]) => void;
   setEdges: (edges: Edge[]) => Promise<void>;
-  setNode: (node: Node) => Promise<void>;
+  setNode: (node: Node[]) => Promise<void>;
   initStore: () => Promise<void>;
 }
 
@@ -40,10 +40,9 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
     }
   },
 
-  setNode: async (node: Node) => {
+  setNode: async (nodes: Node[]) => {
     try {
-      const nodes = (await localForage.getItem<Node[]>("nodes")) || [];
-      const updatedNodes = [...nodes, node];
+      const updatedNodes = nodes;
       await localForage.setItem("nodes", updatedNodes);
       set({ nodes: updatedNodes });
     } catch (error) {

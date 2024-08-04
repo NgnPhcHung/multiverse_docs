@@ -1,3 +1,4 @@
+import { useScreenSize } from "@hooks/useScreenSize";
 import clsx from "clsx";
 import { ChevronLeft, MenuIcon } from "lucide-react";
 import {
@@ -10,10 +11,8 @@ import {
   useState,
 } from "react";
 import { ActionIcon } from "../actionIcon";
-import { useScreenSize } from "@hooks/useScreenSize";
 
 interface SidebarProps extends PropsWithChildren {
-  navbar?: JSX.Element;
   customMinWidth?: number;
 }
 
@@ -21,7 +20,7 @@ const DEFAULT_MIN_WIDTH = 240;
 
 export const Sidebar = ({
   children,
-  navbar,
+
   customMinWidth = DEFAULT_MIN_WIDTH,
 }: SidebarProps) => {
   const { md: isMobile, xl, xxl, lg, xxxl } = useScreenSize();
@@ -144,7 +143,7 @@ export const Sidebar = ({
           className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 right-0 top-0 group-hover/sidebar:bg-blue-500 "
         />
       </aside>
-      <div
+      <nav
         ref={navbarRef}
         className={clsx(
           "absolute top-0 z-sideBar left-60 flex space-x-2 ",
@@ -156,15 +155,20 @@ export const Sidebar = ({
           isCollapsed && "bg-transparent"
         )}
       >
-        {navbar}
-        {isCollapsed && (
+        {/* {isCollapsed && (
           <nav className="bg-transparent w-fit ml-1 mt-3">
             <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
               <MenuIcon className="w-4 h-4" />
             </ActionIcon>
           </nav>
-        )}
-      </div>
+        )} */}
+
+        <div className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12">
+          <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
+            <MenuIcon className="w-4 h-4" />
+          </ActionIcon>
+        </div>
+      </nav>
     </>
   );
 };

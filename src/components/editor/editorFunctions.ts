@@ -80,13 +80,13 @@ export const useEditorFormatter = () => {
             }`,
             type: "floating",
             data: {
-              // label: RelationType[relation as keyof typeof RelationType],
               label: RelationType[relation as keyof typeof RelationType],
             },
           });
         }
       });
     });
+    console.log({relations})
     setEdges(relations);
   };
 
@@ -124,7 +124,6 @@ export const useEditorFormatter = () => {
 
   const onFormat = (value: string) => {
     if (!value) {
-      setEdges([]);
       return;
     }
 
@@ -222,7 +221,7 @@ export const useEditorFormatter = () => {
       };
     });
 
-    newTable.forEach((d) => setNode(d));
+    setNode(newTable)
 
   };
 

@@ -16,18 +16,4 @@ export const viewSelectorOptions: ViewSelectorOptions[] = [
     url: "text-diagram",
     icon: "layout-list",
   },
-  {
-    id: 2,
-    title: "Work flow",
-    description: "Create your own workflow by drag and drop",
-    url: "work-flow",
-    icon: "boxes",
-  },
-  {
-    id: 3,
-    title: "Note with board",
-    description: "Note taking with your board view",
-    url: "note-taking",
-    icon: "book",
-  },
 ];

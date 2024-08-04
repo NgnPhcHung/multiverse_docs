@@ -1,9 +1,9 @@
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
-import { useDiagramStore } from "@store/diagramStore";
+import { useDebounce } from "@src/hooks";
+import { useAppStore } from "@src/store";
 import { TableType, useEditorStore } from "@store/editorStore";
 import * as monaco from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
-import { useDebounce } from "usehooks-ts";
 import { EditorSkeleton } from "./EditorSkeleton";
 import { useEditorFormatter } from "./editorFunctions";
 import {
@@ -12,13 +12,11 @@ import {
   setEditorTheme,
   settingMonacoEditor,
 } from "./editorSettings";
-import { useAppStore } from "@src/store";
 
 export const Editor = () => {
   const [loading, setLoading] = useState(true);
   const [editorValues, setEditorValues] = useState("");
   const { isDarkMode } = useAppStore();
-  const { setNode, setEdges } = useDiagramStore();
 
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
@@ -92,13 +90,6 @@ export const Editor = () => {
     setEditorTheme(monaco, isDarkMode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDarkMode]);
-
-  useEffect(() => {
-    return () => {
-      // setNode([]);
-      setEdges([]);
-    };
-  }, [setNode, setEdges]);
 
   return (
     <div className="w-full h-full">
