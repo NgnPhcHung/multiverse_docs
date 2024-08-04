@@ -65,19 +65,17 @@ export const useEditorFormatter = () => {
           return;
         } else {
           const related = foreign.trim().replaceAll(" ", ".").split(relation);
+          const sourceHandler = `${related[0].split(".")[0]}.${
+            related[0].split(".")[1]
+          }`;
+          const targetHandler = `${related[1].split(".")[0]}.${
+            related[1].split(".")[1]
+          }`;
 
           relations.push({
-            id: `${related[0].split(".")[0]}.${related[0].split(".")[1]}-${
-              related[1].split(".")[0]
-            }.${related[1].split(".")[1]}`,
-            source: related[0].split(".")[0],
-            target: related[1].split(".")[0],
-            sourceHandle: `${related[0].split(".")[0]}.${
-              related[0].split(".")[1]
-            }`,
-            targetHandle: `${related[1].split(".")[0]}.${
-              related[1].split(".")[1]
-            }`,
+            id: `${sourceHandler}-${targetHandler}`,
+            source: sourceHandler,
+            target: targetHandler,
             type: "floating",
             data: {
               label: RelationType[relation as keyof typeof RelationType],
@@ -86,7 +84,6 @@ export const useEditorFormatter = () => {
         }
       });
     });
-    console.log({relations})
     setEdges(relations);
   };
 
@@ -221,8 +218,7 @@ export const useEditorFormatter = () => {
       };
     });
 
-    setNode(newTable)
-
+    setNode(newTable);
   };
 
   return { onFormat, formatValue };
