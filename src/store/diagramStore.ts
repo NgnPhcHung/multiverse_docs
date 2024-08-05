@@ -23,13 +23,23 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],
 
-  onNodesChange: (changes: NodeChange<Node>[]) => {
+  onNodesChange: async (changes: NodeChange<Node>[]) => {
     const updatedNodes = applyNodeChanges(changes, get().nodes);
-    set({ nodes: updatedNodes });
+    try {
+      await localForage.setItem("nodes", updatedNodes);
+      set({ nodes: updatedNodes });
+    } catch (error) {
+      console.error("Failed to save node:", error);
+    }
   },
-  onEdgesChange: (changes: EdgeChange<Edge>[]) => {
+  onEdgesChange: async (changes: EdgeChange<Edge>[]) => {
     const updatedEdges = applyEdgeChanges(changes, get().edges);
-    set({ edges: updatedEdges });
+    try {
+      await localForage.setItem("edges", updatedEdges);
+      set({ edges: updatedEdges });
+    } catch (error) {
+      console.error("Failed to save edges:", error);
+    }
   },
   setEdges: async (edges: Edge[]) => {
     try {
@@ -42,9 +52,8 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
 
   setNode: async (nodes: Node[]) => {
     try {
-      const updatedNodes = nodes;
-      await localForage.setItem("nodes", updatedNodes);
-      set({ nodes: updatedNodes });
+      await localForage.setItem("nodes", nodes);
+      set({ nodes});
     } catch (error) {
       console.error("Failed to save node:", error);
     }

@@ -27,8 +27,6 @@ export const Diagram = () => {
     []
   );
 
-  console.log({ edges, nodes });
-
   return (
     <div className="w-full h-full bg-primary">
       <ReactFlow

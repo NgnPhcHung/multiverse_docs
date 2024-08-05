@@ -164,7 +164,9 @@ export const Sidebar = ({
         )} */}
 
         <div className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12">
-          <ActionIcon variant="secondary" size="md" onClick={resetWidth}>
+          <ActionIcon variant="secondary" size="md" onClick={resetWidth} className={clsx({
+            hidden: !isCollapsed
+          })}>
             <MenuIcon className="w-4 h-4" />
           </ActionIcon>
         </div>

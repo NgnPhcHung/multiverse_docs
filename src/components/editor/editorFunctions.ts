@@ -129,9 +129,6 @@ export const useEditorFormatter = () => {
     let tables: Node[] = [];
 
     formattedValue?.forEach((v) => {
-      let nameFlag = 0;
-      let entityFlag = 0;
-
       const regexValue = v;
       if (regexValue !== null) {
         const tableName = regexValue.substring(0, regexValue.indexOf(" "));
@@ -151,74 +148,47 @@ export const useEditorFormatter = () => {
         });
         if (tableName === null && tableEntity === null) return "";
 
-        if (tables.length <= 0 && tableName.length) {
-          // tables.push({ tableName, tableEntity });
+        // no any table
+        if (tables.length <= 0) {
           tables.push({
             id: tableName,
             type: "tables",
             data: { tableName, tableEntity: formatEntityObject(tableEntity) },
             position: { x: 125, y: 22 },
           });
-        } else {
-          tables.forEach((tb) => {
-            nameFlag = 0;
-            entityFlag = 0;
-            tables.forEach((v) => {
-              if (v.data.tableName === tableName) {
-                nameFlag++;
-                if (v.data.tableEntity) entityFlag++;
-              }
-            });
-            const existedNode = nodes.find((node) => node.id === tableName);
+        }
+        // has table data
+        else {
+          const existedNode = nodes.find((node) => node.id === tableName);
 
-            if (nameFlag === 0) {
-              tables.push({
-                id: tableName,
-                type: "tables",
-                data: {
-                  tableName,
-                  tableEntity: formatEntityObject(tableEntity),
-                },
-                position: { ...(existedNode?.position ?? { x: 125, y: 22 }) },
-              });
-            } else if (nameFlag === 1 && !!existedNode) {
-              if (tb.data.tableEntity || entityFlag === 1) {
-                const filteredTable = tables.filter(
-                  (item) => item.data.tableName !== tableName
-                );
-                tables = filteredTable;
-                tables.push({
-                  id: tableName,
-                  type: "tables",
-                  data: {
-                    tableName,
-                    tableEntity: formatEntityObject(tableEntity),
-                  },
-                  position: { ...existedNode.position },
-                });
-              }
-            }
-          });
+          if (!existedNode) {
+            tables.push({
+              id: tableName,
+              type: "tables",
+              data: {
+                tableName,
+                tableEntity: formatEntityObject(tableEntity),
+              },
+              position: { x: 140, y: 20 },
+            });
+          } else {
+    
+            tables.push({
+              ...existedNode,
+              id: tableName,
+              data: {
+                tableName,
+                tableEntity: formatEntityObject(tableEntity),
+              },
+            });
+            const newTables = [...new Set(tables)];
+            tables = newTables;
+          }
         }
       }
     });
 
-    const newTable = tables.map((table) => {
-      const entity = new String(table.data.tableEntity);
-      const splitted = entity.split(")")[0];
-
-      return {
-        ...table,
-        data: {
-          tableName: table.data.tableName,
-          tableEntity: splitted,
-        },
-        id: table.data.tableName as string,
-        position: { x: 125, y: 22 },
-      };
-    });
-
-    setNode(newTable);
+    setNode(tables);
   };
 
   return { onFormat, formatValue };

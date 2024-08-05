@@ -4,12 +4,15 @@ import { useDiagramStore } from "@store/diagramStore";
 import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
 import { Diagram } from "./Diagram";
+import { useEditorStore } from "@src/store";
 
 export const DiagramByEditor = () => {
-  const store = useDiagramStore();
+  const diagramStore = useDiagramStore();
+  const editorStore = useEditorStore();
 
   useEffect(() => {
-    store.initStore();
+    diagramStore.initStore();
+    editorStore.initStore();
   }, []);
 
   return (

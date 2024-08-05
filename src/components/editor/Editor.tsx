@@ -1,39 +1,21 @@
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
-import { useDebounce } from "@src/hooks";
+import useDebouncedCallback from "@src/hooks/useDebouncedCallback";
 import { useAppStore } from "@src/store";
 import { TableType, useEditorStore } from "@store/editorStore";
 import * as monaco from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
 import { EditorSkeleton } from "./EditorSkeleton";
 import { useEditorFormatter } from "./editorFunctions";
-import {
-  defaultEditorValue,
-  regex,
-  setEditorTheme,
-  settingMonacoEditor,
-} from "./editorSettings";
+import { regex, setEditorTheme, settingMonacoEditor } from "./editorSettings";
 
 export const Editor = () => {
   const [loading, setLoading] = useState(true);
-  const [editorValues, setEditorValues] = useState("");
   const { isDarkMode } = useAppStore();
 
-  const [value, setValue] = useState("");
-  const debouncedValue = useDebounce<string>(value, 500);
+  // const [value, setValue] = useState("");
   const monaco = useMonaco();
   const { onFormat, formatValue } = useEditorFormatter();
   const { editorFileContent, setEditorContent } = useEditorStore();
-
-  const onChange = (changedValue?: string) => {
-    if (!changedValue) return;
-    setValue(changedValue);
-  };
-
-  const setDefaultValues = () => {
-    editorFileContent
-      ? setEditorValues(editorFileContent.toString())
-      : setEditorValues(defaultEditorValue);
-  };
 
   const handleMonacoEditorDidMount = useCallback(
     (editor: monaco.editor.IStandaloneCodeEditor) => {
@@ -58,19 +40,22 @@ export const Editor = () => {
             });
           }
         });
-        setEditorContent(tableValues);
+        setEditorContent(editor.getValue());
         editor.focus();
-        setDefaultValues();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
+  const handleChange = useDebouncedCallback((changedValue) => {
+    setEditorContent(changedValue as string);
+  }, 500);
+
   useEffect(() => {
-    if (debouncedValue) onFormat(debouncedValue);
+    if (editorFileContent) onFormat(editorFileContent);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedValue]);
+  }, [editorFileContent]);
 
   useEffect(() => {
     if (!monaco) {
@@ -100,8 +85,8 @@ export const Editor = () => {
           onMount={handleMonacoEditorDidMount}
           theme="unknown-language-theme"
           language="unknown-language"
-          value={editorValues}
-          onChange={onChange}
+          value={editorFileContent}
+          onChange={handleChange}
         />
       )}
     </div>
