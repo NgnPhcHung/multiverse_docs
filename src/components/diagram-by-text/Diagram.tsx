@@ -1,3 +1,4 @@
+import { useScreenSize } from "@src/hooks";
 import { useAppStore } from "@src/store";
 import { useDiagramStore } from "@store/diagramStore";
 import {
@@ -8,31 +9,25 @@ import {
   ReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useMemo } from "react";
+import clsx from "clsx";
 import ConnectionEdge from "./ConnectionEdge";
 import { Tables } from "./Tables";
-import { useScreenSize } from "@src/hooks";
-import clsx from "clsx";
 
 export const Diagram = () => {
   const { edges, nodes, onEdgesChange, onNodesChange } = useDiagramStore();
-  const nodeTypes = useMemo(() => ({ tables: Tables }), []);
   const { isDarkMode } = useAppStore();
   const { md: isMobile } = useScreenSize();
 
-  const edgeTypes = useMemo(
-    () => ({
-      floating: ConnectionEdge,
-    }),
-    []
-  );
+  const nodeTypes = { tables: Tables };
+  const edgeTypes = {
+    floating: ConnectionEdge,
+  };
 
   return (
     <div className="w-full h-full bg-primary">
       <ReactFlow
-        fitView
         snapToGrid
-        snapGrid={[20, 20]}
+        snapGrid={[32, 32]}
         edges={edges}
         nodes={nodes}
         nodeTypes={nodeTypes}

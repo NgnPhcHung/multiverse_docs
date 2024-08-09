@@ -1,10 +1,11 @@
 import { getEdgeParams } from "@utils/getEdgeParams";
-import { EdgeLabelRenderer, EdgeProps, getSmoothStepPath } from "@xyflow/react";
-import { Position } from "monaco-editor";
-import { useCallback } from "react";
-import { useStore } from "zustand";
+import {
+  EdgeLabelRenderer,
+  EdgeProps,
+  getSmoothStepPath,
+  useInternalNode
+} from "@xyflow/react";
 
-// this is a little helper component to render the actual edge label
 function EdgeLabel({ transform, label }: { transform: string; label: string }) {
   return (
     <div
@@ -26,13 +27,8 @@ function ConnectionEdge({
   style,
   data,
 }: EdgeProps) {
-  const sourceNode = useStore(
-    useCallback((store) => store.nodeInternals.get(source), [source])
-  );
-  const targetNode = useStore(
-    useCallback((store) => store.nodeInternals.get(target), [target])
-  );
-
+  const sourceNode = useInternalNode(source);
+  const targetNode = useInternalNode(target);
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -43,12 +39,12 @@ function ConnectionEdge({
   );
 
   const [edgePath, labelX, labelY] = getSmoothStepPath({
-    sourceX: sx as number,
-    sourceY: sy as number,
-    sourcePosition: sourcePos as Position,
-    targetPosition: targetPos as Position,
-    targetX: tx as number,
-    targetY: ty as number,
+    sourceX: sx,
+    sourceY: sy,
+    sourcePosition: sourcePos,
+    targetPosition: targetPos,
+    targetX: tx,
+    targetY: ty,
   });
 
   return (
@@ -64,7 +60,7 @@ function ConnectionEdge({
       <EdgeLabelRenderer>
         <EdgeLabel
           transform={`translate(-50%, -50%)  translate(${labelX}px,${labelY}px)`}
-          label={data.label}
+          label={data?.label}
         />
       </EdgeLabelRenderer>
     </>

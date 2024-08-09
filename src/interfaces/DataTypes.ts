@@ -1,5 +1,3 @@
-export const Constrains = ["Constrains", "PrimaryKey", "Unique",];
-
 export enum DataTypes {
   Char = "char",
   Varchar = "Varchar",

@@ -3,14 +3,15 @@ import { Node } from "@xyflow/react";
 import { create } from "zustand";
 import localForage from "localforage";
 import { defaultEditorValue } from "@src/components/editor/editorSettings";
+import { Entity } from "@src/interfaces";
 
-export interface TableType extends Node {
+export interface TableType extends Node<Entity> {
   tableName: string;
   tableEntity: string;
 }
 
 type State = {
-  tableList?: TableType[];
+  tableList?: Node<Entity>[];
   foreignList?: TableForeign[];
   editorFileContent?: string;
   initStore: () => Promise<void>;

@@ -1,3 +1,4 @@
+import { Entity } from "@src/interfaces";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -10,12 +11,12 @@ import localForage from "localforage";
 import { create } from "zustand";
 
 interface FlowState {
-  nodes: Node[];
+  nodes: Node<Entity>[];
   edges: Edge[];
-  onNodesChange: (changes: NodeChange<Node>[]) => void;
+  onNodesChange: (changes: NodeChange<Node<Entity>>[]) => void;
   onEdgesChange: (changes: EdgeChange<Edge>[]) => void;
   setEdges: (edges: Edge[]) => Promise<void>;
-  setNode: (node: Node[]) => Promise<void>;
+  setNode: (node: Node<Entity>[]) => Promise<void>;
   initStore: () => Promise<void>;
 }
 
@@ -23,7 +24,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],
 
-  onNodesChange: async (changes: NodeChange<Node>[]) => {
+  onNodesChange: async (changes: NodeChange<Node<Entity>>[]) => {
     const updatedNodes = applyNodeChanges(changes, get().nodes);
     try {
       await localForage.setItem("nodes", updatedNodes);
@@ -50,10 +51,10 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
     }
   },
 
-  setNode: async (nodes: Node[]) => {
+  setNode: async (nodes: Node<Entity>[]) => {
     try {
       await localForage.setItem("nodes", nodes);
-      set({ nodes});
+      set({ nodes });
     } catch (error) {
       console.error("Failed to save node:", error);
     }
@@ -61,7 +62,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
 
   initStore: async () => {
     try {
-      const nodes = (await localForage.getItem<Node[]>("nodes")) || [];
+      const nodes = (await localForage.getItem<Node<Entity>[]>("nodes")) || [];
       const edges = (await localForage.getItem<Edge[]>("edges")) || [];
       set({ nodes, edges });
     } catch (error) {
