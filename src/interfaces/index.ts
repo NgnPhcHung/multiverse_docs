@@ -1,5 +1,6 @@
 export * from "./Contrains";
 export * from "./DataTypes";
+export * from "./DiagramDataType";
 export * from "./EditorTextRelation";
 export * from "./EditorType";
 export * from "./Entity";

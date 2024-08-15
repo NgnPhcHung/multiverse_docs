@@ -1,15 +1,12 @@
 import { Editor as MonacoEditor, useMonaco } from "@monaco-editor/react";
 import useDebouncedCallback from "@src/hooks/useDebouncedCallback";
-import { Entity } from "@src/interfaces";
 import { useAppStore } from "@src/store";
 import { useEditorStore } from "@store/editorStore";
-import { Node } from "@xyflow/react";
 import * as monaco from "monaco-editor";
 import { useCallback, useEffect, useState } from "react";
 import { EditorSkeleton } from "./EditorSkeleton";
 import { useEditorFormatter } from "./editorFunctions";
-import { regex, setEditorTheme, settingMonacoEditor } from "./editorSettings";
-import { formatStringToEntityProperty } from "@src/utils";
+import { setEditorTheme, settingMonacoEditor } from "./editorSettings";
 
 export const Editor = () => {
   const [loading, setLoading] = useState(true);
@@ -17,33 +14,13 @@ export const Editor = () => {
 
   // const [value, setValue] = useState("");
   const monaco = useMonaco();
-  const { onFormat, formatValue } = useEditorFormatter();
+  const { onFormat } = useEditorFormatter();
   const { editorFileContent, setEditorContent } = useEditorStore();
 
   const handleMonacoEditorDidMount = useCallback(
     (editor: monaco.editor.IStandaloneCodeEditor) => {
       const editorModel = editor.getModel();
       if (editorModel !== null) {
-        const tableValues: Node<Entity>[] = [];
-        const formattedValueFormEditor = formatValue(editor.getValue());
-        formattedValueFormEditor?.forEach((element) => {
-          const regexValue = regex.exec(element);
-          if (regexValue !== null) {
-            const tableName = regexValue[1];
-            const tableEntity = regexValue[2];
-            tableValues.push({
-              position: {
-                x: 225,
-                y: 225,
-              },
-              id: tableName,
-              data: {
-                name: tableName,
-                property: formatStringToEntityProperty(tableEntity),
-              },
-            });
-          }
-        });
         setEditorContent(editor.getValue());
         editor.focus();
       }

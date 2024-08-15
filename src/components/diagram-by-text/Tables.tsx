@@ -1,6 +1,7 @@
-import { Entity } from "@src/interfaces";
-import { useDiagramStore } from "@store/diagramStore";
+import { DiagramDataType, Entity } from "@src/interfaces";
+import { useDiagramStore } from "@src/store";
 import { Handle, Node, NodeProps, Position } from "@xyflow/react";
+import clsx from "clsx";
 
 type TableProps = {
   id: string;
@@ -14,76 +15,32 @@ function isString(value: unknown): value is string {
 }
 
 export const Tables = (data: NodeProps<Node<Entity>>) => {
-  const tableInfo = data.data;
+  const nodeData = data.data;
   const { edges } = useDiagramStore();
-  const tableEntity = tableInfo.property;
 
-  const tableName = isString(tableInfo.name)
-    ? tableInfo.name
-    : "Undefined Name";
+  const tableName = isString(nodeData.name) ? nodeData.name : "Undefined Name";
+  const sourceHandle = `${data.parentId}.${nodeData.name}`;
+  const handler = edges.find((edge) => edge.id.includes(sourceHandle));
 
   return (
     <div
-      className="min-w-48 h-fit bg-secondaryHover text-primaryHover"
-      id={tableName}
+      className={clsx(
+        "min-w-48 h-fit bg-secondaryHover text-primaryHover",
+        nodeData.className
+      )}
+      id={
+        nodeData.renderType === DiagramDataType.Property
+          ? sourceHandle
+          : tableName
+      }
     >
-      <p className="p-1 font-semibold bg-secondary">{tableName}</p>
-      {tableEntity?.map((entity, ind) => {
-        const handler = edges.find((edge) =>
-          edge.id.includes(`${tableName}.${entity.name}`)
-        );
-
-        const isRenderHandler =
-          !!handler && handler.id?.includes(`${tableName}.${entity.name}`);
-        const sourceHandler =
-          data.id === tableName ? handler?.sourceHandle : handler?.targetHandle;
-        const targetHandler =
-          data.id === tableName ? handler?.targetHandle : handler?.sourceHandle;
-
-        return (
-          <div
-            className="hover:bg-secondary p-1 px-2 relative flex justify-between w-full h-8"
-            key={entity.name + ind}
-          >
-            {isRenderHandler && (
-              <>
-                <Handle
-                  id={sourceHandler || undefined}
-                  type="source"
-                  position={Position.Left}
-                />
-                <Handle
-                  id={sourceHandler || undefined}
-                  type="source"
-                  position={Position.Right}
-                />
-                <Handle
-                  id={targetHandler || undefined}
-                  type="source"
-                  position={Position.Left}
-                />
-                <Handle
-                  id={targetHandler || undefined}
-                  type="source"
-                  position={Position.Right}
-                />
-              </>
-            )}
-            {isRenderHandler && sourceHandler}-
-            {isRenderHandler && targetHandler}
-            <div className="flex space-x-2 items-center">
-              {/* <div className="font-semibold">{entity.dataType}</div> */}
-              {/* {!!entity.constrains && (
-                <div>
-                  {entity.constrains.includes("PrimaryKey") && (
-                    <Key className="w-4 h-4 text-brand font-semibold" />
-                  )}
-                </div>
-              )} */}
-            </div>
-          </div>
-        );
-      })}
+      <div>{nodeData.name}</div>
+      {nodeData.renderType === DiagramDataType.Property && !!handler && (
+        <>
+          <Handle id={handler.source} type="source" position={Position.Left} />
+          <Handle id={handler.source} type="source" position={Position.Right} />
+        </>
+      )}
     </div>
   );
 };

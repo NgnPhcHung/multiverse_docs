@@ -1,12 +1,16 @@
-import { Constrains, EntityProperty } from "@src/interfaces";
+import { Constrains, DiagramDataType, EntityProperty } from "@src/interfaces";
+
+const PROPERTY_CLASSNAME =
+  "hover:!bg-secondary p-1 px-2 relative flex justify-between w-full h-16 z-8 nodrag";
 
 export const formatStringToEntityProperty = (
   entityString?: string
 ): EntityProperty[] | undefined => {
   if (!entityString) return;
+
   const str = entityString.split(")")[0];
   const entities = str.split(",");
-  const mappedEntity = entities
+  const mappedEntity: undefined | EntityProperty[] = entities
     .map((entity) => {
       const noWhiteSpaceEntity = entity.replace(/\s+/g, " ").trim().split(" ");
       let dataType = "";
@@ -30,18 +34,19 @@ export const formatStringToEntityProperty = (
         name: noWhiteSpaceEntity[0].replace(/[:]/g, ""),
         dataType,
         constrains,
+        renderType: DiagramDataType.Property,
+        className: PROPERTY_CLASSNAME,
       };
     })
     .filter((e) => e !== undefined);
 
-  const results:
-    | { name: string; dataType: string; constrains: string }[]
-    | undefined = [];
+  const results: EntityProperty[] | undefined = [];
 
   mappedEntity.forEach((element) => {
     if (element !== undefined) {
       results.push(element);
     }
   });
+
   return results;
 };

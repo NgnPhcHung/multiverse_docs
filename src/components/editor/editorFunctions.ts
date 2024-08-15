@@ -1,37 +1,61 @@
 import { EditorTextRelation } from "@interfaces/EditorTextRelation";
 import { RelationType } from "@interfaces/RelationTypes";
-import { Entity, EntityProperty } from "@src/interfaces";
-import { formatStringToEntityProperty } from "@src/utils";
+import { DiagramDataType, Entity, EntityProperty } from "@src/interfaces";
 import { useDiagramStore } from "@store/diagramStore";
 import { CoordinateExtent, Edge, Node } from "@xyflow/react";
 import { lineRegex, regexForeign } from "./editorSettings";
+import { formatStringToEntityProperty } from "@src/utils";
+
+const TABLE_TITLE_CLASSNAME =
+  "bg-secondary p-1 px-2 relative flex justify-between items-center w-full h-10 text-primaryHover z-10 font-semibold";
+
+interface TableWithProperty {
+  index: number;
+  tableName: string;
+  properties: string;
+}
 
 export const useEditorFormatter = () => {
   const { setNode, setEdges, nodes } = useDiagramStore();
 
-  const removeDuplicated = <T extends Record<string, unknown>>(
-    data: Node<T>[]
-  ) => {
-    const counter: Record<string, number> = {};
-    const duplicated: Node<T>[] = [];
-    const copiedData = [...data];
-    copiedData.forEach((item) => {
-      if (!counter[item.id]) {
-        counter[item.id] = 1;
+  const getDuplicated = (data?: TableWithProperty[]) => {
+    const cloneData = JSON.parse(JSON.stringify(data)) as TableWithProperty[];
+    const counter: Record<string, number[]> = {};
+    let duplicated: undefined | TableWithProperty[] = [];
+    let remaining: undefined | TableWithProperty[] = [];
+    cloneData.forEach((node, index) => {
+      if (Object.keys(counter).includes(node.tableName)) {
+        counter[node.tableName].push(index);
       } else {
-        counter[item.id]++;
+        counter[node.tableName] = [index];
       }
     });
 
-    copiedData.forEach((item, idx) => {
-      if (counter[item.id] > 1) {
-        duplicated.push(copiedData.splice(idx, 1)[0]);
+    Object.keys(counter).forEach((record) => {
+      if (counter[record].length < 2) {
+        delete counter[record];
       }
     });
+    const removed = Object.keys(counter).map((dup) =>
+      cloneData
+        .filter((filtered) => filtered.tableName === dup)
+        .map((filtered, index) => {
+          if (index > 0) {
+            const name = `${filtered.tableName} copy ${index}`;
+            filtered.tableName = name;
+          }
+          return filtered;
+        })
+    );
+    duplicated = removed.reduce((acc, subArr) => acc.concat(subArr), []);
 
+    remaining = data?.filter(
+      (root) => !Object.keys(counter).includes(root.tableName)
+    );
     return {
-      remaining: copiedData,
+      remaining,
       duplicated,
+      full: [...(remaining || []), ...duplicated],
     };
   };
 
@@ -62,10 +86,53 @@ export const useEditorFormatter = () => {
     });
     setEdges(relations);
   };
+  const defaultTable = (tableName: string) => {
+    return {
+      id: tableName,
+      type: "tables",
+      data: {
+        name: tableName,
+        renderType: DiagramDataType.Table,
+        className: TABLE_TITLE_CLASSNAME,
+      },
+      position: { x: 136, y: 32 },
+    };
+  };
+
+  const defaultSettings = (
+    tableName: string,
+    property: EntityProperty,
+    index: number
+  ) => {
+    return {
+      id: `${tableName}.${property.name}`,
+      type:"tables",
+      position: { x: 136, y: 32 * (index + 1) },
+    };
+  };
+
+  const defaultProperty = (
+    tableName: string,
+    property: EntityProperty,
+    index: number
+  ) => {
+    return {
+      ...defaultSettings(tableName, property, index),
+      extent: "parent" as "parent" | CoordinateExtent,
+      parentId: tableName,
+      data: {
+        ...property,
+        type: DiagramDataType.Property,
+      },
+    };
+  };
 
   const formatValue = (value: string) => {
-    if (!value) return;
-    if (!value.includes("Create")) return;
+    if (!value || !value.includes("Create")) {
+      setEdges([]);
+      setNode([]);
+      return;
+    }
 
     const userInputValues = lineRegex.exec(value);
     const inputValues = userInputValues?.input
@@ -77,8 +144,15 @@ export const useEditorFormatter = () => {
       ?.replace(/(\r\n|\n|\r)/gm, "")
       .replace(/ +(?= )/g, "");
 
-    const splitTable = newValue?.split("Create ");
-    const foreignTemp = regexForeign.exec(newValue || "")?.[0].split(",");
+    let foreignSection = regexForeign.exec(newValue || "")?.[0];
+    foreignSection = foreignSection?.substring(0, foreignSection?.length - 1);
+    const foreignTemp = foreignSection?.split(",");
+    const splitTable = newValue?.split("Create ")?.map((table) => {
+      if (foreignSection) {
+        table.replaceAll(foreignSection, "");
+      }
+      return table;
+    });
 
     const foreign: string[] = [];
     foreignTemp?.forEach((f) => {
@@ -95,149 +169,63 @@ export const useEditorFormatter = () => {
     return splitTable || [];
   };
 
-  const onFormat = (value: string) => {
+  const onFormat = async (value: string) => {
     if (!value) {
+      setEdges([]);
+      setNode([]);
       return;
     }
-    const tableNodes: Node<Entity>[] = [];
-    let tables: Node<Entity>[] = [];
-    const entityProperties: Node<EntityProperty>[] = [];
-    const formattedValue = formatValue(value);
-    let tempProperties: Node<EntityProperty>[] = [];
 
-    formattedValue?.forEach((v) => {
-      const regexValue = v;
-      if (regexValue !== null) {
-        const tableName = regexValue.substring(0, regexValue.indexOf(" "));
-        const tableEntity = regexValue
-          .substring(regexValue.indexOf(" ") + 1)
+    const originalTableList = formatValue(value)?.filter(
+      (value) => !!value.length
+    );
+    const tempProperties: Node<EntityProperty>[] = [];
+    const entities: Node<Entity>[] = [];
+
+    const tableWithProperty: TableWithProperty[] | undefined =
+      originalTableList?.map((fValue, index) => {
+        const tableName = fValue.substring(0, fValue.indexOf(" "));
+
+        const entityProperties = fValue
+          .substring(fValue.indexOf(" ") + 1)
           .slice(1, -1);
-        if (!tableName) return;
-        const baseSettings = (property: EntityProperty, index: number) => {
-          return {
-            id:
-              tableName +
-              property.name +
-              property.dataType +
-              property.constrains,
-            type: "tables",
-            extent: "parent" as "parent" | CoordinateExtent,
-            parentId: tableName,
-            position: { x: 136, y: 32 * (index + 1) },
-          };
-        };
-        const defaultProperty = (property: EntityProperty, index: number) => {
-          return {
-            data: {
-              ...property,
-            },
-            ...baseSettings(property, index),
-          };
-        };
 
-        formatStringToEntityProperty(tableEntity)?.map((property, index) => {
-          entityProperties.push(defaultProperty(property, index));
-        });
-        tableNodes.push({
-          id: tableName,
-          type: "tables",
+        return {
+          index,
+          tableName,
+          properties: entityProperties,
+        };
+      });
+
+    const { full } = getDuplicated(tableWithProperty);
+    full.map((itemData) => {
+      const tableProperties = formatStringToEntityProperty(itemData.properties);
+      tableProperties?.map((property, index) => {
+        tempProperties.push(
+          defaultProperty(itemData.tableName, property, index)
+        );
+      });
+
+      const existedEntity = nodes.find(
+        (node) => node.id === itemData.tableName
+      );
+
+      //update data only
+      if (existedEntity) {
+        entities.push({
+          ...existedEntity,
           data: {
-            name: tableName,
-            property: formatStringToEntityProperty(tableEntity),
+            ...defaultTable(itemData.tableName).data,
+            renderType: existedEntity.data.renderType,
           },
-          position: { x: 125, y: 22 },
         });
-        if (tableName === null && tableEntity === null) return "";
-        if (tables.length <= 0) {
-          tables.push({
-            id: tableName,
-            type: "tables",
-            data: {
-              name: tableName,
-              property: formatStringToEntityProperty(tableEntity),
-            },
-            position: { x: 125, y: 22 },
-          });
-        } else {
-          const existedNode = nodes.find((node) => node.id === tableName);
-
-          if (!existedNode) {
-            tables.push({
-              id: tableName,
-              type: "tables",
-              data: {
-                name: tableName,
-                property: formatStringToEntityProperty(tableEntity),
-              },
-              position: { x: 140, y: 20 },
-            });
-          } else {
-            tables.push({
-              ...existedNode,
-              id: tableName,
-              data: {
-                name: tableName,
-                property: formatStringToEntityProperty(tableEntity),
-              },
-            });
-          }
-        }
-        if (tempProperties.length <= 0) {
-          formatStringToEntityProperty(tableEntity)?.map((property, index) =>
-            tempProperties.push(defaultProperty(property, index))
-          );
-        } else {
-          const existedProperty = nodes.find((node) => node.id === tableName);
-
-          if (!existedProperty) {
-            formatStringToEntityProperty(tableEntity)?.map((property, index) =>
-              tempProperties.push(defaultProperty(property, index))
-            );
-          } else {
-            formatStringToEntityProperty(tableEntity)?.map((property, index) =>
-              tempProperties.push({
-                ...existedProperty,
-                data: {
-                  ...property,
-                },
-                ...baseSettings(property, index),
-              })
-            );
-          }
-        }
+      } else {
+        //create new one
+        entities.push(defaultTable(itemData.tableName));
       }
     });
-    const { duplicated: duplicatedTable, remaining: remainingTable } =
-      removeDuplicated(tables);
-    tables = remainingTable;
 
-    duplicatedTable.forEach((dupItem, index) => {
-      const tableName = `${dupItem.data?.name} copy ${index + 1}`;
-
-      tables.push({
-        ...dupItem,
-        data: {
-          ...dupItem.data,
-          name: tableName,
-        },
-      });
-    });
-
-    const { duplicated, remaining } = removeDuplicated(tempProperties);
-    tempProperties = remaining;
-
-    duplicated.forEach((dupItem, index) => {
-      const tableName = `${dupItem.data?.name} copy ${index + 1}`;
-
-      tempProperties.push({
-        ...dupItem,
-        data: {
-          ...dupItem.data,
-          name: tableName,
-        },
-      });
-    });
-    setNode([...tempProperties, ...tables]);
+    setNode(entities.concat(tempProperties));
   };
 
   return { onFormat, formatValue };

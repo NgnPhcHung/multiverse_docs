@@ -2,27 +2,61 @@ import { SQLVariableType } from "@interfaces/SQLVariableType";
 import * as monacoType from "monaco-editor";
 import { EditorTheme, editorRule, editorColor } from "src/theme";
 
-export const defaultEditorValue = `Create user ( 
-  id: Char  PrimaryKey,
-  firstname: Varchar unique,
-  lastname: Varchar,
-  dateofbirth: Date,
-  address: Varchar,
-)
-Create dogtor ( 
-  id: Char PrimaryKey,
-  firstname: char,
+export const defaultEditorValue = `Create owner ( 
+  ownerId: Number  PrimaryKey,
+  firstName: Varchar unique NN,
+  lastName: Varchar,
+  phonenumber: Varchar NN,
 )
 
-Create host ( 
-  id: Char PrimaryKey,
-  phonenumber: Varchar,
-  lastname: Varchar,
-  dateOfBirth: Datetime,
+Create animal ( 
+  animalId: Number PrimaryKey,
+  ownerId: Number NN,
+  name: Char NN,
+  species: Char NN,
+  notes: Varchar,
 )
- 
-Foreign host.phonenumber -- user.firstname,
-Foreign dogtor.firstname << host.phonenumber,
+
+Create case ( 
+  id: Number PrimaryKey,
+  animalId: Number NN,
+  statusId: Number NN,
+  addressId: Varchar
+)
+
+Create status ( 
+  statusId: Number PrimaryKey,
+  type: Varchar NN,
+)
+
+
+Create vaccine ( 
+  vaccineId: Number PrimaryKey,
+  type: Varchar NN,
+  description: Varchar,
+)
+
+
+Create animal_vaccine ( 
+  vaccineId: Number PrimaryKey,
+  animalId: Number PrimaryKey,
+)
+
+Create address (
+  addressId: Number PrimaryKey,
+  country: Char NN,
+  city: Char NN,
+  ward: Char,
+  describe: Varchar
+)
+
+Foreign owner.ownerId >> animal.ownerId,
+Foreign case.animalId >> animal.animalId,
+Foreign case.statusId -- status.statusId,
+Foreign address.addressId << address.addressId,
+Foreign vaccine.vaccineId <> animal.animalId,
+Foreign animal_vaccine.vaccineId << vaccine.vaccineId,
+Foreign animal_vaccine.animalId << animal.animalId,
 `;
 
 export const settingMonacoEditor = (
