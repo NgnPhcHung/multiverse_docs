@@ -1,4 +1,4 @@
-import { Entity } from "@src/interfaces";
+import { Entity, EntityProperty } from "@src/interfaces";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -11,18 +11,27 @@ import localForage from "localforage";
 import { create } from "zustand";
 
 interface FlowState {
-  nodes: Node<Entity>[];
+  nodes: Node<Entity | EntityProperty>[];
   edges: Edge[];
+  hydrated: boolean;
   onNodesChange: (changes: NodeChange<Node<Entity>>[]) => void;
   onEdgesChange: (changes: EdgeChange<Edge>[]) => void;
   setEdges: (edges: Edge[]) => Promise<void>;
   setNode: (node: Node<Entity>[]) => Promise<void>;
   initStore: () => Promise<void>;
+  hydrateStore: () => Promise<void>;
 }
 
 export const useDiagramStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],
+  hydrated: false,
+  hydrateStore: async () => {
+    if (!get().hydrated) {
+      await get().initStore();
+      set({ hydrated: true });
+    }
+  },
 
   onNodesChange: async (changes: NodeChange<Node<Entity>>[]) => {
     const updatedNodes = applyNodeChanges(changes, get().nodes);
@@ -63,8 +72,9 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
   initStore: async () => {
     try {
       const nodes = (await localForage.getItem<Node<Entity>[]>("nodes")) || [];
-      const edges = (await localForage.getItem<Edge[]>("edges")) || [];
-      set({ nodes, edges });
+      const edges =
+        (await localForage.getItem<Edge<EntityProperty>[]>("edges")) || [];
+      set({ edges, nodes });
     } catch (error) {
       console.error("Failed to initialize store:", error);
     }

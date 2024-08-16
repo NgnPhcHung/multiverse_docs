@@ -2,7 +2,6 @@ import { TableForeign } from "@interfaces/TableForeign";
 import { Node } from "@xyflow/react";
 import { create } from "zustand";
 import localForage from "localforage";
-import { defaultEditorValue } from "@src/components/editor/editorSettings";
 import { Entity } from "@src/interfaces";
 
 export interface TableType extends Node<Entity> {
@@ -40,7 +39,7 @@ export const useEditorStore = create<State & Action>((set) => ({
   initStore: async () => {
     try {
       const editContent = await localForage.getItem<string>("editorContent");
-      set({ editorFileContent: editContent || defaultEditorValue });
+      set({ editorFileContent: editContent || "" });
     } catch (error) {
       console.error("Failed to initialize store:", error);
     }

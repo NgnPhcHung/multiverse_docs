@@ -11,8 +11,6 @@ import { setEditorTheme, settingMonacoEditor } from "./editorSettings";
 export const Editor = () => {
   const [loading, setLoading] = useState(true);
   const { isDarkMode } = useAppStore();
-
-  // const [value, setValue] = useState("");
   const monaco = useMonaco();
   const { onFormat } = useEditorFormatter();
   const { editorFileContent, setEditorContent } = useEditorStore();
@@ -25,8 +23,7 @@ export const Editor = () => {
         editor.focus();
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [setEditorContent]
   );
 
   const handleChange = useDebouncedCallback((changedValue) => {
@@ -34,8 +31,7 @@ export const Editor = () => {
   }, 500);
 
   useEffect(() => {
-    if (editorFileContent) onFormat(editorFileContent);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    onFormat(editorFileContent);
   }, [editorFileContent]);
 
   useEffect(() => {
@@ -45,7 +41,6 @@ export const Editor = () => {
     }
     settingMonacoEditor(monaco, isDarkMode);
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monaco]);
 
   useEffect(() => {
@@ -54,7 +49,6 @@ export const Editor = () => {
       return;
     }
     setEditorTheme(monaco, isDarkMode);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDarkMode]);
 
   return (

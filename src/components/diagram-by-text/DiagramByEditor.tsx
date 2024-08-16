@@ -7,27 +7,31 @@ import { Diagram } from "./Diagram";
 import { useEditorStore } from "@src/store";
 
 export const DiagramByEditor = () => {
-  const diagramStore = useDiagramStore();
-  const editorStore = useEditorStore();
+  const { initStore: initDiagram, hydrateStore, hydrated } = useDiagramStore();
+  const { initStore: initEditor } = useEditorStore();
 
   useEffect(() => {
-    diagramStore.initStore();
-    editorStore.initStore();
+    // useDiagramStore.getState().hydrateStore();
+    hydrateStore();
+    initDiagram();
+    initEditor();
   }, []);
 
   return (
-    <div
-      key="diagram-editor"
-      className="flex dark:bg-brand relative h-full overflow-hidden"
-    >
-      <Sidebar>
-        <Editor />
-      </Sidebar>
-      <main className="flex-1 overflow-hidden relative bg-diagram">
-        <ReactFlowProvider>
-          <Diagram />
-        </ReactFlowProvider>
-      </main>
-    </div>
+    hydrated && (
+      <div
+        key="diagram-editor"
+        className="flex dark:bg-brand relative h-full overflow-hidden"
+      >
+        <Sidebar>
+          <Editor />
+        </Sidebar>
+        <main className="flex-1 overflow-hidden relative bg-diagram">
+          <ReactFlowProvider>
+            <Diagram />
+          </ReactFlowProvider>
+        </main>
+      </div>
+    )
   );
 };

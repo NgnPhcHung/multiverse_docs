@@ -1,7 +1,7 @@
 import { Constrains, DiagramDataType, EntityProperty } from "@src/interfaces";
 
 const PROPERTY_CLASSNAME =
-  "hover:!bg-secondary p-1 px-2 relative flex justify-between w-full h-16 z-8 nodrag";
+  "p-1 px-2 relative flex justify-between h-16 z-8 nodrag";
 
 export const formatStringToEntityProperty = (
   entityString?: string

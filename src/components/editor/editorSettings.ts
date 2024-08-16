@@ -54,7 +54,6 @@ Foreign owner.ownerId >> animal.ownerId,
 Foreign case.animalId >> animal.animalId,
 Foreign case.statusId -- status.statusId,
 Foreign case.addressId << address.addressId,
-Foreign vaccine.vaccineId <> animal.animalId,
 Foreign animal_vaccine.vaccineId << vaccine.vaccineId,
 Foreign animal_vaccine.animalId << animal.animalId,
 `;

@@ -1,13 +1,13 @@
 import { EditorTextRelation } from "@interfaces/EditorTextRelation";
 import { RelationType } from "@interfaces/RelationTypes";
 import { DiagramDataType, Entity, EntityProperty } from "@src/interfaces";
+import { formatStringToEntityProperty } from "@src/utils";
 import { useDiagramStore } from "@store/diagramStore";
 import { CoordinateExtent, Edge, Node } from "@xyflow/react";
 import { lineRegex, regexForeign } from "./editorSettings";
-import { formatStringToEntityProperty } from "@src/utils";
 
 const TABLE_TITLE_CLASSNAME =
-  "bg-secondary p-1 px-2 relative flex justify-between items-center w-full h-10 text-primaryHover z-10 font-semibold";
+  "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ml-[136px]";
 
 interface TableWithProperty {
   index: number;
@@ -16,7 +16,12 @@ interface TableWithProperty {
 }
 
 export const useEditorFormatter = () => {
-  const { setNode, setEdges, nodes } = useDiagramStore();
+  const { setNode, setEdges, nodes } = useDiagramStore((state) => ({
+    nodes: state.nodes,
+    edges: state.edges,
+    setNode: state.setNode,
+    setEdges: state.setEdges,
+  }));
 
   const getDuplicated = (data?: TableWithProperty[]) => {
     const cloneData = JSON.parse(JSON.stringify(data)) as TableWithProperty[];
@@ -106,7 +111,7 @@ export const useEditorFormatter = () => {
   ) => {
     return {
       id: `${tableName}.${property.name}`,
-      type:"tables",
+      type: "tables",
       position: { x: 136, y: 32 * (index + 1) },
     };
   };
@@ -169,7 +174,7 @@ export const useEditorFormatter = () => {
     return splitTable || [];
   };
 
-  const onFormat = async (value: string) => {
+  const onFormat = async (value?: string) => {
     if (!value) {
       setEdges([]);
       setNode([]);
@@ -198,6 +203,7 @@ export const useEditorFormatter = () => {
       });
 
     const { full } = getDuplicated(tableWithProperty);
+
     full.map((itemData) => {
       const tableProperties = formatStringToEntityProperty(itemData.properties);
       tableProperties?.map((property, index) => {
@@ -209,7 +215,6 @@ export const useEditorFormatter = () => {
       const existedEntity = nodes.find(
         (node) => node.id === itemData.tableName
       );
-
       //update data only
       if (existedEntity) {
         entities.push({
