@@ -17,7 +17,7 @@ interface FlowState {
   onNodesChange: (changes: NodeChange<Node<Entity>>[]) => void;
   onEdgesChange: (changes: EdgeChange<Edge>[]) => void;
   setEdges: (edges: Edge[]) => Promise<void>;
-  setNode: (node: Node<Entity>[]) => Promise<void>;
+  setNode: (node: Node<Entity | EntityProperty>[]) => Promise<void>;
   initStore: () => Promise<void>;
   hydrateStore: () => Promise<void>;
 }

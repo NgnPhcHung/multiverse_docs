@@ -1,33 +1,22 @@
-import { TableForeign } from "@interfaces/TableForeign";
-import { Node } from "@xyflow/react";
-import { create } from "zustand";
+import { EntityStore } from "@src/interfaces";
 import localForage from "localforage";
-import { Entity } from "@src/interfaces";
-
-export interface TableType extends Node<Entity> {
-  tableName: string;
-  tableEntity: string;
-}
+import { create } from "zustand";
 
 type State = {
-  tableList?: Node<Entity>[];
-  foreignList?: TableForeign[];
+  entities?: EntityStore[];
   editorFileContent?: string;
   initStore: () => Promise<void>;
 };
 
 type Action = {
-  updateTableList: (tableList: State["tableList"]) => void;
-  updateForeignList: (foreignList: State["foreignList"]) => void;
+  setEntities: (entities: State["entities"]) => void;
   setEditorContent: (editorFileContent: State["editorFileContent"]) => void;
 };
 
 export const useEditorStore = create<State & Action>((set) => ({
-  tableList: undefined,
-  foreignList: undefined,
+  entities: undefined,
   editorFileContent: undefined,
-  updateTableList: (tableList) => set(() => ({ tableList })),
-  updateForeignList: (foreignList) => set(() => ({ foreignList })),
+  setEntities: (entities) => set(() => ({ entities })),
   setEditorContent: async (editorFileContent) => {
     try {
       await localForage.setItem("editorContent", editorFileContent);

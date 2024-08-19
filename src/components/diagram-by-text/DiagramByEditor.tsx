@@ -11,7 +11,6 @@ export const DiagramByEditor = () => {
   const { initStore: initEditor } = useEditorStore();
 
   useEffect(() => {
-    // useDiagramStore.getState().hydrateStore();
     hydrateStore();
     initDiagram();
     initEditor();

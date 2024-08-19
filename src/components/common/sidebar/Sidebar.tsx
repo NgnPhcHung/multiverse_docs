@@ -4,6 +4,7 @@ import { ChevronLeft, MenuIcon } from "lucide-react";
 import {
   ElementRef,
   PropsWithChildren,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -14,13 +15,14 @@ import { ActionIcon } from "../actionIcon";
 
 interface SidebarProps extends PropsWithChildren {
   customMinWidth?: number;
+  navItems?: ReactNode;
 }
 
 const DEFAULT_MIN_WIDTH = 240;
 
 export const Sidebar = ({
   children,
-
+  navItems,
   customMinWidth = DEFAULT_MIN_WIDTH,
 }: SidebarProps) => {
   const { md: isMobile, xl, xxl, lg, xxxl } = useScreenSize();
@@ -164,11 +166,19 @@ export const Sidebar = ({
         )} */}
 
         <div className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12">
-          <ActionIcon variant="secondary" size="md" onClick={resetWidth} className={clsx({
-            hidden: !isCollapsed
-          })}>
+          <ActionIcon
+            variant="secondary"
+            size="md"
+            onClick={resetWidth}
+            className={clsx({
+              hidden: !isCollapsed,
+            })}
+          >
             <MenuIcon className="w-4 h-4" />
           </ActionIcon>
+          {
+            navItems && navItems 
+          }
         </div>
       </nav>
     </>

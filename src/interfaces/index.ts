@@ -5,6 +5,7 @@ export * from "./EditorTextRelation";
 export * from "./EditorType";
 export * from "./Entity";
 export * from "./EntityProperty";
+export * from "./EntityStore";
 export * from "./RelationTypes";
 export * from "./SQLVariableType";
 export * from "./TableForeign";

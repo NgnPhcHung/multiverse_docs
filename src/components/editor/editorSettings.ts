@@ -186,7 +186,8 @@ export const setEditorTheme = (
   });
 };
 
-export const lineRegex = /[^a-zA-Z]/g;
 export const regex = /(.*)\((.*)\)/i;
 export const regexForeign = /[^)]+$/;
 export const chenRelationRegex = /[<<>>~-]/g;
+export const lineRegex = /\bCreate\s+\w+\s*\((?:[^()]|\([^)]*\))+\)/gi;
+export const regexType = /(\w+)\s*\(([^)]+)\)/;

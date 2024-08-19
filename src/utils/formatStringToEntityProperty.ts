@@ -8,11 +8,13 @@ export const formatStringToEntityProperty = (
 ): EntityProperty[] | undefined => {
   if (!entityString) return;
 
-  const str = entityString.split(")")[0];
+  const str = entityString
   const entities = str.split(",");
   const mappedEntity: undefined | EntityProperty[] = entities
     .map((entity) => {
-      const noWhiteSpaceEntity = entity.replace(/\s+/g, " ").trim().split(" ");
+      const noWhiteSpaceEntity = entity
+        .trim()
+        .split(/(?!\([^)]*)\s(?![^(]*\))/);
       let dataType = "";
       let constrains = "";
 

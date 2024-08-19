@@ -1,10 +1,10 @@
-import { EditorTextRelation } from "@interfaces/EditorTextRelation";
 import { RelationType } from "@interfaces/RelationTypes";
-import { DiagramDataType, Entity, EntityProperty } from "@src/interfaces";
-import { formatStringToEntityProperty } from "@src/utils";
+import { DiagramDataType, Entity, EntityProperty, EntityStore } from "@src/interfaces";
+import { useEditorStore } from "@src/store";
+import { formatStringToEntityProperty, groupBy } from "@src/utils";
 import { useDiagramStore } from "@store/diagramStore";
 import { CoordinateExtent, Edge, Node } from "@xyflow/react";
-import { lineRegex, regexForeign } from "./editorSettings";
+import { regexForeign } from "./editorSettings";
 
 const TABLE_TITLE_CLASSNAME =
   "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ml-[136px]";
@@ -21,6 +21,10 @@ export const useEditorFormatter = () => {
     edges: state.edges,
     setNode: state.setNode,
     setEdges: state.setEdges,
+  }));
+
+  const { setEntities } = useEditorStore((state) => ({
+    setEntities: state.setEntities,
   }));
 
   const getDuplicated = (data?: TableWithProperty[]) => {
@@ -132,46 +136,40 @@ export const useEditorFormatter = () => {
     };
   };
 
-  const formatValue = (value: string) => {
-    if (!value || !value.includes("Create")) {
+  const getForeignLine = (inputValue: string) => {
+    if (!inputValue || !inputValue.includes("Create")) {
       setEdges([]);
       setNode([]);
       return;
     }
 
-    const userInputValues = lineRegex.exec(value);
-    const inputValues = userInputValues?.input
-      ? userInputValues.input
-      : userInputValues;
-
-    const newValue = inputValues
-      ?.toString()
-      ?.replace(/(\r\n|\n|\r)/gm, "")
+    const newValue = inputValue
+      .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/ +(?= )/g, "");
 
     let foreignSection = regexForeign.exec(newValue || "")?.[0];
-    foreignSection = foreignSection?.substring(0, foreignSection?.length - 1);
+    foreignSection = foreignSection?.substring(0, foreignSection?.length);
+
     const foreignTemp = foreignSection?.split(",");
-    const splitTable = newValue?.split("Create ")?.map((table) => {
-      if (foreignSection) {
-        table.replaceAll(foreignSection, "");
-      }
-      return table;
-    });
+    const tableSection = newValue
+      .split("Create ")
+      .slice(1)
+      .map((table) => {
+        if (foreignSection) {
+          return table.replaceAll(foreignSection, "").trim();
+        }
+        return table.trim();
+      });
 
     const foreign: string[] = [];
     foreignTemp?.forEach((f) => {
-      f = f.replace("Foreign ", "");
-      Object.values(EditorTextRelation).map((re) =>
-        f.replace(re, RelationType[re])
-      );
-      f = f.replace(/\s/g, "");
-      foreign.push(f.replace(/[.]/g, " "));
+      f = f.replace("Foreign ", "").replace(/\s/g, "").replace(/[.]/g, " ");
+      foreign.push(f);
     });
 
     createEdges(foreign);
 
-    return splitTable || [];
+    return tableSection;
   };
 
   const onFormat = async (value?: string) => {
@@ -181,7 +179,7 @@ export const useEditorFormatter = () => {
       return;
     }
 
-    const originalTableList = formatValue(value)?.filter(
+    const originalTableList = getForeignLine(value)?.filter(
       (value) => !!value.length
     );
     const tempProperties: Node<EntityProperty>[] = [];
@@ -194,7 +192,6 @@ export const useEditorFormatter = () => {
         const entityProperties = fValue
           .substring(fValue.indexOf(" ") + 1)
           .slice(1, -1);
-
         return {
           index,
           tableName,
@@ -215,7 +212,6 @@ export const useEditorFormatter = () => {
       const existedEntity = nodes.find(
         (node) => node.id === itemData.tableName
       );
-      //update data only
       if (existedEntity) {
         entities.push({
           ...existedEntity,
@@ -225,13 +221,36 @@ export const useEditorFormatter = () => {
           },
         });
       } else {
-        //create new one
         entities.push(defaultTable(itemData.tableName));
       }
     });
-
-    setNode(entities.concat(tempProperties));
+    const tableColumns = entities.concat(tempProperties);
+    setNode(tableColumns);
+    saveDBContent(tableColumns as Node<EntityProperty>[]);
   };
 
-  return { onFormat, formatValue };
+  const saveDBContent = (tempProperties: Node<EntityProperty>[]) => {
+    const groupByTable = groupBy(tempProperties, "parentId");
+    const entities: EntityStore[] = Object.entries(groupByTable)
+      .filter(([key]) => key !== "undefined")
+      .map(([key, value]) => {
+        const properties: Omit<EntityProperty, "renderType">[] = value.map(
+          ({ data: { constrains, dataType, name } }) => {
+            return {
+              constrains,
+              dataType,
+              name,
+            };
+          }
+        );
+        return {
+          name: key,
+          properties,
+        };
+      });
+
+    setEntities(entities);
+  };
+
+  return { onFormat, formatValue: getForeignLine };
 };
