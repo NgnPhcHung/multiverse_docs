@@ -12,7 +12,10 @@ type Action = {
   setEntities: (entities: State["entities"]) => void;
   setEditorContent: (editorFileContent: State["editorFileContent"]) => void;
 };
-
+localForage.config({
+  name: "multi_docDB",
+  storeName: "defaultDatabase",
+});
 export const useEditorStore = create<State & Action>((set) => ({
   entities: undefined,
   editorFileContent: undefined,

@@ -26,7 +26,6 @@ export const Dialog = ({
   size = "md",
   children,
 }: DialogProps) => {
-  
   return (
     <AnimatePresence>
       {opened && (
@@ -43,7 +42,7 @@ export const Dialog = ({
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
             className={clsx(
-              "bg-gray-200 text-gray-950  p-4  rounded-lg shadow-xl cursor-default relative overflow-hidden ",
+              "bg-gray-200 text-gray-950 justify-center p-4 rounded-lg shadow-xl cursor-default relative overflow-hidden ",
               containSize[size]
             )}
           >
@@ -63,11 +62,18 @@ export const Dialog = ({
   );
 };
 
-interface DescriptionProps extends PropsWithChildren {}
+interface DescriptionProps extends PropsWithChildren {
+  className?: string;
+}
 
-const Description = ({ children }: DescriptionProps) => {
+const Description = ({ children, className }: DescriptionProps) => {
   return (
-    <div className="mt-6 overflow-hidden flex-wrap flex flex-col items-center justify-center w-full h-full">
+    <div
+      className={clsx(
+        "",
+        className
+      )}
+    >
       {children}
     </div>
   );

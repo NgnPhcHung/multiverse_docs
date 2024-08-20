@@ -1,5 +1,10 @@
 import { RelationType } from "@interfaces/RelationTypes";
-import { DiagramDataType, Entity, EntityProperty, EntityStore } from "@src/interfaces";
+import {
+  DiagramDataType,
+  Entity,
+  EntityProperty,
+  EntityStore,
+} from "@src/interfaces";
 import { useEditorStore } from "@src/store";
 import { formatStringToEntityProperty, groupBy } from "@src/utils";
 import { useDiagramStore } from "@store/diagramStore";
@@ -245,9 +250,9 @@ export const useEditorFormatter = () => {
         );
         return {
           name: key,
-          properties,
+          property: properties,
         };
-      });
+      }) as EntityStore[];
 
     setEntities(entities);
   };

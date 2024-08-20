@@ -1,7 +1,7 @@
 export enum DBTypes {
   MYSQL = "MySql",
   POSTGRES = "Postgresql",
-  MSSQL = "Transactsql",
+  MSSQL = "MSSQL",
   SQLITE = "Sqlite",
   MARIADB = "Mariadb",
 }

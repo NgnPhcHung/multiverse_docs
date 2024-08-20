@@ -1,19 +1,19 @@
+import {
+  MariaSQL,
+  MSSQL,
+  MySQL,
+  PostgreSQL,
+  SQLDialect,
+  SQLite,
+} from "@codemirror/lang-sql";
 import { Dialog } from "@src/components/common";
 import { DBTypes } from "@src/consts";
-import { FC, useCallback, useMemo } from "react";
-import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
-import {
-  MySQL,
-  SQLDialect,
-  MariaSQL,
-  PostgreSQL,
-  SQLite,
-  MSSQL,
-} from "@codemirror/lang-sql";
 import { useEditorStore } from "@src/store";
+import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
+import { FC, useCallback, useMemo } from "react";
 
 interface SQLPreviewModalProps {
-  dbType: DBTypes;
+  dbType?: DBTypes;
   onClose: () => void;
 }
 
@@ -22,7 +22,7 @@ const language: Record<DBTypes, SQLDialect> = {
   Mariadb: MariaSQL,
   Postgresql: PostgreSQL,
   Sqlite: SQLite,
-  Transactsql: MSSQL,
+  MSSQL: MSSQL,
 };
 
 export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
@@ -30,57 +30,52 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
   onClose,
 }) => {
   const { entities } = useEditorStore();
-
   const onChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
-    console.log("val:", value);
     viewUpdate;
   }, []);
 
   const sqlQuery = useMemo(() => {
-    entities;
     const createDB = `CREATE DATABASE PetManagement;
-USE PetManagement`;
+USE PetManagement
+`;
     let createTables = "";
-
-    entities?.map((entity) => {
+    entities?.forEach((entity) => {
       let properties = "";
-      entity.property?.map((property) => {
-        const constrains = property.constrains
+      entity.property?.forEach((property) => {
+        const constraints = property.constrains
           .split(",")
           .map((cons) => cons.toUpperCase())
           .join(" ");
 
         properties += `
-                ${
-                  property.name
-                } ${property.dataType.toUpperCase()} ${constrains},
-            `;
+  ${property.name} ${property.dataType.toUpperCase()} ${constraints},`;
       });
+
       createTables += `
-CREATE TABLE ${entity.property} (
-        ${properties}
-)
-`;
+CREATE TABLE ${entity.name} (${properties}
+)`;
     });
 
     return `
-${createDB}${createTables}`
+${createDB}${createTables}`;
   }, [entities]);
 
   return (
-    <Dialog
-      onClose={onClose}
-      opened={!!dbType}
-      title={`Export to ${dbType}`}
-      size="xl"
-    >
-      <CodeMirror
-        value={sqlQuery}
-        className="h-full"
-        extensions={[language[dbType] ?? MySQL]}
-        onChange={onChange}
-      />
-      ;
-    </Dialog>
+    language[dbType!] && (
+      <Dialog
+        onClose={onClose}
+        opened={!!dbType}
+        title={`Export to ${dbType}`}
+        size="xl"
+      >
+        <Dialog.Description className="h-[70vh] overflow-auto">
+          <CodeMirror
+            value={sqlQuery}
+            extensions={[language[dbType!]]}
+            onChange={onChange}
+          />
+        </Dialog.Description>
+      </Dialog>
+    )
   );
 };

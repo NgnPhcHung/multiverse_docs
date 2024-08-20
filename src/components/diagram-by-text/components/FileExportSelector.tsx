@@ -4,9 +4,9 @@ import { Dropdown, DropdownProps, MenuProps } from "antd";
 import { useState } from "react";
 import { SQLPreviewModal } from "./SQLPreviewModal";
 
-const items: MenuProps["items"] = Object.entries(DBTypes).map(
-  ([key, value]) => ({
-    key: key,
+const items: MenuProps["items"] = Object.values(DBTypes).map(
+  (value) => ({
+    key: value,
     label: value,
   })
 );
@@ -22,7 +22,8 @@ export const FileExportSelector = () => {
   };
 
   const onClick: MenuProps["onClick"] = ({ key }) => {
-    setSelectedDB(key);
+    console.log(key)
+    setSelectedDB(key as DBTypes);
     setOpen(false)
   };
   return (
