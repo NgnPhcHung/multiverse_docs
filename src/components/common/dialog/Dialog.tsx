@@ -35,7 +35,7 @@ export const Dialog = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="bg-slate-900/20 backdrop-blur fixed inset-0 z-50 grid place-items-center cursor-pointer  overflow-hidden"
+          className="bg-slate-900/20 backdrop-blur-sm fixed inset-0 z-50 grid place-items-center cursor-pointer overflow-hidden"
         >
           <motion.div
             initial={{ scale: 0, rotate: "12.5deg" }}

@@ -21,7 +21,10 @@ interface FlowState {
   initStore: () => Promise<void>;
   hydrateStore: () => Promise<void>;
 }
-
+localForage.config({
+  name: "myCustomDB", // Set your desired database name here
+  storeName: "myStoreName", // Set your desired store name (optional)
+});
 export const useDiagramStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],

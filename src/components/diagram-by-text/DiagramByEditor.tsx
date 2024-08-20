@@ -5,6 +5,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
 import { Diagram } from "./Diagram";
 import { useEditorStore } from "@src/store";
+import { FileExportSelector } from "./components";
 
 export const DiagramByEditor = () => {
   const { initStore: initDiagram, hydrateStore, hydrated } = useDiagramStore();
@@ -22,7 +23,13 @@ export const DiagramByEditor = () => {
         key="diagram-editor"
         className="flex dark:bg-brand relative h-full overflow-hidden"
       >
-        <Sidebar>
+        <Sidebar
+          navItems={
+            <>
+              <FileExportSelector />
+            </>
+          }
+        >
           <Editor />
         </Sidebar>
         <main className="flex-1 overflow-hidden relative bg-diagram">

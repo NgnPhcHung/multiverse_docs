@@ -165,7 +165,7 @@ export const Sidebar = ({
           </nav>
         )} */}
 
-        <div className="z-50 bg-secondary p-2 w-full flex items-center space-x-4 group/navbar h-12">
+        <div className="z-50 bg-secondary p-2 w-full flex items-center group/navbar h-12">
           <ActionIcon
             variant="secondary"
             size="md"

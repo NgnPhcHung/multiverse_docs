@@ -1,51 +1,51 @@
-import { SQLVariableType } from "@interfaces/SQLVariableType";
+import { DataTypes, DBConstrains } from "@src/consts";
 import * as monacoType from "monaco-editor";
-import { EditorTheme, editorRule, editorColor } from "src/theme";
+import { EditorTheme, editorColor, editorRule } from "src/theme";
 
 export const defaultEditorValue = `Create owner ( 
-  ownerId: Number  PrimaryKey,
-  firstName: Varchar unique NN,
+  ownerId: Int  Primary AutoIncrement,
+  firstName: Varchar Unique NotNull,
   lastName: Varchar,
-  phonenumber: Varchar NN,
+  phonenumber: Varchar NotNull,
 )
 
 Create animal ( 
-  animalId: Number PrimaryKey,
-  ownerId: Number NN,
-  name: Char NN,
-  species: Char NN,
+  animalId: Int Primary AutoIncrement,
+  ownerId: Int NotNull,
+  name: Char NotNull,
+  species: Char NotNull,
   notes: Varchar,
 )
 
 Create case ( 
-  id: Number PrimaryKey,
-  animalId: Number NN,
-  statusId: Number NN,
+  id: Int Primary AutoIncrement,
+  animalId: Int NotNull,
+  statusId: Int NotNull,
   addressId: Varchar
 )
 
 Create status ( 
-  statusId: Number PrimaryKey,
-  type: Varchar NN,
+  statusId: Int Primary AutoIncrement,
+  type: Varchar NotNull,
 )
 
 
 Create vaccine ( 
-  vaccineId: Number PrimaryKey,
-  type: Varchar NN,
+  vaccineId: Int Primary AutoIncrement,
+  type: Varchar NotNull,
   description: Varchar,
 )
 
 
 Create animal_vaccine ( 
-  vaccineId: Number PrimaryKey,
-  animalId: Number PrimaryKey,
+  vaccineId: Int Primary AutoIncrement,
+  animalId: Int Primary,
 )
 
 Create address (
-  addressId: Number PrimaryKey,
-  country: Char NN,
-  city: Char NN,
+  addressId: Int Primary AutoIncrement,
+  country: Char NotNull,
+  city: Char NotNull,
   ward: Char,
   describe: Varchar
 )
@@ -63,9 +63,9 @@ export const settingMonacoEditor = (
   isDarkMode?: boolean
 ) => {
   const theme = isDarkMode ? EditorTheme.Dark : EditorTheme.Light;
-  const keywords = ["Create", "PrimaryKey", "Foreign"];
-  const typeKeywords = Object.keys(SQLVariableType);
-  const constrainKeywords = ["NOT NULL", "not null", "UNIQUE", "unique"];
+  const keywords = ["Create", "Primary", "Foreign"];
+  const typeKeywords = Object.keys(DataTypes);
+  const constrainKeywords = Object.keys(DBConstrains);
   monaco.languages.register({ id: "unknown-language" });
   monaco.languages.setMonarchTokensProvider("unknown-language", {
     keywords,

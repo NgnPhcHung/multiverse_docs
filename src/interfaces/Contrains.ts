@@ -1,1 +1,1 @@
-export const Constrains = ["Constrains", "PrimaryKey", "Unique"];
+export const Constrains = ["Constrains", "Primary", "Unique"];
