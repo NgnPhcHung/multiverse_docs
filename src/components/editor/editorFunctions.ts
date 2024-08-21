@@ -4,6 +4,7 @@ import {
   Entity,
   EntityProperty,
   EntityStore,
+  TableReference,
 } from "@src/interfaces";
 import { useEditorStore } from "@src/store";
 import { formatStringToEntityProperty, groupBy } from "@src/utils";
@@ -28,8 +29,9 @@ export const useEditorFormatter = () => {
     setEdges: state.setEdges,
   }));
 
-  const { setEntities } = useEditorStore((state) => ({
+  const { setEntities, setReference } = useEditorStore((state) => ({
     setEntities: state.setEntities,
+    setReference: state.setReferences,
   }));
 
   const getDuplicated = (data?: TableWithProperty[]) => {
@@ -73,6 +75,25 @@ export const useEditorFormatter = () => {
     };
   };
 
+  const createReference = (relations: Edge[]) => {
+    const references: TableReference[] = relations.map((relation) => {
+      const source = relation.source.split(".");
+      const target = relation.target.split(".");
+      return {
+        sourceTable: {
+          tableName: source[0],
+          tableKey: source[1],
+        },
+        referenceTable: {
+          tableName: target[0],
+          tableKey: target[1],
+        },
+      };
+    });
+
+    setReference(references)
+  };
+
   const createEdges = (foreignList: string[]) => {
     if (!foreignList.length) return;
 
@@ -99,6 +120,7 @@ export const useEditorFormatter = () => {
       });
     });
     setEdges(relations);
+    createReference(relations);
   };
   const defaultTable = (tableName: string) => {
     return {

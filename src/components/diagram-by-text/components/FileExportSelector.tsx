@@ -22,7 +22,6 @@ export const FileExportSelector = () => {
   };
 
   const onClick: MenuProps["onClick"] = ({ key }) => {
-    console.log(key)
     setSelectedDB(key as DBTypes);
     setOpen(false)
   };

@@ -1,4 +1,4 @@
-import { DataTypes, DBConstrains } from "@src/consts";
+import { DataTypes, DBConstrains, EditorKeywords } from "@src/consts";
 import * as monacoType from "monaco-editor";
 import { EditorTheme, editorColor, editorRule } from "src/theme";
 
@@ -63,7 +63,7 @@ export const settingMonacoEditor = (
   isDarkMode?: boolean
 ) => {
   const theme = isDarkMode ? EditorTheme.Dark : EditorTheme.Light;
-  const keywords = ["Create", "Primary", "Foreign"];
+  const keywords = Object.keys(EditorKeywords);
   const typeKeywords = Object.keys(DataTypes);
   const constrainKeywords = Object.keys(DBConstrains);
   monaco.languages.register({ id: "unknown-language" });

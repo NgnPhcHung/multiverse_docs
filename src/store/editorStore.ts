@@ -1,14 +1,16 @@
-import { EntityStore } from "@src/interfaces";
+import { EntityStore, TableReference } from "@src/interfaces";
 import localForage from "localforage";
 import { create } from "zustand";
 
 type State = {
+  references?: TableReference[];
   entities?: EntityStore[];
   editorFileContent?: string;
   initStore: () => Promise<void>;
 };
 
 type Action = {
+  setReferences: (references: State["references"]) => void;
   setEntities: (entities: State["entities"]) => void;
   setEditorContent: (editorFileContent: State["editorFileContent"]) => void;
 };
@@ -17,8 +19,10 @@ localForage.config({
   storeName: "defaultDatabase",
 });
 export const useEditorStore = create<State & Action>((set) => ({
+  references: undefined,
   entities: undefined,
   editorFileContent: undefined,
+  setReferences: (references) => set(() => ({ references })),
   setEntities: (entities) => set(() => ({ entities })),
   setEditorContent: async (editorFileContent) => {
     try {

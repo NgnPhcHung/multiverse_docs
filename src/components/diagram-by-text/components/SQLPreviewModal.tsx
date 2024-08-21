@@ -6,11 +6,13 @@ import {
   SQLDialect,
   SQLite,
 } from "@codemirror/lang-sql";
-import { Dialog } from "@src/components/common";
+import { Button, Dialog, TextInput } from "@src/components/common";
 import { DBTypes } from "@src/consts";
+import useDebouncedCallback from "@src/hooks/useDebouncedCallback";
 import { useEditorStore } from "@src/store";
+import { generateSQL } from "@src/utils";
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 interface SQLPreviewModalProps {
   dbType?: DBTypes;
@@ -29,36 +31,41 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
   dbType,
   onClose,
 }) => {
-  const { entities } = useEditorStore();
+  const { entities: schema, references: relation } = useEditorStore();
+  const [sqlResult, setSqlResult] = useState("");
+  const [tableName, setTableName] = useState("untitledDatabase");
+
   const onChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
     viewUpdate;
   }, []);
 
-  const sqlQuery = useMemo(() => {
-    const createDB = `CREATE DATABASE PetManagement;
-USE PetManagement
-`;
-    let createTables = "";
-    entities?.forEach((entity) => {
-      let properties = "";
-      entity.property?.forEach((property) => {
-        const constraints = property.constrains
-          .split(",")
-          .map((cons) => cons.toUpperCase())
-          .join(" ");
+  const handleChange = useDebouncedCallback((changedValue) => {
+    setTableName(changedValue as string);
+  }, 500);
 
-        properties += `
-  ${property.name} ${property.dataType.toUpperCase()} ${constraints},`;
-      });
+  useEffect(() => {
+    if (!dbType || !schema?.length) return;
 
-      createTables += `
-CREATE TABLE ${entity.name} (${properties}
-)`;
-    });
+    try {
+      const builderResult = generateSQL(dbType, schema, relation);
+      setSqlResult(builderResult);
+    } catch (error) {
+      console.error("Error generating SQL:", error);
+      setSqlResult("Error generating SQL. Please try again.");
+    }
+  }, [dbType, schema]);
 
-    return `
-${createDB}${createTables}`;
-  }, [entities]);
+  const handleSaveFile = () => {
+    const element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(sqlResult)
+    );
+    element.setAttribute("download", tableName+".sql");
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   return (
     language[dbType!] && (
@@ -70,11 +77,22 @@ ${createDB}${createTables}`;
       >
         <Dialog.Description className="h-[70vh] overflow-auto">
           <CodeMirror
-            value={sqlQuery}
+            value={sqlResult}
             extensions={[language[dbType!]]}
             onChange={onChange}
           />
         </Dialog.Description>
+        <div className="flex items-center space-x-3 mt-2">
+          <TextInput value={tableName} onChange={handleChange} />
+          <Button
+            className={{
+              button: "!w-24 break-keep",
+            }}
+            onClick={handleSaveFile}
+          >
+            Save to file
+          </Button>
+        </div>
       </Dialog>
     )
   );

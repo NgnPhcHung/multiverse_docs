@@ -7,5 +7,5 @@ export * from "./Entity";
 export * from "./EntityProperty";
 export * from "./EntityStore";
 export * from "./RelationTypes";
-export * from "./TableForeign";
+export * from "./TableReference";
 export * from "./UserPresence";
