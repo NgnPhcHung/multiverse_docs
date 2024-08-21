@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@codemirror/lang-sql": "^6.7.0",
-    "@headlessui/react": "^1.7.19",
-    "@mdxeditor/editor": "^2.20.7",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash.throttle": "^4.1.9",
     "@uiw/react-codemirror": "^4.23.0",
