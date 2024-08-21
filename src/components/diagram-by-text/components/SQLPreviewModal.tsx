@@ -11,7 +11,7 @@ import { DBTypes } from "@src/consts";
 import useDebouncedCallback from "@src/hooks/useDebouncedCallback";
 import { useEditorStore } from "@src/store";
 import { generateSQL } from "@src/utils";
-import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
 import { FC, useCallback, useEffect, useState } from "react";
 
 interface SQLPreviewModalProps {
@@ -35,9 +35,7 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
   const [sqlResult, setSqlResult] = useState("");
   const [tableName, setTableName] = useState("untitledDatabase");
 
-  const onChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
-    viewUpdate;
-  }, []);
+  const onChange = useCallback(() => {}, []);
 
   const handleChange = useDebouncedCallback((changedValue) => {
     setTableName(changedValue as string);
@@ -61,7 +59,7 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
       "href",
       "data:text/plain;charset=utf-8," + encodeURIComponent(sqlResult)
     );
-    element.setAttribute("download", tableName+".sql");
+    element.setAttribute("download", tableName + ".sql");
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);

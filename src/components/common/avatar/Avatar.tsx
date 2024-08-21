@@ -7,7 +7,7 @@ interface AvatarProps {
   color: string;
 }
 
-export const Avatar = memo(({ color, name }: AvatarProps) => {
+export const Avatar = memo(({ name }: AvatarProps) => {
   const generator = new AvatarGenerator();
   const avatar = generator.generateRandomAvatar();
 
