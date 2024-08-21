@@ -4,12 +4,10 @@ import { Dropdown, DropdownProps, MenuProps } from "antd";
 import { useState } from "react";
 import { SQLPreviewModal } from "./SQLPreviewModal";
 
-const items: MenuProps["items"] = Object.values(DBTypes).map(
-  (value) => ({
-    key: value,
-    label: value,
-  })
-);
+const items: MenuProps["items"] = Object.values(DBTypes).map((value) => ({
+  key: value,
+  label: value,
+}));
 
 export const FileExportSelector = () => {
   const [open, setOpen] = useState(false);
@@ -23,12 +21,15 @@ export const FileExportSelector = () => {
 
   const onClick: MenuProps["onClick"] = ({ key }) => {
     setSelectedDB(key as DBTypes);
-    setOpen(false)
+    setOpen(false);
   };
   return (
     <>
       <Dropdown
-        menu={{ items, onClick }}
+        menu={{
+          items: [{ label: DBTypes.MYSQL, key: DBTypes.MYSQL }],
+          onClick,
+        }}
         placement="bottomLeft"
         arrow
         onOpenChange={handleOpenChange}
