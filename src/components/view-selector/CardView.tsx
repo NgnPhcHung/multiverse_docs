@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DynamicIcon } from "../common/DyanamicIcon";
 
 interface CardViewProps {
-  icon: keyof typeof dynamicIconImports;
+  icon?: keyof typeof dynamicIconImports;
   title: string;
   description: string;
   url: string;
@@ -25,7 +25,9 @@ export const CardView = ({ description, icon, title, url }: CardViewProps) => {
       className="w-full h-full z-sideBar rounded-md flex items-center space-x-4 p-4 hover:border-primaryHover-900 cursor-pointer group/cardview col-span-12 md:col-span-6 xl:col-span-4 bg-primary text-secondary outline-2 outline-primary outline hover:outline-offset-2 hover:p-3 duration-200"
       onClick={onNavigate}
     >
-      <DynamicIcon name={icon} size={36} className="text-secondary " />
+      {icon && (
+        <DynamicIcon name={icon} size={36} className="text-secondary " />
+      )}
       <div className="w-full">
         <h2
           className={clsx(

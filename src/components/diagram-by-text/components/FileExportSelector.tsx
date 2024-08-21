@@ -36,7 +36,7 @@ export const FileExportSelector = () => {
         open={open}
         trigger={["click"]}
       >
-        <Button onClick={() => setOpen(!open)}>Export</Button>
+        <Button onClick={() => setOpen(!open)} variant="secondary">Export</Button>
       </Dropdown>
       <SQLPreviewModal
         dbType={selectedDB}

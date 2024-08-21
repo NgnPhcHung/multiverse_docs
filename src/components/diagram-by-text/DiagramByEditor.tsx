@@ -5,7 +5,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
 import { Diagram } from "./Diagram";
 import { useEditorStore } from "@src/store";
-import { FileExportSelector } from "./components";
+import { FileExportSelector, TemplateSelector } from "./components";
 
 export const DiagramByEditor = () => {
   const { initStore: initDiagram, hydrateStore, hydrated } = useDiagramStore();
@@ -25,9 +25,10 @@ export const DiagramByEditor = () => {
       >
         <Sidebar
           navItems={
-            <>
+            <div className="space-x-2 flex items-center">
               <FileExportSelector />
-            </>
+              <TemplateSelector />
+            </div>
           }
         >
           <Editor />
