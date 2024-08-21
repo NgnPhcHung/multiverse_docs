@@ -1,4 +1,4 @@
-import { Position, Node } from "@xyflow/react";
+import { Node, Position } from "@xyflow/react";
 
 interface Center {
   x: number;
@@ -25,7 +25,7 @@ interface NodeInternals {
   };
 }
 
-interface NodeExtended extends Node {
+export interface NodeExtended extends Node {
   internals: NodeInternals;
   measured: {
     width: number;
@@ -60,8 +60,8 @@ function getHandleCoordsByPosition(
       break;
   }
 
-  const x = node.internals.positionAbsolute.x + handle?.x || 0 + offsetX;
-  const y = node.internals.positionAbsolute.y + handle?.y || 0 + offsetY;
+  const x = node.internals.positionAbsolute.x + (handle?.x || 0) + offsetX;
+  const y = node.internals.positionAbsolute.y + (handle?.y || 0) + offsetY;
 
   return [x, y];
 }

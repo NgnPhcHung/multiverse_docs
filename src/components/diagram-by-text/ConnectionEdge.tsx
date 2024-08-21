@@ -1,4 +1,4 @@
-import { getEdgeParams } from "@utils/getEdgeParams";
+import { getEdgeParams, NodeExtended } from "@utils/getEdgeParams";
 import {
   EdgeLabelRenderer,
   EdgeProps,
@@ -27,8 +27,8 @@ function ConnectionEdge({
   style,
   data,
 }: EdgeProps) {
-  const sourceNode = useInternalNode(source);
-  const targetNode = useInternalNode(target);
+  const sourceNode = useInternalNode(source) as NodeExtended;
+  const targetNode = useInternalNode(target) as NodeExtended;
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -60,7 +60,7 @@ function ConnectionEdge({
       <EdgeLabelRenderer>
         <EdgeLabel
           transform={`translate(-50%, -50%)  translate(${labelX}px,${labelY}px)`}
-          label={data?.label}
+          label={String(data?.label)}
         />
       </EdgeLabelRenderer>
     </>
