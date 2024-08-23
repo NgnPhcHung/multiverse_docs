@@ -5,7 +5,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
 import { Diagram } from "./Diagram";
 import { useEditorStore } from "@src/store";
-import { FileExportSelector, TemplateSelector } from "./components";
+import { ErrorPanel, FileExportSelector, TemplateSelector } from "./components";
 
 export const DiagramByEditor = () => {
   const { initStore: initDiagram, hydrateStore, hydrated } = useDiagramStore();

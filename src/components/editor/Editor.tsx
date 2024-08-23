@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { EditorSkeleton } from "./EditorSkeleton";
 import { useEditorFormatter } from "./editorFunctions";
 import { setEditorTheme, settingMonacoEditor } from "./editorSettings";
+import { ErrorPanel } from "../diagram-by-text/components";
 
 export const Editor = () => {
   const [loading, setLoading] = useState(true);
@@ -52,7 +53,7 @@ export const Editor = () => {
   }, [isDarkMode]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       {loading ? (
         <EditorSkeleton />
       ) : (
@@ -64,6 +65,7 @@ export const Editor = () => {
           onChange={handleChange}
         />
       )}
+      <ErrorPanel />
     </div>
   );
 };

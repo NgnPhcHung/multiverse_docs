@@ -12,6 +12,7 @@ export default {
         primary: "hsl(var(--primary))",
         primaryHover: "hsl(var(--primary-hover))",
         diagram: "hsl(var(--diagram))",
+        default: "hsl(var(--default))",
       },
       zIndex: {
         modalOverlay: 99998,
