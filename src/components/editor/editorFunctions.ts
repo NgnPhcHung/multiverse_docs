@@ -29,10 +29,21 @@ export const useEditorFormatter = () => {
     setEdges: state.setEdges,
   }));
 
-  const { setEntities, setReference } = useEditorStore((state) => ({
-    setEntities: state.setEntities,
-    setReference: state.setReferences,
-  }));
+  const { setEntities, setReference, setIsLoading } = useEditorStore(
+    (state) => ({
+      setEntities: state.setEntities,
+      setReference: state.setReferences,
+      setIsLoading: state.setIsLoading,
+    })
+  );
+
+  const invokeLoader = () => {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+  };
 
   const getDuplicated = (data?: TableWithProperty[]) => {
     const cloneData = JSON.parse(JSON.stringify(data)) as TableWithProperty[];
@@ -91,7 +102,7 @@ export const useEditorFormatter = () => {
       };
     });
 
-    setReference(references)
+    setReference(references);
   };
 
   const createEdges = (foreignList: string[]) => {
@@ -254,6 +265,7 @@ export const useEditorFormatter = () => {
     const tableColumns = entities.concat(tempProperties);
     setNode(tableColumns);
     saveDBContent(tableColumns as Node<EntityProperty>[]);
+    invokeLoader();
   };
 
   const saveDBContent = (tempProperties: Node<EntityProperty>[]) => {

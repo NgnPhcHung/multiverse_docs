@@ -6,6 +6,7 @@ export * from "./EditorType";
 export * from "./Entity";
 export * from "./EntityProperty";
 export * from "./EntityStore";
+export * from "./TableError";
 export * from "./RelationTypes";
 export * from "./TableReference";
 export * from "./UserPresence";

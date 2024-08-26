@@ -9,6 +9,7 @@ body,
   padding: 0;
   margin: 0;
   transition: all 300ms ease-in-out;
+  --navHeight: 48px
 }
 ::view-transition-old(root),
 ::view-transition-new(root) {

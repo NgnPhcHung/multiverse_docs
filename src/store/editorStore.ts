@@ -3,15 +3,17 @@ import localForage from "localforage";
 import { create } from "zustand";
 
 type State = {
-  references?: TableReference[];
+  isLoading: boolean;
   entities?: EntityStore[];
   editorFileContent?: string;
+  references?: TableReference[];
   initStore: () => Promise<void>;
 };
 
 type Action = {
-  setReferences: (references: State["references"]) => void;
+  setIsLoading: (state: boolean) => void;
   setEntities: (entities: State["entities"]) => void;
+  setReferences: (references: State["references"]) => void;
   setEditorContent: (editorFileContent: State["editorFileContent"]) => void;
 };
 localForage.config({
@@ -19,9 +21,11 @@ localForage.config({
   storeName: "defaultDatabase",
 });
 export const useEditorStore = create<State & Action>((set) => ({
-  references: undefined,
+  isLoading: false,
   entities: undefined,
+  references: undefined,
   editorFileContent: undefined,
+  setIsLoading: (isLoading) => set(() => ({ isLoading })),
   setReferences: (references) => set(() => ({ references })),
   setEntities: (entities) => set(() => ({ entities })),
   setEditorContent: async (editorFileContent) => {
