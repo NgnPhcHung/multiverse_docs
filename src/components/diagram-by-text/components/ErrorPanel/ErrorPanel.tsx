@@ -1,21 +1,18 @@
 import { CollapsiblePanel, ResizablePanel } from "@src/components/common";
 import { TableError } from "@src/interfaces";
 import { useEditorStore } from "@src/store";
-import { Loader, AlertTriangle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ErrorLoadingState } from "./ErrorLoadingState";
 import { ErrorMsg } from "./ErrorMsg";
+import { ErrorSpinner } from "./ErrorSpinner";
 
 export const ErrorPanel = () => {
-  const { isLoading, relations, entities } = useEditorStore((state) => ({
-    isLoading: state.isLoading,
+  const { relations, entities } = useEditorStore((state) => ({
     relations: state.references,
     entities: state.entities,
   }));
   const [isPanelOpened, setIsPanelOpened] = useState(false);
   const sqlErrors = useMemo(() => {
-    if (isLoading) return [];
-
     const errors: TableError[] = [];
 
     // REGION: Foreign key referencing a non-existent table or column
@@ -49,7 +46,7 @@ export const ErrorPanel = () => {
     });
     //REGION: Foreign key mismatch type
     return errors;
-  }, [entities, relations, isLoading]);
+  }, [entities, relations]);
 
   return (
     <ResizablePanel isPanelOpened={isPanelOpened}>
@@ -59,13 +56,7 @@ export const ErrorPanel = () => {
         title={
           <div className="flex items-center justify-between w-full">
             <div>Errors</div>
-            {isLoading && <Loader className="animate-spin size-4" />}
-            {!!sqlErrors.length && (
-              <div className="flex items-center space-x-1 text-red-500">
-                <AlertTriangle size={16}/>
-                <div>{sqlErrors.length}</div>
-              </div>
-            )}
+            <ErrorSpinner errorCount={sqlErrors.length} />
           </div>
         }
         className={{
