@@ -42,7 +42,7 @@ export const useEditorFormatter = () => {
 
     setTimeout(() => {
       setIsLoading(false);
-    }, 5000);
+    }, 2500);
   };
 
   const getDuplicated = (data?: TableWithProperty[]) => {
@@ -284,7 +284,7 @@ export const useEditorFormatter = () => {
         );
         return {
           name: key,
-          property: properties,
+          properties,
         };
       }) as EntityStore[];
 
