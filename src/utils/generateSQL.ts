@@ -12,7 +12,7 @@ export function generateSQL(
   schema.forEach((table) => {
     const pks: string[] = [];
     builder.startTable(table.name);
-    table.property?.forEach((column) => {
+    table.properties?.forEach((column) => {
       const constraints = column.constrains
         .split(",")
         .map((cons) => cons.trim());

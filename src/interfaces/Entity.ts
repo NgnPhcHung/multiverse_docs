@@ -4,6 +4,6 @@ import { EntityProperty } from "./EntityProperty";
 export type Entity = {
   name: string;
   className?: string;
-  property?: EntityProperty[];
+  properties?: EntityProperty[];
   renderType: DiagramDataType;
 };

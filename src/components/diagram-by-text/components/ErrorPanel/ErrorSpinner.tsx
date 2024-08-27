@@ -11,8 +11,9 @@ export const ErrorSpinner = ({ errorCount }: ErrorSpinnerProps) => {
   }));
 
   if (isLoading) {
-    <Loader className="animate-spin size-4" />;
+    return <Loader className="animate-spin size-4" />;
   }
+
   return (
     errorCount > 0 && (
       <div className="flex items-center space-x-1 text-red-500">
