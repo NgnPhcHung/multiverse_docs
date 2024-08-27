@@ -1,11 +1,11 @@
 import { Sidebar } from "@components/common";
 import { Editor } from "@components/editor";
+import { useEditorStore } from "@src/store";
 import { useDiagramStore } from "@store/diagramStore";
 import { ReactFlowProvider } from "@xyflow/react";
 import { useEffect } from "react";
+import { FileExportSelector, TemplateSelector } from "./components";
 import { Diagram } from "./Diagram";
-import { useEditorStore } from "@src/store";
-import { ErrorPanel, FileExportSelector, TemplateSelector } from "./components";
 
 export const DiagramByEditor = () => {
   const { initStore: initDiagram, hydrateStore, hydrated } = useDiagramStore();
