@@ -35,7 +35,7 @@ Create vaccine (
 
 
 Create animal_vaccine ( 
-  vaccineId: Int Primary AutoIncrement,
+  vaccineId: Int Primary AutoIncrement [relate to vaccine table],
   animalId: Int Primary,
 )
 

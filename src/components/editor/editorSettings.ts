@@ -1,4 +1,6 @@
 import { DataTypes, DBConstrains, EditorKeywords } from "@src/consts";
+import { DiagramDataType, EntityProperty } from "@src/interfaces";
+import { CoordinateExtent } from "@xyflow/react";
 import * as monacoType from "monaco-editor";
 import { EditorTheme, editorColor, editorRule } from "src/theme";
 
@@ -186,6 +188,49 @@ export const setEditorTheme = (
   });
 };
 
+export const defaultTable = (tableName: string) => {
+  return {
+    id: tableName,
+    type: "tables",
+    data: {
+      name: tableName,
+      renderType: DiagramDataType.Table,
+      className: TABLE_TITLE_CLASSNAME,
+    },
+    position: { x: 136, y: 32 },
+  };
+};
+
+export const defaultSettings = (
+  tableName: string,
+  property: EntityProperty,
+  index: number
+) => {
+  return {
+    id: `${tableName}.${property.name}`,
+    type: "tables",
+    position: { x: 136, y: 32 * (index + 1) },
+  };
+};
+
+export const defaultProperty = (
+  tableName: string,
+  property: EntityProperty,
+  index: number
+) => {
+  return {
+    ...defaultSettings(tableName, property, index),
+    extent: "parent" as "parent" | CoordinateExtent,
+    parentId: tableName,
+    data: {
+      ...property,
+      type: DiagramDataType.Property,
+    },
+  };
+};
+const TABLE_TITLE_CLASSNAME =
+  "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ml-[136px]";
+export const regexComment = /\[(.*?)\]/;
 export const regex = /(.*)\((.*)\)/i;
 export const regexForeign = /[^)]+$/;
 export const chenRelationRegex = /[<<>>~-]/g;

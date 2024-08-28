@@ -1,6 +1,5 @@
 import { RelationType } from "@interfaces/RelationTypes";
 import {
-  DiagramDataType,
   Entity,
   EntityProperty,
   EntityStore,
@@ -9,11 +8,13 @@ import {
 import { useEditorStore } from "@src/store";
 import { formatStringToEntityProperty, groupBy } from "@src/utils";
 import { useDiagramStore } from "@store/diagramStore";
-import { CoordinateExtent, Edge, Node } from "@xyflow/react";
-import { regexForeign } from "./editorSettings";
-
-const TABLE_TITLE_CLASSNAME =
-  "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ml-[136px]";
+import { Edge, Node } from "@xyflow/react";
+import {
+  defaultProperty,
+  defaultTable,
+  regexComment,
+  regexForeign,
+} from "./editorSettings";
 
 interface TableWithProperty {
   index: number;
@@ -133,46 +134,6 @@ export const useEditorFormatter = () => {
     setEdges(relations);
     createReference(relations);
   };
-  const defaultTable = (tableName: string) => {
-    return {
-      id: tableName,
-      type: "tables",
-      data: {
-        name: tableName,
-        renderType: DiagramDataType.Table,
-        className: TABLE_TITLE_CLASSNAME,
-      },
-      position: { x: 136, y: 32 },
-    };
-  };
-
-  const defaultSettings = (
-    tableName: string,
-    property: EntityProperty,
-    index: number
-  ) => {
-    return {
-      id: `${tableName}.${property.name}`,
-      type: "tables",
-      position: { x: 136, y: 32 * (index + 1) },
-    };
-  };
-
-  const defaultProperty = (
-    tableName: string,
-    property: EntityProperty,
-    index: number
-  ) => {
-    return {
-      ...defaultSettings(tableName, property, index),
-      extent: "parent" as "parent" | CoordinateExtent,
-      parentId: tableName,
-      data: {
-        ...property,
-        type: DiagramDataType.Property,
-      },
-    };
-  };
 
   const getForeignLine = (inputValue: string) => {
     if (!inputValue || !inputValue.includes("Create")) {
@@ -242,8 +203,17 @@ export const useEditorFormatter = () => {
     full.map((itemData) => {
       const tableProperties = formatStringToEntityProperty(itemData.properties);
       tableProperties?.map((property, index) => {
+        const { comment, constraints } = getComment(property.constrains);
         tempProperties.push(
-          defaultProperty(itemData.tableName, property, index)
+          defaultProperty(
+            itemData.tableName,
+            {
+              ...property,
+              constrains: constraints,
+              comment,
+            },
+            index
+          )
         );
       });
 
@@ -268,6 +238,17 @@ export const useEditorFormatter = () => {
     invokeLoader();
   };
 
+  const getComment = (value: string) => {
+    const matches = regexComment.exec(value);
+    const comment = matches ? matches[1] : undefined;
+    const rest = value.replace(regexComment, "");
+
+    return {
+      comment,
+      constraints: rest,
+    };
+  };
+
   const saveDBContent = (tempProperties: Node<EntityProperty>[]) => {
     const groupByTable = groupBy(tempProperties, "parentId");
     const entities: EntityStore[] = Object.entries(groupByTable)
@@ -275,10 +256,12 @@ export const useEditorFormatter = () => {
       .map(([key, value]) => {
         const properties: Omit<EntityProperty, "renderType">[] = value.map(
           ({ data: { constrains, dataType, name } }) => {
+            const { constraints, comment } = getComment(constrains);
             return {
-              constrains,
+              constrains: constraints,
               dataType,
               name,
+              comment,
             };
           }
         );

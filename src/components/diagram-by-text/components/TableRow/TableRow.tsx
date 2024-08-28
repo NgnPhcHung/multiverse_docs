@@ -1,7 +1,9 @@
 import { DiagramDataType, Entity, EntityProperty } from "@src/interfaces";
 import { useDiagramStore } from "@src/store";
 import { Handle, Node, NodeProps, Position } from "@xyflow/react";
+import { Popover } from "antd";
 import clsx from "clsx";
+import { RowTooltip } from "./RowTooltip";
 
 type TableProps = {
   id: string;
@@ -10,7 +12,7 @@ type TableProps = {
 
 export type CustomNode = Node<TableProps>;
 
-export const Tables = (data: NodeProps<Node<Entity>>) => {
+export const TableRow = (data: NodeProps<Node<Entity>>) => {
   const nodeData = data.data;
   const { edges } = useDiagramStore();
   const currentRow = `${data.parentId}.${nodeData.name}`;
@@ -26,14 +28,28 @@ export const Tables = (data: NodeProps<Node<Entity>>) => {
         nodeData.className
       )}
     >
-      <div className="grid grid-cols-2 w-full">
-        <div className={
-          clsx("text-truncate text-ellipsis overflow-hidden",
-            isProperty(nodeData) ? "col-span-1" :"col-span-2"
-          )
-        }>{nodeData.name}</div>
-        {isProperty(nodeData) && <div className="col-span-1 justify-self-end">{nodeData.dataType}</div>}
-      </div>
+      <Popover
+        content={
+          isProperty(nodeData) &&<RowTooltip data={isProperty(nodeData) ? nodeData : undefined} />
+        }
+        placement="right"
+      >
+        <div className="grid grid-cols-2 w-full">
+          <div
+            className={clsx(
+              "text-truncate text-ellipsis overflow-hidden",
+              isProperty(nodeData) ? "col-span-1" : "col-span-2"
+            )}
+          >
+            {nodeData.name}
+          </div>
+          {isProperty(nodeData) && (
+            <div className="col-span-1 justify-self-end">
+              {nodeData.dataType}
+            </div>
+          )}
+        </div>
+      </Popover>
       {!!handler && (
         <>
           <Handle

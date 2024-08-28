@@ -1,14 +1,14 @@
 import { Constrains, DiagramDataType, EntityProperty } from "@src/interfaces";
 
 const PROPERTY_CLASSNAME =
-  "p-1 px-2 relative flex justify-between h-16 z-8 nodrag";
+  "p-1 px-2 relative flex justify-between h-16 z-8 nodrag cursor-default";
 
 export const formatStringToEntityProperty = (
   entityString?: string
 ): EntityProperty[] | undefined => {
   if (!entityString) return;
 
-  const str = entityString
+  const str = entityString;
   const entities = str.split(",");
   const mappedEntity: undefined | EntityProperty[] = entities
     .map((entity) => {
@@ -17,17 +17,22 @@ export const formatStringToEntityProperty = (
         .split(/(?!\([^)]*)\s(?![^(]*\))/);
       let dataType = "";
       let constrains = "";
-
       if (
         !Constrains.map((cons) => cons.toLocaleLowerCase()).includes(
           (noWhiteSpaceEntity[1] ?? "").toLocaleLowerCase()
         )
       ) {
         dataType = noWhiteSpaceEntity[1];
-        constrains = noWhiteSpaceEntity.slice(2).toString();
+        constrains = noWhiteSpaceEntity
+          .slice(2)
+          .toString()
+          .replaceAll(",", " ");
       } else {
         dataType = noWhiteSpaceEntity[2];
-        constrains = noWhiteSpaceEntity.slice(1).toString();
+        constrains = noWhiteSpaceEntity
+          .slice(1)
+          .toString()
+          .replaceAll(",", " ");
       }
       if (!noWhiteSpaceEntity[0]) {
         return undefined;

@@ -11,14 +11,14 @@ import {
 import "@xyflow/react/dist/style.css";
 import clsx from "clsx";
 import ConnectionEdge from "./ConnectionEdge";
-import { Tables } from "./Tables";
+import { TableRow } from "./components";
 
 export const Diagram = () => {
   const { edges, nodes, onEdgesChange, onNodesChange } = useDiagramStore();
   const { isDarkMode } = useAppStore();
   const { md: isMobile } = useScreenSize();
 
-  const nodeTypes = { tables: Tables };
+  const nodeTypes = { tables: TableRow };
   const edgeTypes = {
     floating: ConnectionEdge,
   };

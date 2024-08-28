@@ -6,4 +6,5 @@ export type EntityProperty = {
   constrains: string;
   className?: string;
   renderType: DiagramDataType;
+  comment?: string;
 };

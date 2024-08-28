@@ -33,8 +33,9 @@ export const TemplateSelector = () => {
         size="lg"
       >
         <Dialog.Description className="space-y-4 mt-4">
-          {Object.values(DBDiagramTemplate).map((option) => (
+          {Object.values(DBDiagramTemplate).map((option, index) => (
             <div
+              key={index}
               className="w-56 p-4 rounded-md hover:shadow-md bg-primary shadow-secondaryHover cursor-pointer"
               role="button"
               onClick={() => chooseTemplate(option as DBDiagramTemplate)}
