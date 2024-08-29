@@ -12,28 +12,32 @@ export const Breadcrumbs = () => {
 
   return (
     <div className="bg-secondaryHover flex items-center justify-between px-4 py-2">
-      <div className="flex items-center justify-center space-x-2 text-primary">
-        <Tooltip placement="bottomRight" title="Home">
-          <Link to="/">
-            <HomeIcon className="w-4 h-4 mt-1 text-primaryHover" />
-          </Link>
-        </Tooltip>
-        {paths.map((path, index) => {
-          const pathTitle = path.split("-").join(" ");
-          return (
-            <div key={path} className="flex space-x-2">
-              <span>/</span>
-              <Link
-                to={`/${paths.slice(0, index + 1).join("/")}`}
-                key={path}
-                className="capitalize "
-              >
-                {pathTitle}
-              </Link>
-            </div>
-          );
-        })}
-      </div>
+      {window.location.pathname !== "/" ? (
+        <div className="flex items-center justify-center space-x-2 text-primary">
+          <Tooltip placement="bottomRight" title="Home">
+            <Link to="/">
+              <HomeIcon className="w-4 h-4 mt-1 text-primaryHover" />
+            </Link>
+          </Tooltip>
+          {paths.map((path, index) => {
+            const pathTitle = path.split("-").join(" ");
+            return (
+              <div key={path} className="flex space-x-2">
+                <span>/</span>
+                <Link
+                  to={`/${paths.slice(0, index + 1).join("/")}`}
+                  key={path}
+                  className="capitalize "
+                >
+                  {pathTitle}
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div />
+      )}
       <ToggleTheme />
     </div>
   );

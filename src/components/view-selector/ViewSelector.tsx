@@ -1,22 +1,31 @@
-import { CardView } from "./CardView";
-import { viewSelectorOptions } from "./viewSelectorOptions";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../common";
+import TiltCard from "./TiltCard";
 
 export const ViewSelector = () => {
+  const navigate = useNavigate();
+
   return (
     <div
       key="view-selector"
-      className=" h-full w-full flex items-center bg-secondary"
+      className="h-full w-full flex items-center justify-center bg-secondary text-primary"
     >
-      <div className="p-8 grid grid-cols-12 gap-3 place-items-center w-full">
-        {viewSelectorOptions.map((view) => (
-          <CardView
-            key={view.id}
-            icon={view.icon}
-            description={view.description}
-            title={view.title}
-            url={view.url}
-          />
-        ))}
+      <div className="flex space-x-4 items-center w-11/12">
+        <div className="text-5xl font-bold space-y-4">
+          Create your own ERD in a
+          <span className="text-brand"> FLASH</span>
+          <Button
+            onClick={() => navigate("text-diagram")}
+            variant="brand"
+            className={{
+              button: "!w-fit !p-4 !text-xl !font-bold",
+            }}
+          >
+            Try It Now!
+          </Button>
+        </div>
+
+        <TiltCard />
       </div>
     </div>
   );
