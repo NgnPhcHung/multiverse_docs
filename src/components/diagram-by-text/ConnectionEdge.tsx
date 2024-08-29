@@ -1,10 +1,13 @@
+import { BaseEdge } from "@src/interfaces";
 import { getEdgeParams, NodeExtended } from "@utils/getEdgeParams";
 import {
+  Edge,
   EdgeLabelRenderer,
   EdgeProps,
   getSmoothStepPath,
-  useInternalNode
+  useInternalNode,
 } from "@xyflow/react";
+import clsx from "clsx";
 
 function EdgeLabel({ transform, label }: { transform: string; label: string }) {
   return (
@@ -26,7 +29,7 @@ function ConnectionEdge({
   markerEnd,
   style,
   data,
-}: EdgeProps) {
+}: EdgeProps<Edge<BaseEdge>>) {
   const sourceNode = useInternalNode(source) as NodeExtended;
   const targetNode = useInternalNode(target) as NodeExtended;
   if (!sourceNode || !targetNode) {
@@ -51,7 +54,7 @@ function ConnectionEdge({
     <>
       <path
         id={id}
-        className="react-flow__edge-path"
+        className={clsx("react-flow__edge-path", data?.classNames?.path)}
         d={edgePath}
         strokeWidth={5}
         markerEnd={markerEnd}

@@ -1,10 +1,7 @@
-import { DiagramDataType } from "./DiagramDataType";
+import { BaseNode } from "./BaseNode";
 
-export type EntityProperty = {
-  name: string;
+export type EntityProperty = BaseNode & {
   dataType: string;
   constrains: string;
-  className?: string;
-  renderType: DiagramDataType;
   comment?: string;
 };

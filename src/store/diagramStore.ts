@@ -1,4 +1,4 @@
-import { Entity, EntityProperty } from "@src/interfaces";
+import { BaseEdge, BaseNode, Entity } from "@src/interfaces";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -11,18 +11,18 @@ import localForage from "localforage";
 import { create } from "zustand";
 
 interface FlowState {
-  nodes: Node<Entity | EntityProperty>[];
-  edges: Edge[];
+  nodes: Node<BaseNode>[];
+  edges: Edge<BaseEdge>[];
   hydrated: boolean;
-  onNodesChange: (changes: NodeChange<Node<Entity>>[]) => void;
-  onEdgesChange: (changes: EdgeChange<Edge>[]) => void;
-  setEdges: (edges: Edge[]) => Promise<void>;
-  setNode: (node: Node<Entity | EntityProperty>[]) => Promise<void>;
+  onNodesChange: (changes: NodeChange<Node<BaseNode>>[]) => void;
+  onEdgesChange: (changes: EdgeChange<Edge<BaseEdge>>[]) => void;
+  setEdges: (edges: Edge<BaseEdge>[]) => Promise<void>;
+  setNode: (node: Node<BaseNode>[]) => Promise<void>;
   initStore: () => Promise<void>;
   hydrateStore: () => Promise<void>;
 }
 localForage.config({
-  name: "multi_docDB", 
+  name: "multi_docDB",
   storeName: "defaultDatabase",
 });
 export const useDiagramStore = create<FlowState>((set, get) => ({
@@ -36,7 +36,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
     }
   },
 
-  onNodesChange: async (changes: NodeChange<Node<Entity>>[]) => {
+  onNodesChange: async (changes: NodeChange<Node<BaseNode>>[]) => {
     const updatedNodes = applyNodeChanges(changes, get().nodes);
     try {
       await localForage.setItem("nodes", updatedNodes);
@@ -45,7 +45,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
       console.error("Failed to save node:", error);
     }
   },
-  onEdgesChange: async (changes: EdgeChange<Edge>[]) => {
+  onEdgesChange: async (changes: EdgeChange<Edge<BaseEdge>>[]) => {
     const updatedEdges = applyEdgeChanges(changes, get().edges);
     try {
       await localForage.setItem("edges", updatedEdges);
@@ -54,7 +54,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
       console.error("Failed to save edges:", error);
     }
   },
-  setEdges: async (edges: Edge[]) => {
+  setEdges: async (edges: Edge<BaseEdge>[]) => {
     try {
       await localForage.setItem("edges", edges);
       set({ edges });
@@ -63,7 +63,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
     }
   },
 
-  setNode: async (nodes: Node<Entity>[]) => {
+  setNode: async (nodes: Node<BaseNode>[]) => {
     try {
       await localForage.setItem("nodes", nodes);
       set({ nodes });
@@ -76,7 +76,7 @@ export const useDiagramStore = create<FlowState>((set, get) => ({
     try {
       const nodes = (await localForage.getItem<Node<Entity>[]>("nodes")) || [];
       const edges =
-        (await localForage.getItem<Edge<EntityProperty>[]>("edges")) || [];
+        (await localForage.getItem<Edge<BaseEdge>[]>("edges")) || [];
       set({ edges, nodes });
     } catch (error) {
       console.error("Failed to initialize store:", error);

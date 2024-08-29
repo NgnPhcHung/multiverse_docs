@@ -1,7 +1,9 @@
-import { Constrains, DiagramDataType, EntityProperty } from "@src/interfaces";
-
-const PROPERTY_CLASSNAME =
-  "p-1 px-2 relative flex justify-between h-16 z-8 nodrag cursor-default";
+import { PROPERTY_CLASSNAME } from "@src/components/editor/editorSettings";
+import {
+  Constrains,
+  DiagramDataType,
+  EntityProperty
+} from "@src/interfaces";
 
 export const formatStringToEntityProperty = (
   entityString?: string
@@ -11,7 +13,7 @@ export const formatStringToEntityProperty = (
   const str = entityString;
   const entities = str.split(",");
   const mappedEntity: undefined | EntityProperty[] = entities
-    .map((entity) => {
+    .map<EntityProperty | undefined>((entity) => {
       const noWhiteSpaceEntity = entity
         .trim()
         .split(/(?!\([^)]*)\s(?![^(]*\))/);
@@ -42,7 +44,9 @@ export const formatStringToEntityProperty = (
         dataType,
         constrains,
         renderType: DiagramDataType.Property,
-        className: PROPERTY_CLASSNAME,
+        classNames: {
+          property: PROPERTY_CLASSNAME,
+        },
       };
     })
     .filter((e) => e !== undefined);

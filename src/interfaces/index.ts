@@ -1,3 +1,5 @@
+export * from "./BaseEdge";
+export * from "./BaseNode";
 export * from "./Contrains";
 export * from "./DataTypes";
 export * from "./DiagramDataType";

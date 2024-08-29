@@ -1,5 +1,6 @@
 import { RelationType } from "@interfaces/RelationTypes";
 import {
+  BaseEdge,
   Entity,
   EntityProperty,
   EntityStore,
@@ -109,7 +110,7 @@ export const useEditorFormatter = () => {
   const createEdges = (foreignList: string[]) => {
     if (!foreignList.length) return;
 
-    const relations: Edge[] = [];
+    const relations: Edge<BaseEdge>[] = [];
     foreignList.map((foreign: string) => {
       Object.keys(RelationType).map((relation) => {
         if (!foreign.includes(relation)) {

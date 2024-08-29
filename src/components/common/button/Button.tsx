@@ -26,7 +26,7 @@ export const Button = ({
       onClick={onClick}
       role="button"
       className={clsx(
-        "px-2 py-1 font-semibold text-center rounded-sm flex items-center justify-center text-sm",
+        "px-2 py-1 font-semibold text-center rounded-sm flex items-center justify-center text-sm clip-corner ",
         variants[variant],
         className?.button
       )}

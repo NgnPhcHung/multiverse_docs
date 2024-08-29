@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
-  darkMode: ['class', '[data-mode="dark"]'],  
+  darkMode: ["class", '[data-mode="dark"]'],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -17,9 +18,9 @@ export default {
       zIndex: {
         modalOverlay: 99998,
         modal: 99999,
-        sideBar:999,
-        editor:1000,
-        onEditor:1001,
+        sideBar: 999,
+        editor: 1000,
+        onEditor: 1001,
       },
       borderWidth: {
         1: "1px",

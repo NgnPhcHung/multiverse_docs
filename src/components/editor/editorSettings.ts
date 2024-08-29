@@ -1,8 +1,8 @@
 import { DataTypes, DBConstrains, EditorKeywords } from "@src/consts";
-import { DiagramDataType, EntityProperty } from "@src/interfaces";
-import { CoordinateExtent } from "@xyflow/react";
+import { BaseNode, DiagramDataType, EntityProperty } from "@src/interfaces";
+import { CoordinateExtent, Node } from "@xyflow/react";
 import * as monacoType from "monaco-editor";
-import { EditorTheme, editorColor, editorRule } from "src/theme";
+import { editorColor, editorRule, EditorTheme } from "src/theme";
 
 export const defaultEditorValue = `Create owner ( 
   ownerId: Int  Primary AutoIncrement,
@@ -188,28 +188,25 @@ export const setEditorTheme = (
   });
 };
 
-export const defaultTable = (tableName: string) => {
+export const defaultSettings = (id: string, index?: number) => {
   return {
-    id: tableName,
+    id,
     type: "tables",
-    data: {
-      name: tableName,
-      renderType: DiagramDataType.Table,
-      className: TABLE_TITLE_CLASSNAME,
-    },
-    position: { x: 136, y: 32 },
+    position: { x: 0, y: 32 * (index || 1 + 1) },
   };
 };
 
-export const defaultSettings = (
-  tableName: string,
-  property: EntityProperty,
-  index: number
-) => {
+export const defaultTable = (tableName: string): Node<BaseNode> => {
   return {
-    id: `${tableName}.${property.name}`,
-    type: "tables",
-    position: { x: 136, y: 32 * (index + 1) },
+    ...defaultSettings(tableName),
+    data: {
+      name: tableName,
+      renderType: DiagramDataType.Table,
+      classNames: {
+        title: TABLE_TITLE_CLASSNAME,
+      },
+    },
+    position: { x: 136, y: 32 },
   };
 };
 
@@ -219,7 +216,7 @@ export const defaultProperty = (
   index: number
 ) => {
   return {
-    ...defaultSettings(tableName, property, index),
+    ...defaultSettings(`${tableName}.${property.name}`, index),
     extent: "parent" as "parent" | CoordinateExtent,
     parentId: tableName,
     data: {
@@ -228,8 +225,12 @@ export const defaultProperty = (
     },
   };
 };
+
 const TABLE_TITLE_CLASSNAME =
-  "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ml-[136px]";
+  "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ";
+export const HIGHLIGHT_PATH_CLASSNAME="!stroke-brand !stroke-2"
+export const PROPERTY_CLASSNAME =
+  "p-1 px-2 relative flex justify-between h-16 z-8 nodrag cursor-default";
 export const regexComment = /\[(.*?)\]/;
 export const regex = /(.*)\((.*)\)/i;
 export const regexForeign = /[^)]+$/;

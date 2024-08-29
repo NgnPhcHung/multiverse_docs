@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface AppStoreState {
   isDarkMode: boolean;
@@ -19,7 +19,7 @@ export const useAppStore = create(
     }),
     {
       name: "app-settings",
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

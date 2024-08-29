@@ -18,19 +18,21 @@ export const TableRow = (data: NodeProps<Node<Entity>>) => {
   const currentRow = `${data.parentId}.${nodeData.name}`;
   const handler = edges.find((edge) => edge.id.includes(currentRow));
 
-  const isProperty = (value: any): value is EntityProperty => {
+  const toProperty = (value: any): value is EntityProperty => {
     return value?.renderType === DiagramDataType.Property;
   };
+  const isProperty = toProperty(nodeData);
   return (
     <div
       className={clsx(
         "w-56 h-fit bg-secondary text-primaryHover",
-        nodeData.className
+        nodeData.classNames?.property,
+        nodeData.classNames?.title
       )}
     >
       <Popover
         content={
-          isProperty(nodeData) &&<RowTooltip data={isProperty(nodeData) ? nodeData : undefined} />
+          isProperty && <RowTooltip data={isProperty ? nodeData : undefined} />
         }
         placement="right"
       >
@@ -38,12 +40,12 @@ export const TableRow = (data: NodeProps<Node<Entity>>) => {
           <div
             className={clsx(
               "text-truncate text-ellipsis overflow-hidden",
-              isProperty(nodeData) ? "col-span-1" : "col-span-2"
+              isProperty ? "col-span-1" : "col-span-2"
             )}
           >
             {nodeData.name}
           </div>
-          {isProperty(nodeData) && (
+          {isProperty && (
             <div className="col-span-1 justify-self-end">
               {nodeData.dataType}
             </div>
