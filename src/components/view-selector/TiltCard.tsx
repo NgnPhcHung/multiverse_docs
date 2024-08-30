@@ -2,6 +2,8 @@ import { useAppStore } from "@src/store";
 import { motion } from "framer-motion";
 import { MouseEvent } from "react";
 
+const TILT_INTENSITY = 30;
+
 const TiltCard = () => {
   const { isDarkMode } = useAppStore();
 
@@ -10,8 +12,8 @@ const TiltCard = () => {
     const x = (event.clientX - rect.left) / rect.width;
     const y = (event.clientY - rect.top) / rect.height;
 
-    const rotateX = (y - 0.5) * 30; // 30 degrees tilt intensity
-    const rotateY = (x - 0.5) * -30;
+    const rotateX = (y - 0.5) * TILT_INTENSITY;
+    const rotateY = (x - 0.5) * -TILT_INTENSITY;
 
     return { rotateX, rotateY };
   };
@@ -32,13 +34,13 @@ const TiltCard = () => {
     >
       {isDarkMode ? (
         <img
-          src="src/assets/intro_light_mode.png"
+          src="/images/intro_light_mode.png"
           alt="intro_light_mode"
           className="object-contain w-full h-full"
         />
       ) : (
         <img
-          src="src/assets/intro_dark_mode.png"
+          src="/images/intro_dark_mode.png"
           alt="intro_dark_mode"
           className="object-contain w-full h-full"
         />

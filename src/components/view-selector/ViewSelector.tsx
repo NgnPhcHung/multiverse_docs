@@ -8,17 +8,17 @@ export const ViewSelector = () => {
   return (
     <div
       key="view-selector"
-      className="h-full w-full flex items-center justify-center bg-secondary text-primary"
+      className="h-full w-full bg-secondary text-primary lg:p-8 p-4"
     >
-      <div className="flex space-x-4 items-center w-11/12">
-        <div className="text-5xl font-bold space-y-4">
+      <div className="flex flex-col lg:flex-row space-x-4 justify-center items-center h-full space-y-2">
+        <div className="text-4xl lg:!text-5xl font-bold space-y-4 w-11/12 ">
           Create your own ERD in a
           <span className="text-brand"> FLASH</span>
           <Button
             onClick={() => navigate("text-diagram")}
             variant="brand"
             className={{
-              button: "!w-fit !p-4 !text-xl !font-bold",
+              button: "!w-fit !p-2 lg:!p-4 !text-xl !font-bold",
             }}
           >
             Try It Now!
