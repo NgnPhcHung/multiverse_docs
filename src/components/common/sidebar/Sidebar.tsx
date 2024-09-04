@@ -148,7 +148,7 @@ export const Sidebar = ({
       <nav
         ref={navbarRef}
         className={clsx(
-          "absolute top-0 z-sideBar left-60 flex space-x-2 ",
+          "absolute top-0 z-sideBar left-60 flex",
           customMinWidth
             ? `w-[calc(100%-${customMinWidth}px)] `
             : `w-[calc(100%-${DEFAULT_MIN_WIDTH}px)]`,
@@ -165,7 +165,7 @@ export const Sidebar = ({
           </nav>
         )} */}
 
-        <div className="z-50 bg-secondary p-2 w-full flex items-center group/navbar h-12">
+        <div className="z-50 bg-secondary p-2 w-full flex items-center group/navbar h-12 space-x-2">
           <ActionIcon
             variant="secondary"
             size="md"

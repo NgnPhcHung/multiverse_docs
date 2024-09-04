@@ -32,11 +32,11 @@ export const TemplateSelector = () => {
         title="Select your template to start"
         size="lg"
       >
-        <Dialog.Description className="space-y-4 mt-4">
+        <Dialog.Description className="space-y-2 mt-4 items-center flex-col flex">
           {Object.values(DBDiagramTemplate).map((option, index) => (
             <div
               key={index}
-              className="w-56 p-4 rounded-md hover:shadow-md bg-primary shadow-secondaryHover cursor-pointer"
+              className="w-56 px-4 py-2  rounded-md hover:shadow-md bg-primary shadow-secondaryHover cursor-pointer"
               role="button"
               onClick={() => chooseTemplate(option as DBDiagramTemplate)}
             >
