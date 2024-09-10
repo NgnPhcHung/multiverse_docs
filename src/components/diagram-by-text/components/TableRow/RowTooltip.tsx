@@ -12,7 +12,7 @@ export const RowTooltip = ({ data }: RowTooltipProps) => {
       </div>
       <div className="py-2">
         <p className="uppercase text-orange-500">{data?.dataType}</p>
-        <p className=" ">{data?.constrains}</p>
+        <p className="font-semibold">{data?.constrains}</p>
       </div>
       <div className="py-2">
         {data?.comment ? (
