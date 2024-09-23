@@ -9,6 +9,7 @@ import {
 import { Button, Dialog, TextInput } from "@src/components/common";
 import { DBTypes } from "@src/consts";
 import useDebouncedCallback from "@src/hooks/useDebouncedCallback";
+import { EntityGenerator } from "@src/orm/typeorm/ConvertToTypeorm";
 import { useEditorStore } from "@src/store";
 import { generateSQL } from "@src/utils";
 import CodeMirror from "@uiw/react-codemirror";
@@ -43,7 +44,7 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
 
   useEffect(() => {
     if (!dbType || !schema?.length) return;
-
+    console.log(relation);
     try {
       const builderResult = generateSQL(dbType, schema, relation);
       setSqlResult(builderResult);
@@ -51,7 +52,7 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
       console.error("Error generating SQL:", error);
       setSqlResult("Error generating SQL. Please try again.");
     }
-  }, [dbType, schema]);
+  }, [dbType, relation, schema]);
 
   const handleSaveFile = () => {
     const element = document.createElement("a");
@@ -64,7 +65,13 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
     element.click();
     document.body.removeChild(element);
   };
+  const typeorm = () => {
+    if(!schema?.length) return 
 
+    const generator = new EntityGenerator();
+    const typeOrmEntities = generator.generateEntity(schema);
+    console.log(typeOrmEntities);
+  };
   return (
     language[dbType!] && (
       <Dialog
@@ -89,6 +96,14 @@ export const SQLPreviewModal: FC<SQLPreviewModalProps> = ({
             onClick={handleSaveFile}
           >
             Save to file
+          </Button>
+          <Button
+            className={{
+              button: "!w-24 break-keep",
+            }}
+            onClick={typeorm}
+          >
+            save to orm
           </Button>
         </div>
       </Dialog>
