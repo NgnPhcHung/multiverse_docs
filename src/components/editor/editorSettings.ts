@@ -188,11 +188,11 @@ export const setEditorTheme = (
   });
 };
 
-export const defaultSettings = (id: string, index?: number) => {
+export const defaultSettings = (id: string, index=1) => {
   return {
     id,
     type: "tables",
-    position: { x: 0, y: 32 * (index || 1 + 1) },
+    position: { x: 0, y: 32 * (index + 1) },
   };
 };
 
@@ -228,7 +228,7 @@ export const defaultProperty = (
 
 const TABLE_TITLE_CLASSNAME =
   "!bg-brandHover p-1 px-2 relative flex justify-between items-center h-10 text-white font-semibold ";
-export const HIGHLIGHT_PATH_CLASSNAME="!stroke-brand !stroke-2"
+export const HIGHLIGHT_PATH_CLASSNAME = "!stroke-brand !stroke-2";
 export const PROPERTY_CLASSNAME =
   "p-1 px-2 relative flex justify-between h-16 z-8 nodrag cursor-default";
 export const regexComment = /\[(.*?)\]/;
